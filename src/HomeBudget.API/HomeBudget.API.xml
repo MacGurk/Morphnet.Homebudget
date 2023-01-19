@@ -1,0 +1,188 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>HomeBudget.API</name>
+    </assembly>
+    <members>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactions(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Int32)">
+            <summary>
+            Get all transactions
+            </summary>
+            <param name="searchQuery">Optional: Search filter</param>
+            <param name="month">Month filter</param>
+            <param name="year">Year filter</param>
+            <param name="pageNumber">Page of the results to return</param>
+            <param name="pageSize">Amount of results to return</param>
+            <returns>A list of transactions</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactionAsync(System.Int32)">
+            <summary>
+            Get a transaction by id
+            </summary>
+            <param name="transactionId">The id of the transaction to get</param>
+            <returns>A transaction when it exists</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.CreateTransactionAsync(HomeBudget.API.Models.Transaction.TransactionForCreationDto)">
+            <summary>
+            Create a new transaction
+            </summary>
+            <param name="transaction">Transaction to create</param>
+            <returns>The created transaction and the corresponding route</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.UpdateTransactionAsync(System.Int32,HomeBudget.API.Models.Transaction.TransactionForUpdateDto)">
+            <summary>
+            Update a transaction
+            </summary>
+            <param name="transactionId">The id of the transaction to update</param>
+            <param name="transaction">The updated transaction</param>
+            <returns>No Content</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.PartialUpdateTransactionAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{HomeBudget.API.Models.Transaction.TransactionForUpdateDto})">
+            <summary>
+            Partially update a transaction
+            </summary>
+            <param name="transactionId">The id of the transaction to update</param>
+            <param name="patchDocument">The patch document describing the update</param>
+            <returns>No Content</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.DeleteTransaction(System.Int32)">
+            <summary>
+            Delete a transaction
+            </summary>
+            <param name="transactionId">The id of the transaction to delete</param>
+            <returns>No Content</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.UserController.GetUsers">
+            <summary>
+            Get all users
+            </summary>
+            <returns>A list of all users</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.UserController.GetUser(System.Int32)">
+            <summary>
+            Get a user by id
+            </summary>
+            <param name="userId">The id of the user to get</param>
+            <returns>The requestsd user when it exists</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.UserController.CreateUser(HomeBudget.API.Models.User.UserForCreationDto)">
+            <summary>
+            Create a new user
+            </summary>
+            <param name="user">User to create</param>
+            <returns>The created user and the corresponding route</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.UserController.UpdateUser(System.Int32,HomeBudget.API.Models.User.UserForUpdateDto)">
+            <summary>
+            Update a user
+            </summary>
+            <param name="userId">The id of the user to update</param>
+            <param name="user">The updated user</param>
+            <returns>No Content</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.UserController.DeleteUser(System.Int32)">
+            <summary>
+            Deletes a user
+            </summary>
+            <param name="userId">The id of the user to delete</param>
+            <returns>No Content</returns>
+        </member>
+        <member name="T:HomeBudget.API.Migrations.Initial">
+            <inheritdoc />
+        </member>
+        <member name="M:HomeBudget.API.Migrations.Initial.Up(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HomeBudget.API.Migrations.Initial.Down(Microsoft.EntityFrameworkCore.Migrations.MigrationBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="M:HomeBudget.API.Migrations.Initial.BuildTargetModel(Microsoft.EntityFrameworkCore.ModelBuilder)">
+            <inheritdoc />
+        </member>
+        <member name="T:HomeBudget.API.Models.Transaction.TransactionDto">
+            <summary>
+            Full Transaction object
+            </summary>
+        </member>
+        <member name="T:HomeBudget.API.Models.Transaction.TransactionForCreationDto">
+            <summary>
+            Transaction object to create a new user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.Transaction.TransactionForCreationDto.Date">
+            <summary>
+            Date of the transaction
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.Transaction.TransactionForCreationDto.UserId">
+            <summary>
+            Associated user of the transaction
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.Transaction.TransactionForCreationDto.Description">
+            <summary>
+            A description of the transaction
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.Transaction.TransactionForCreationDto.Price">
+            <summary>
+            The price of the transaction
+            </summary>
+        </member>
+        <member name="T:HomeBudget.API.Models.User.UserDto">
+            <summary>
+            Full user object
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserDto.Id">
+            <summary>
+            Id of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserDto.Name">
+            <summary>
+            Name of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserDto.Email">
+            <summary>
+            Email address of the user
+            </summary>
+        </member>
+        <member name="T:HomeBudget.API.Models.User.UserForCreationDto">
+            <summary>
+            User object to create a new user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Name">
+            <summary>
+            Name of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Email">
+            <summary>
+            Email address of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Password">
+            <summary>
+            Password of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Name">
+            <summary>
+            Name of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Email">
+            <summary>
+            Email address of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Password">
+            <summary>
+            Password of the user
+            </summary>
+        </member>
+    </members>
+</doc>
