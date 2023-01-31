@@ -4,8 +4,7 @@
         @theme="onClick"
     ></NavigationDrawer>
     <v-main>
-      <img alt="Vue logo" src="./assets/logo.png">
-      <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+      <router-view></router-view>
     </v-main>
   </v-app>
 </template>
@@ -13,7 +12,7 @@
 <script lang="ts">
 import { defineComponent } from 'vue';
 import HelloWorld from './components/HelloWorld.vue';
-import NavigationDrawer from "@/components/NavigationDrawer.vue";
+import NavigationDrawer from "@/components/common/NavigationDrawer.vue";
 
 
 export default defineComponent({

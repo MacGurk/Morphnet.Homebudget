@@ -1,16 +1,22 @@
 ﻿<template>
   <v-navigation-drawer
       v-model="drawer"
-      :rail="rail"
-      permanent
-      @click="rail = false"
+      expand-on-hover
+      rail
   >
-    <v-list-item prepend-avatar="mdi-account" title="User"></v-list-item>
-    <v-list-item>
-      <template v-slot:append>
-        <v-btn v-show="!rail" variant="text" icon="mdi-chevron-left" @click.stop="rail = !rail"></v-btn>
-      </template>
-    </v-list-item>
+    <v-list nav>
+      <router-link to="/">
+        <v-list-item prepend-icon="mdi-home" title="Home" value="home"></v-list-item>
+      </router-link>
+      <router-link to="/transactions">
+        <v-list-item prepend-icon="mdi-cash" title="Transactions" value="transactions"></v-list-item>
+      </router-link>
+      <router-link to="/users">
+        <v-list-item prepend-icon="mdi-account" title="User"></v-list-item>
+      </router-link>
+    </v-list>
+    <v-divider></v-divider>
+    
     <template v-slot:append>
       <v-list-item
           :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
@@ -32,7 +38,6 @@ export default defineComponent({
     return {
       theme: 'dark',
       drawer: true,
-      rail: true
     }
   },
   methods: {
