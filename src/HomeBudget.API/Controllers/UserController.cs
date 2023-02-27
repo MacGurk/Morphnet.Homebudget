@@ -40,7 +40,7 @@ namespace HomeBudget.API.Controllers
         /// </summary>
         /// <param name="userId">The id of the user to get</param>
         /// <returns>The requestsd user when it exists</returns>
-        [HttpGet("{userId}")]
+        [HttpGet("{userId}", Name = "GetUser")]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -70,8 +70,8 @@ namespace HomeBudget.API.Controllers
 
             await _userRepository.AddUserAsync(userToAdd);
             var createdUser = _mapper.Map<UserDto>(userToAdd);
-            
-            return CreatedAtRoute("GetUser", new { userToAdd.Id }, createdUser);
+
+            return CreatedAtRoute("GetUser", new { userId = userToAdd.Id }, createdUser);
         }
 
         /// <summary>
