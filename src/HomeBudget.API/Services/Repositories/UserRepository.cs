@@ -7,7 +7,7 @@ namespace HomeBudget.API.Services
     public class UserRepository : IUserRepository
     {
         private readonly HomeBudgetContext _context;
-        
+
         public UserRepository(HomeBudgetContext context)
         {
             _context = context;
@@ -16,8 +16,9 @@ namespace HomeBudget.API.Services
 
         public async Task<IEnumerable<User>> GetUsersAsync() => await _context.Users.ToListAsync();
 
-        public async Task<User?> GetUserByIdAsync(int userId) => await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-        
+        public async Task<User?> GetUserByIdAsync(int userId) =>
+            await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
         public async Task AddUserAsync(User user)
         {
             _context.Users.Add(user);

@@ -13,6 +13,5 @@ namespace HomeBudget.API.DbContexts
         public HomeBudgetContext(DbContextOptions<HomeBudgetContext> options) : base(options)
         {
         }
-
     }
 }

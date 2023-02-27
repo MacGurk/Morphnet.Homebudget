@@ -9,12 +9,12 @@ public class UserDto
     /// Id of the user
     /// </summary>
     public int Id { get; set; }
-    
+
     /// <summary>
     /// Name of the user
     /// </summary>
     public string Name { get; set; } = default!;
-    
+
     /// <summary>
     /// Email address of the user
     /// </summary>

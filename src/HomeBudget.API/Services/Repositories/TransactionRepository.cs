@@ -7,7 +7,7 @@ namespace HomeBudget.API.Services
     public class TransactionRepository : ITransactionRepository
     {
         private readonly HomeBudgetContext _context;
-        
+
         public TransactionRepository(HomeBudgetContext context)
         {
             _context = context;
@@ -16,14 +16,16 @@ namespace HomeBudget.API.Services
 
         public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await _context.Transactions.ToListAsync();
 
-        public async Task<(IEnumerable<Transaction>, PaginationMetadata)> GetTransactionsAsync(string? searchQuery, int? month, int? year, int pageNumber, int pageSize)
+        public async Task<(IEnumerable<Transaction>, PaginationMetadata)> GetTransactionsAsync(string? searchQuery,
+            int? month, int? year, int pageNumber, int pageSize)
         {
             var collection = _context.Transactions as IQueryable<Transaction>;
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
                 searchQuery = searchQuery.Trim();
-                collection = collection.Where(x => x.Description.Contains(searchQuery) || x.User.Name.Contains(searchQuery));
+                collection = collection.Where(x =>
+                    x.Description.Contains(searchQuery) || x.User.Name.Contains(searchQuery));
             }
 
             if (month.HasValue && year.HasValue)

@@ -13,20 +13,20 @@ public class TransactionForCreationDto
     /// </summary>
     [Required]
     public DateTimeOffset Date { get; set; }
-    
+
     /// <summary>
     /// Associated user of the transaction
     /// </summary>
     [Required]
     public int UserId { get; set; }
-    
+
     /// <summary>
     /// A description of the transaction
     /// </summary>
     [Required]
     [MaxLength(200)]
     public string Description { get; set; } = default!;
-    
+
     /// <summary>
     /// The price of the transaction
     /// </summary>

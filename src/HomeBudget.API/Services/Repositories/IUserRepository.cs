@@ -13,7 +13,7 @@ namespace HomeBudget.API.Services
         Task DeleteUserAsync(User user);
 
         Task<bool> UserExistsAsync(int userId);
-        
+
         Task SaveChangesAsync();
     }
 }

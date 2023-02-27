@@ -10,15 +10,15 @@ namespace HomeBudget.API.Entities
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
-        
+
         [Required]
         [MaxLength(50)]
         public string Name { get; set; } = default!;
-        
+
         [Required]
         [MaxLength(70)]
         public string Email { get; set; } = default!;
-        
+
         [Required]
         [MaxLength(128)]
         public string Password { get; set; } = default!;

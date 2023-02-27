@@ -48,11 +48,12 @@ namespace HomeBudget.API.Controllers
             {
                 pageSize = maxTransactionPageSize;
             }
+
             var (transactionEntities, paginationMetadata) =
                 await _transactionRepository.GetTransactionsAsync(searchQuery, month, year, pageNumber, pageSize);
-            
+
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
-            
+
             return Ok(_mapper.Map<IEnumerable<TransactionDto>>(transactionEntities));
         }
 
@@ -88,7 +89,7 @@ namespace HomeBudget.API.Controllers
             var createdTransaction = _mapper.Map<TransactionDto>(transactionToAdd);
             return CreatedAtRoute("GetTransaction", new { id = createdTransaction.Id }, createdTransaction);
         }
-        
+
         /// <summary>
         /// Update a transaction
         /// </summary>
@@ -129,9 +130,9 @@ namespace HomeBudget.API.Controllers
             {
                 return NotFound();
             }
-            
+
             var transactionToPatch = _mapper.Map<TransactionForUpdateDto>(transactionEntity);
-            
+
             patchDocument.ApplyTo(transactionToPatch, ModelState);
 
             if (!ModelState.IsValid || !TryValidateModel(transactionToPatch))
@@ -143,9 +144,8 @@ namespace HomeBudget.API.Controllers
             await _transactionRepository.SaveChangedAsync();
 
             return NoContent();
-
         }
-        
+
         /// <summary>
         /// Delete a transaction
         /// </summary>

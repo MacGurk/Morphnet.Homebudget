@@ -10,10 +10,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers(options =>
-{
-    options.ReturnHttpNotAcceptable = true;
-});
+builder.Services.AddControllers(options => { options.ReturnHttpNotAcceptable = true; });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -21,9 +18,9 @@ builder.Services.AddSwaggerGen(setupAction =>
 {
     var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
-    
+
     setupAction.IncludeXmlComments(xmlCommentsFullPath);
-    
+
     setupAction.AddSecurityDefinition("HomeBudgetApiBearerAuth", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.Http,
@@ -34,12 +31,15 @@ builder.Services.AddSwaggerGen(setupAction =>
     setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme {
-                Reference = new OpenApiReference {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
                     Type = ReferenceType.SecurityScheme,
                     Id = "HomeBudgetApiBearerAuth"
                 }
-            }, new List<string>()
+            },
+            new List<string>()
         }
     });
 });
@@ -62,7 +62,6 @@ builder.Services.AddDbContext<HomeBudgetContext>(options =>
     {
         throw new ArgumentException($"{databaseType} is not a valid database type.");
     }
-    
 });
 
 builder.Services.AddTransient<IUserRepository, UserRepository>();
