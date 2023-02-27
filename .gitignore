@@ -351,3 +351,8 @@ MigrationBackup/
 
 # Editor directories and files
 .idea
+
+# SQLite db-file
+*.db
+*.db-shm
+*.db-wal
