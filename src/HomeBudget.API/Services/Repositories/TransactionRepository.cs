@@ -38,7 +38,6 @@ namespace HomeBudget.API.Services
             var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
 
             var collectionToReturn = await collection
-                .OrderBy(x => x.Date)
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
                 .ToListAsync();

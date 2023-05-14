@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HomeBudget.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/v{version:apiVersion}/transaction")]
+    [ApiVersion("1.0")]
     [ApiController]
     public class TransactionController : ControllerBase
     {
@@ -77,17 +78,23 @@ namespace HomeBudget.API.Controllers
         [HttpPost]
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
         {
-            if (!await _userRepository.UserExistsAsync(transaction.UserId))
+            var user = await _userRepository.GetUserByIdAsync(transaction.UserId);
+            
+            if (user == null)
             {
                 return BadRequest();
             }
 
             var transactionToAdd = _mapper.Map<Transaction>(transaction);
+            transactionToAdd.User = user;
 
             await _transactionRepository.AddTransactionAsync(transactionToAdd);
 
             var createdTransaction = _mapper.Map<TransactionDto>(transactionToAdd);
-            return CreatedAtRoute("GetTransaction", new { id = createdTransaction.Id }, createdTransaction);
+            return CreatedAtRoute(
+                "GetTransaction",
+                new { transactionId = createdTransaction.Id },
+                createdTransaction);
         }
 
         /// <summary>

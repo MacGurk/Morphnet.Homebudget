@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudget.API.Controllers
 {
-    [Route("api/v{version:apiVersion}/users")]
+    [Route("api/v{version:apiVersion}/user")]
     [ApiVersion("1.0")]
     [ApiController]
     public class UserController : ControllerBase
