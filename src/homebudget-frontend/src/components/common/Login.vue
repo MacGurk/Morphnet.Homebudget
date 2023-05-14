@@ -19,38 +19,36 @@
                   @click:append-inner="switchVisibility"
                   required
               ></v-text-field>
-              <v-btn type="submit" size="large" color="primary" block>Sign In</v-btn>
+              <v-btn type="submit" size="large" color="primary" block
+              >Sign In
+              </v-btn
+              >
             </v-form>
           </v-card-text>
-          
         </v-card>
-        
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import {defineComponent} from "vue";
+import {defineComponent} from 'vue';
 
 export default defineComponent({
-  name: "Login",
+  name: 'Login',
   data() {
     return {
       username: '',
       password: '',
       passwordVisible: false,
-    }
-    
+    };
   },
   methods: {
-    switchVisibility():void {
-      this.passwordVisible = !this.passwordVisible
-    }
-  }
-})
+    switchVisibility(): void {
+      this.passwordVisible = !this.passwordVisible;
+    },
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

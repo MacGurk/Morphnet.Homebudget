@@ -1,13 +1,14 @@
 <template>
-  <div>Home</div>
+  <TitleBar title="Home"/>
 </template>
 
 <script>
+import TitleBar from '@/components/common/TitleBar.vue';
+
 export default {
-  name: "Home"
-}
+  name: 'Home',
+  components: {TitleBar},
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
