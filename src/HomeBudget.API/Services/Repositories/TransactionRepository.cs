@@ -40,6 +40,7 @@ namespace HomeBudget.API.Services
             var collectionToReturn = await collection
                 .Skip(pageSize * (pageNumber - 1))
                 .Take(pageSize)
+                .Include(x => x.User)
                 .ToListAsync();
 
             return (collectionToReturn, paginationMetadata);
