@@ -21,6 +21,9 @@
           mdi-delete
         </v-icon>
       </template>
+      <template v-slot:item.date="{ item }">
+        {{ formatDate(item.raw.date) }}
+      </template>
     </v-data-table>
   </div>
 </template>
@@ -56,6 +59,9 @@ export default defineComponent({
     },
     editItem(id: number) {
       this.$emit('editItem', id);
+    },
+    formatDate(date: string): string {
+      return new Date(date).toLocaleDateString();
     }
   }
 })

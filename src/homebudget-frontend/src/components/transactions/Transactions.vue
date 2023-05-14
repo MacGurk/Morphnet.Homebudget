@@ -42,7 +42,7 @@ export default defineComponent({
       users: [],
       headers: [
         {title: 'Id', align: 'start', key: 'id', width: '5%'},
-        {title: 'Date', align: 'start', key: 'date'},
+        {title: 'Date', align: 'start', key: 'date', width: '5%'},
         {title: 'Description', align: 'start', key: 'description'},
         {title: 'User', align: 'start', key: 'user.name'},
         {title: 'Price', align: 'start', key: 'price'},
