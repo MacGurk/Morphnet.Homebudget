@@ -4,11 +4,13 @@
       title="Transactions Overview"
       :items="transactions"
       :headers="headers"
+      @delete-item="deleteTransaction"
   >
     <template v-slot:createForm>
       <TransactionCreateForm @add-transaction="addTransaction" />
     </template>
   </CRUDTable>
+  <ConfirmDialog ref="confirm" />
 </template>
 
 <script lang="ts">
@@ -22,6 +24,7 @@ import CRUDTable, {CrudTableHeader} from '@/components/common/CRUDTable.vue';
 import TransactionCreateForm from '@/components/transactions/TransactionCreateForm.vue';
 import TransactionForCreation from '@/models/TransactionForCreation';
 import {getDateString} from '../../utils/utils';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 
 interface TransactionsData {
   transactions: Transaction[];
@@ -32,6 +35,7 @@ interface TransactionsData {
 export default defineComponent({
   name: 'Transactions',
   components: {
+    ConfirmDialog,
     CRUDTable,
     TransactionCreateForm,
     TitleBar,
@@ -46,6 +50,7 @@ export default defineComponent({
         {title: 'Description', align: 'start', key: 'description'},
         {title: 'User', align: 'start', key: 'user.name'},
         {title: 'Price', align: 'start', key: 'price'},
+        {title: 'Settled', align:'start', key: 'isSettled'},
         {title: 'Actions', align: 'start', key: 'actions', sortable: false, width: '10%'},
       ]
     }
@@ -78,6 +83,16 @@ export default defineComponent({
         this.transactions.push(transaction);
       } catch (e) {
         console.error(e);
+      }
+    },
+    async deleteTransaction(id: number): Promise<void> {
+      if (await this.$refs.confirm.open(
+          `Delete user ${id}`,
+          `Do you really want to delete the transaction '${id}'?`,
+          'Delete',
+          'error'
+      )) {
+        this.transactions = this.transactions.filter(t => t.id !== id);
       }
     }
   }

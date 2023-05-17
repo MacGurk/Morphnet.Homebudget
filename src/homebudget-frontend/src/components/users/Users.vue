@@ -5,6 +5,7 @@
       <UserCreateForm @add-user="addUser" />
     </template>
   </CRUDTable>
+  <ConfirmDialog ref="confirm" />
 </template>
 
 <script lang="ts">
@@ -15,6 +16,7 @@ import UserApi from '@/api/UserApi';
 import CRUDTable, {CrudTableHeader} from '@/components/common/CRUDTable.vue';
 import UserCreateForm from '@/components/users/UserCreateForm.vue';
 import UserForCreation from '@/models/UserForCreation';
+import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 
 interface UsersData {
   users: User[];
@@ -39,6 +41,7 @@ export default defineComponent({
     };
   },
   components: {
+    ConfirmDialog,
     UserCreateForm,
     CRUDTable,
     TitleBar
@@ -57,8 +60,19 @@ export default defineComponent({
       console.log(`Parent edit: ${id}`);
     },
     async deleteUser(id: number): Promise<void> {
-      if (await userApi.delete(id)) {
-        this.users = this.users.filter(user => user.id !== id);
+      const deleteUser = this.users.find(u => u.id === id);
+      if (!deleteUser) {
+        return;
+      }
+      if (await this.$refs.confirm.open(
+          `Delete user ${deleteUser.name}`,
+          `Do you really want to delete the user '${deleteUser.name}'?`,
+          'Delete',
+          'error'
+      )) {
+        if (await userApi.delete(id)) {
+          this.users = this.users.filter(user => user.id !== id);
+        }
       }
     },
     async addUser(newUser: UserForCreation): Promise<void> {

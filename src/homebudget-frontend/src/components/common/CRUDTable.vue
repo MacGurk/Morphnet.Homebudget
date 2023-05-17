@@ -14,15 +14,23 @@
         </v-toolbar>
       </template>
       <template v-slot:[`item.actions`]="{ item }">
-        <v-icon size="small" class="mr-2" @click="editItem(item.raw.id)">
+        <v-icon size="large" color="info" class="mr-4" @click="editItem(item.raw.id)">
           mdi-pencil
         </v-icon>
-        <v-icon size="small" @click="deleteItem(item.raw.id)">
+        <v-icon size="large" @click="deleteItem(item.raw.id)">
           mdi-delete
         </v-icon>
       </template>
       <template v-slot:item.date="{ item }">
         {{ formatDate(item.raw.date) }}
+      </template>
+      <template v-slot:item.isSettled="{ item }">
+        <v-icon v-if="item.raw.isSettled" size="small" color="success">
+          mdi-check-circle-outline
+        </v-icon>
+        <v-icon v-else size="small" color="error">
+          mdi-close-circle-outline
+        </v-icon>
       </template>
     </v-data-table>
   </div>
@@ -54,7 +62,7 @@ export default defineComponent({
   },
   methods: {
     getDateString,
-    deleteItem(id: number) {
+    async deleteItem(id: number) {
       this.$emit('deleteItem', id);
     },
     editItem(id: number) {
