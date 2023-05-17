@@ -58,6 +58,10 @@ builder.Services.AddDbContext<HomeBudgetContext>(options =>
     {
         options.UseSqlite(builder.Configuration["Database:ConnectionString"]);
     }
+    else if (databaseType == "mysql")
+    {
+        options.UseMySQL(builder.Configuration["Database:ConnectionString"]);
+    }
     else
     {
         throw new ArgumentException($"{databaseType} is not a valid database type.");
