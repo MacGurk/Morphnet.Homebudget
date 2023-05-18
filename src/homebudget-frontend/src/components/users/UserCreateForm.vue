@@ -4,7 +4,7 @@
       <v-btn color="primary" class="mb-2" v-bind="props">Create User</v-btn>
     </template>
     <v-card>
-      <v-card-title>New User</v-card-title>
+      <v-card-title class="bg-primary">New User</v-card-title>
       <v-card-text>
         <v-container>
           <v-row>
@@ -83,7 +83,7 @@
         </v-btn>
         <v-btn
             color="primary"
-            variant="text"
+            variant="flat"
             @click="addUser"
         >
           Save

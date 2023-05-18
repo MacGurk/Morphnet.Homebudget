@@ -5,7 +5,7 @@
     </template>
     <v-card>
       <form>
-        <v-card-title>New Transaction</v-card-title>
+        <v-card-title class="bg-primary">New Transaction</v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
@@ -88,7 +88,7 @@
           </v-btn>
           <v-btn
               color="primary"
-              variant="text"
+              variant="flat"
               @click="addTransaction"
           >
             Save
