@@ -1,31 +1,30 @@
 ﻿<template>
   <v-navigation-drawer permanent>
     <v-list nav>
-      <router-link to="/">
-        <v-list-item
-            prepend-icon="mdi-home"
-            title="Home"
-            value="home"
-        ></v-list-item>
-      </router-link>
-      <router-link to="/transactions">
-        <v-list-item
-            prepend-icon="mdi-cash"
-            title="Transactions"
-            value="transactions"
-        ></v-list-item>
-      </router-link>
-      <router-link to="/users">
-        <v-list-item prepend-icon="mdi-account" title="User" value="user"></v-list-item>
-      </router-link>
+      <v-list-item
+          prepend-icon="mdi-home"
+          title="Home"
+          value="home"
+          to="/"
+      ></v-list-item>
+      <v-list-item
+          prepend-icon="mdi-cash"
+          title="Transactions"
+          value="transactions"
+          to="/transactions"
+      ></v-list-item>
+      <v-list-item
+          prepend-icon="mdi-account"
+          title="User"
+          value="user"
+          to="/users"
+      ></v-list-item>
     </v-list>
     <v-divider></v-divider>
 
     <template v-slot:append>
       <v-list-item
-          :prepend-icon="
-          theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'
-        "
+          :prepend-icon="theme === 'light' ? 'mdi-weather-sunny' : 'mdi-weather-night'"
           title="Toggle Theme"
           @click.stop="onClick"
       ></v-list-item>
@@ -53,5 +52,5 @@ export default defineComponent({
   },
 });
 </script>
-
+  
 <style scoped></style>
