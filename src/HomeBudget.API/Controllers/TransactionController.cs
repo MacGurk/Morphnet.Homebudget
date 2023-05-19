@@ -8,6 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace HomeBudget.API.Controllers
 {
+    /// <summary>
+    /// Handle transaction-related operations
+    /// </summary>
     [Route("api/v{version:apiVersion}/transaction")]
     [ApiVersion("1.0")]
     [ApiController]
@@ -16,7 +19,7 @@ namespace HomeBudget.API.Controllers
         private readonly ITransactionRepository _transactionRepository;
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
-        const int maxTransactionPageSize = 100;
+        const int MaxTransactionPageSize = 100;
 
         public TransactionController(
             ITransactionRepository transactionRepository,
@@ -38,6 +41,7 @@ namespace HomeBudget.API.Controllers
         /// <param name="pageSize">Amount of results to return</param>
         /// <returns>A list of transactions</returns>
         [HttpGet]
+        [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
             string? searchQuery,
             int? month,
@@ -45,9 +49,9 @@ namespace HomeBudget.API.Controllers
             int pageNumber = 1,
             int pageSize = 10)
         {
-            if (pageSize > maxTransactionPageSize)
+            if (pageSize > MaxTransactionPageSize)
             {
-                pageSize = maxTransactionPageSize;
+                pageSize = MaxTransactionPageSize;
             }
 
             var (transactionEntities, paginationMetadata) =
@@ -64,6 +68,8 @@ namespace HomeBudget.API.Controllers
         /// <param name="transactionId">The id of the transaction to get</param>
         /// <returns>A transaction when it exists</returns>
         [HttpGet("{transactionId}", Name = "GetTransaction")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransactionDto>> GetTransactionAsync(int transactionId)
         {
             var transaction = await _transactionRepository.GetTransactionByIdAsync(transactionId);
@@ -76,6 +82,8 @@ namespace HomeBudget.API.Controllers
         /// <param name="transaction">Transaction to create</param>
         /// <returns>The created transaction and the corresponding route</returns>
         [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
         {
             var user = await _userRepository.GetUserByIdAsync(transaction.UserId);
@@ -104,6 +112,9 @@ namespace HomeBudget.API.Controllers
         /// <param name="transaction">The updated transaction</param>
         /// <returns>No Content</returns>
         [HttpPut("{transactionId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateTransactionAsync(int transactionId, TransactionForUpdateDto transaction)
         {
             var transactionEntity = await _transactionRepository.GetTransactionByIdAsync(transactionId);
@@ -127,6 +138,9 @@ namespace HomeBudget.API.Controllers
         /// <param name="patchDocument">The patch document describing the update</param>
         /// <returns>No Content</returns>
         [HttpPatch("{transactionId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> PartialUpdateTransactionAsync(
             int transactionId,
             JsonPatchDocument<TransactionForUpdateDto> patchDocument)
@@ -159,6 +173,8 @@ namespace HomeBudget.API.Controllers
         /// <param name="transactionId">The id of the transaction to delete</param>
         /// <returns>No Content</returns>
         [HttpDelete("{transactionId}")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteTransaction(int transactionId)
         {
             var transactionEntity = await _transactionRepository.GetTransactionByIdAsync(transactionId);

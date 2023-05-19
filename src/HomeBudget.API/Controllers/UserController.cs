@@ -2,12 +2,13 @@ using AutoMapper;
 using HomeBudget.API.Entities;
 using HomeBudget.API.Models.User;
 using HomeBudget.API.Services;
-using HomeBudget.API.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudget.API.Controllers
 {
+    /// <summary>
+    /// Handle user-related operations
+    /// </summary>
     [Route("api/v{version:apiVersion}/user")]
     [ApiVersion("1.0")]
     [ApiController]

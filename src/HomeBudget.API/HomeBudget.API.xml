@@ -4,6 +4,11 @@
         <name>HomeBudget.API</name>
     </assembly>
     <members>
+        <member name="T:HomeBudget.API.Controllers.TransactionController">
+            <summary>
+            Handle transaction-related operations
+            </summary>
+        </member>
         <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactions(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Int32)">
             <summary>
             Get all transactions
@@ -51,6 +56,11 @@
             </summary>
             <param name="transactionId">The id of the transaction to delete</param>
             <returns>No Content</returns>
+        </member>
+        <member name="T:HomeBudget.API.Controllers.UserController">
+            <summary>
+            Handle user-related operations
+            </summary>
         </member>
         <member name="M:HomeBudget.API.Controllers.UserController.GetUsers">
             <summary>
