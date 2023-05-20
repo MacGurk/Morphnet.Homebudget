@@ -1,19 +1,28 @@
 <template>
-  <v-container>
-    <v-row>
-      <v-col>
+  <v-container class="w-25 bg-grey-lighten-1 rounded-xl mx-16 my-8">
+    <v-row class>
+      <v-col class="v-col-2">
         Id:
       </v-col>
+      <v-divider vertical color="blue"></v-divider>
       <v-col>
         {{ user.id }}
       </v-col>
     </v-row>
     <v-row>
-      <v-col>
+      <v-col class="v-col-2">
         Name:
       </v-col>
       <v-col>
         {{ user.name }}
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col class="v-col-2">
+        E-Mail:
+      </v-col>
+      <v-col>
+        {{ user.email }}
       </v-col>
     </v-row>
   </v-container>
@@ -71,5 +80,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-
+  
 </style>
