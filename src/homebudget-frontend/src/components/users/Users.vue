@@ -1,5 +1,5 @@
 <template>
-  <TitleBar title="Users"/>
+  <TitleBar>Users</TitleBar>
   <UserTable 
       :users="users"
       @delete-user="deleteUser"

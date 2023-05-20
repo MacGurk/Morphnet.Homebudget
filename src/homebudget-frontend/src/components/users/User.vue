@@ -1,5 +1,5 @@
 <template>
-  <TitleBar :title="`User ${this.user.name}`" />
+  <TitleBar>{{ `User ${this.user.name}` }}</TitleBar>
   <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
   <UserDetail v-else :user="user"></UserDetail>
 </template>

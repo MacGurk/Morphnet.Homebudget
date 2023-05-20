@@ -1,5 +1,5 @@
 <template>
-  <TitleBar title="Home"/>
+  <TitleBar>Home</TitleBar>
 </template>
 
 <script>

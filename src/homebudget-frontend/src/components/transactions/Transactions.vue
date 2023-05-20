@@ -1,5 +1,5 @@
 <template>
-  <TitleBar title="Transactions" />
+  <TitleBar>Transactions</TitleBar>
   <TransactionFilter @filter-changed="handleFilterChange" />
   <TransactionsTable
       title="Transactions Overview"

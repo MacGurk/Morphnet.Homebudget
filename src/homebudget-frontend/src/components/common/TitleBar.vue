@@ -1,6 +1,6 @@
 <template>
   <div class="py-3">
-    <h2 class="title">{{ title }}</h2>
+    <h2 class="title"><slot></slot></h2>
   </div>
   <v-divider></v-divider>
 </template>
