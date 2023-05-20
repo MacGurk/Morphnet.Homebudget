@@ -56,11 +56,11 @@ builder.Services.AddDbContext<HomeBudgetContext>(options =>
 
     if (databaseType == "sqlite")
     {
-        options.UseSqlite(builder.Configuration["Database:ConnectionString"]);
+        options.UseSqlite(connectionString);
     }
     else if (databaseType == "mysql")
     {
-        options.UseMySQL(builder.Configuration["Database:ConnectionString"]);
+        options.UseMySQL(connectionString!);
     }
     else
     {
