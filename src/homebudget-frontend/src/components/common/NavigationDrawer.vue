@@ -14,6 +14,12 @@
           to="/transactions"
       ></v-list-item>
       <v-list-item
+          prepend-icon="mdi-handshake"
+          title="Settle"
+          value="settle"
+          to="/settle"
+      ></v-list-item>
+      <v-list-item
           prepend-icon="mdi-account"
           title="User"
           value="user"
