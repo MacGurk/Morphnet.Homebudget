@@ -1,10 +1,10 @@
 <template>
   <TitleBar title="Users"/>
-  <CRUDTable title="User Overview" :items="users" :headers="headers" @delete-item="deleteUser" @edit-item="editUser">
-    <template v-slot:createForm>
-      <UserCreateForm @add-user="addUser" />
-    </template>
-  </CRUDTable>
+  <UserTable 
+      :users="users"
+      @delete-user="deleteUser"
+      @edit-user="editUser"
+  ></UserTable>
   <ConfirmDialog ref="confirm" />
 </template>
 
@@ -13,15 +13,13 @@ import {defineComponent} from 'vue';
 import TitleBar from '@/components/common/TitleBar.vue';
 import User from '@/entities/User';
 import UserApi from '@/api/UserApi';
-import CRUDTable, {CrudTableHeader} from '@/components/common/CRUDTable.vue';
-import UserCreateForm from '@/components/users/UserCreateForm.vue';
 import UserForCreation from '@/models/UserForCreation';
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
+import UserTable from '@/components/users/UserTable.vue';
 
 interface UsersData {
   users: User[];
   loading: boolean;
-  headers: CrudTableHeader;
 }
 
 const userApi = new UserApi();
@@ -31,19 +29,12 @@ export default defineComponent({
   data(): UsersData {
     return {
       users: [],
-      loading: false,
-      headers: [
-        {title: 'Id', align: 'start', key: 'id', width: '5%'},
-        {title: 'Name', align: 'start', key: 'name'},
-        {title: 'E-Mail', align: 'start', key: 'email'},
-        {title: 'Actions', align: 'start', key: 'actions', sortable: false, width: '10%'},
-      ],
+      loading: false
     };
   },
   components: {
+    UserTable,
     ConfirmDialog,
-    UserCreateForm,
-    CRUDTable,
     TitleBar
   },
   created() {
@@ -55,9 +46,20 @@ export default defineComponent({
 
       this.users = await userApi.get();
     },
+    async addUser(newUser: UserForCreation): Promise<void> {
+      this.loading = true;
+      try {
+        const user = await userApi.add(newUser);
+        this.users.push(user);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        this.loading = false;
+      }
+    },
     editUser(id: number): void {
       // PUT API call
-      console.log(`Parent edit: ${id}`);
+      console.log(`Edit user: ${id}`);
     },
     async deleteUser(id: number): Promise<void> {
       const deleteUser = this.users.find(u => u.id === id);
@@ -74,19 +76,6 @@ export default defineComponent({
           this.users = this.users.filter(user => user.id !== id);
         }
       }
-    },
-    async addUser(newUser: UserForCreation): Promise<void> {
-      this.loading = true;
-      try {
-        const user = await userApi.add(newUser);
-        this.users.push(user);
-      } catch (e) {
-        console.error(e);
-      } finally {
-        this.loading = false;
-      }
-
-
     }
   },
 });
