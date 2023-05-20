@@ -2,7 +2,7 @@ import User from '@/entities/User';
 import UserForCreation from '@/models/UserForCreation';
 
 export default class UserApi {
-  private path = '/api/v1.0/user';
+  private path = '/api/v1/user';
 
   public async get(): Promise<User[]> {
     const response = await fetch(this.path);

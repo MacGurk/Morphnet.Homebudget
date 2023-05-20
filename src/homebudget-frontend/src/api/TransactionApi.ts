@@ -2,7 +2,7 @@ import Transaction from '@/entities/Transaction';
 import TransactionForCreation from '@/models/TransactionForCreation';
 
 export default class TransactionApi {
-  private path = '/api/v1.0/transaction';
+  private path = '/api/v1/transaction';
 
   public async get(): Promise<Transaction[]> {
     const response = await fetch(this.path);
@@ -26,7 +26,7 @@ export default class TransactionApi {
   }
 
   public async getByUser(userId: number): Promise<Transaction[]> {
-    const response = await fetch(`/api/v1.0/user/${userId}/transaction`);
+    const response = await fetch(`/api/v1/user/${userId}/transaction`);
     if (!response.ok) {
       throw new Error(
         `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`

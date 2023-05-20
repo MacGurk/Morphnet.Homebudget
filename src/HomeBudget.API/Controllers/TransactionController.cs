@@ -11,8 +11,8 @@ namespace HomeBudget.API.Controllers
     /// <summary>
     /// Handle transaction-related operations
     /// </summary>
-    [Route("api/v{version:apiVersion}/transaction")]
-    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}")]
+    [ApiVersion("1")]
     [ApiController]
     public class TransactionController : ControllerBase
     {

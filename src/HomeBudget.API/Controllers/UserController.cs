@@ -10,7 +10,7 @@ namespace HomeBudget.API.Controllers
     /// Handle user-related operations
     /// </summary>
     [Route("api/v{version:apiVersion}/user")]
-    [ApiVersion("1.0")]
+    [ApiVersion("1")]
     [ApiController]
     public class UserController : ControllerBase
     {
