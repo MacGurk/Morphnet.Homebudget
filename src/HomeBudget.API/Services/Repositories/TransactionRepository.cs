@@ -52,6 +52,12 @@ namespace HomeBudget.API.Services
         public async Task<IEnumerable<Transaction>> GetTransactionsByUserAsync(int userId) =>
             await _context.Transactions.Where(t => t.User.Id == userId).ToListAsync();
 
+        public async Task<IEnumerable<Transaction>> GetUnsettledTransactionsAsync() =>
+            await _context.Transactions
+                .Where(t => t.IsSettled == false)
+                .Include(t => t.User)
+                .ToListAsync();
+
         public async Task AddTransactionAsync(Transaction transaction)
         {
             _context.Transactions.Add(transaction);

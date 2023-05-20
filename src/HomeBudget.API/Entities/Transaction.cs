@@ -12,6 +12,8 @@ namespace HomeBudget.API.Entities
         [Required]
         public DateTimeOffset Date { get; set; }
 
+        public int UserId { get; set; }
+        
         [Required]
         public User User { get; set; } = null!;
 

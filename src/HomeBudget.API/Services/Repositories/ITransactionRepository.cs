@@ -12,6 +12,8 @@ namespace HomeBudget.API.Services
         Task<Transaction?> GetTransactionByIdAsync(int transactionId);
 
         Task<IEnumerable<Transaction>> GetTransactionsByUserAsync(int userId);
+        
+        Task<IEnumerable<Transaction>> GetUnsettledTransactionsAsync();
 
         Task AddTransactionAsync(Transaction transaction);
 
