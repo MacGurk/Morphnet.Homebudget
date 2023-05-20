@@ -10,6 +10,14 @@ export default class UserApi {
     return users;
   }
 
+  public async getById(id: number): Promise<User> {
+    const response = await fetch(`${this.path}/${id}`);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch API on path ${this.path}/${id}`);
+    }
+    return (await response.json()) as User;
+  }
+
   public async add(user: UserForCreation): Promise<User> {
     const method = 'POST';
     const response = await fetch(this.path, {
@@ -26,19 +34,6 @@ export default class UserApi {
   public async delete(id: number): Promise<boolean> {
     const method = 'DELETE';
     const response = await fetch(`${this.path}/${id}`, { method });
-    if (response.status != 204) {
-      return false;
-    }
-    return true;
+    return response.status == 204;
   }
-}
-
-const BASE_PATH = '/api/v1.0/user';
-export async function fetchUsers(): Promise<User[]> {
-  const response = await fetch(BASE_PATH);
-  if (!response.ok) {
-    throw new Error(`failed to fetch API on path ${BASE_PATH}`);
-  }
-  const users = (await response.json()) as User[];
-  return users;
 }

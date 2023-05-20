@@ -1,36 +1,62 @@
 import Transaction from '@/entities/Transaction';
 import TransactionForCreation from '@/models/TransactionForCreation';
 
-const BASE_PATH = '/api/v1.0/transaction';
+export default class TransactionApi {
+  private path = '/api/v1.0/transaction';
 
-export async function fetchApiTransactions(): Promise<Transaction[]> {
-  const response = await fetch(BASE_PATH, {
-    headers: getDefaultHeaders(),
-  });
-  if (!response.ok) {
-    throw new Error(`failed to fetch API on path ${BASE_PATH}`);
+  public async get(): Promise<Transaction[]> {
+    const response = await fetch(this.path);
+    if (!response.ok) {
+      throw new Error(`failed to fetch API on path ${this.path}`);
+    }
+    return (await response.json()) as Transaction[];
   }
-  return await response.json();
-}
 
-export async function postApiTransaction(
-  transaction: TransactionForCreation
-): Promise<Transaction> {
-  const method = 'POST';
-  const response = await fetch(BASE_PATH, {
-    method,
-    headers: getDefaultHeaders(),
-    body: JSON.stringify(transaction),
-  });
-  if (!response.ok) {
-    throw new Error(`failed to post API on path ${BASE_PATH}`);
+  public async getFiltered(
+    month: number,
+    year: number
+  ): Promise<Transaction[]> {
+    const response = await fetch(
+      this.path + `?month=${month + 1}&year=${year}`
+    );
+    if (!response.ok) {
+      throw new Error(`failed to fetch API on path ${this.path}`);
+    }
+    return (await response.json()) as Transaction[];
   }
-  const addedTransaction = (await response.json()) as Transaction;
-  return addedTransaction;
-}
 
-function getDefaultHeaders(): Headers {
-  return new Headers({
-    'Content-Type': 'application/json',
-  });
+  public async getByUser(userId: number): Promise<Transaction[]> {
+    const response = await fetch(`/api/v1.0/user/${userId}/transaction`);
+    if (!response.ok) {
+      throw new Error(
+        `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`
+      );
+    }
+    return (await response.json()) as Transaction[];
+  }
+
+  public async add(transaction: TransactionForCreation): Promise<Transaction> {
+    const method = 'POST';
+    const response = await fetch(this.path, {
+      method,
+      headers: this.getDefaultHeaders(),
+      body: JSON.stringify(transaction),
+    });
+    if (!response.ok) {
+      throw new Error(`failed to post API on path ${this.path}`);
+    }
+    return (await response.json()) as Transaction;
+  }
+
+  public async delete(id: number): Promise<boolean> {
+    const method = 'DELETE';
+    const response = await fetch(`${this.path}/${id}`, { method });
+    return response.ok;
+  }
+
+  private getDefaultHeaders(): Headers {
+    return new Headers({
+      'Content-Type': 'application/json',
+    });
+  }
 }

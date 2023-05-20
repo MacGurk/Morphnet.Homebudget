@@ -61,7 +61,7 @@
                 <v-select
                     v-model="newTransaction.userId"
                     label="User"
-                    :items="users"
+                    :items="$props.users"
                     item-title="name"
                     item-value="id"
                 >
@@ -102,11 +102,8 @@
 <script lang="ts">
 import { getDateString } from '@/utils/utils';
 import {defineComponent} from 'vue';
-import Transaction from '@/entities/Transaction';
 import User from '@/entities/User';
-import {fetchUsers} from '@/api/UserApi';
 import TransactionForCreation from '@/models/TransactionForCreation';
-import {tr} from 'vuetify/locale';
 
 interface TransactionCreateFormData {
   createDialog: boolean;
@@ -117,11 +114,13 @@ interface TransactionCreateFormData {
     description: string,
     price: number
   };
-  users: User[];
 }
 
 export default defineComponent({
   name: 'TransactionCreateForm',
+  props: {
+    users: { type: Array as () => User[], required: true}
+  },
   data(): TransactionCreateFormData {
     return {
       createDialog: false,
@@ -132,7 +131,6 @@ export default defineComponent({
         description: '',
         price: 0
       },
-      users: [],
     };
   },
   emits: {
@@ -149,7 +147,6 @@ export default defineComponent({
     async openDialog() {
       try {
         this.loadingUsers = true;
-        this.users = await fetchUsers();
       } catch (e) {
         console.error('Error:', e)
       } finally {

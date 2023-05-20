@@ -1,15 +1,16 @@
 <template>
   <TitleBar title="Transactions" />
-  <CRUDTable
+  <TransactionFilter @filter-changed="handleFilterChange" />
+  <TransactionsTable
       title="Transactions Overview"
-      :items="transactions"
-      :headers="headers"
-      @delete-item="deleteTransaction"
+      :transactions="transactions"
+      @edit-transaction="editTransaction"
+      @delete-transaction="deleteTransaction"
   >
     <template v-slot:createForm>
-      <TransactionCreateForm @add-transaction="addTransaction" />
+      <TransactionCreateForm :users="users" @add-transaction="addTransaction" />
     </template>
-  </CRUDTable>
+  </TransactionsTable>
   <ConfirmDialog ref="confirm" />
 </template>
 
@@ -17,42 +18,43 @@
 import {defineComponent} from 'vue';
 import TitleBar from '@/components/common/TitleBar.vue';
 import Transaction from '@/entities/Transaction';
-import {fetchApiTransactions, postApiTransaction} from '@/api/TransactionApi';
+import TransactionApi from '@/api/TransactionApi';
 import User from '@/entities/User';
-import {fetchUsers} from '@/api/UserApi';
-import CRUDTable, {CrudTableHeader} from '@/components/common/CRUDTable.vue';
-import TransactionCreateForm from '@/components/transactions/TransactionCreateForm.vue';
+import UserApi from '@/api/UserApi';
 import TransactionForCreation from '@/models/TransactionForCreation';
 import {getDateString} from '../../utils/utils';
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
+import TransactionFilter from '@/components/transactions/TransactionFilter.vue';
+import {YearMonthFilter} from '@/types/YearMonthFilter';
+import TransactionsTable from '@/components/transactions/TransactionsTable.vue';
+import TransactionCreateForm from '@/components/transactions/TransactionCreateForm.vue';
 
 interface TransactionsData {
   transactions: Transaction[];
   users: User[],
-  headers: CrudTableHeader;
+  filter: YearMonthFilter;
 }
+
+const userApi = new UserApi();
+const transactionApi = new TransactionApi();
 
 export default defineComponent({
   name: 'Transactions',
   components: {
-    ConfirmDialog,
-    CRUDTable,
     TransactionCreateForm,
+    TransactionsTable,
+    TransactionFilter,
+    ConfirmDialog,
     TitleBar,
   },
   data(): TransactionsData {
     return {
       transactions: [],
       users: [],
-      headers: [
-        {title: 'Id', align: 'start', key: 'id', width: '5%'},
-        {title: 'Date', align: 'start', key: 'date', width: '5%'},
-        {title: 'Description', align: 'start', key: 'description'},
-        {title: 'User', align: 'start', key: 'user.name'},
-        {title: 'Price', align: 'start', key: 'price'},
-        {title: 'Settled', align:'start', key: 'isSettled'},
-        {title: 'Actions', align: 'start', key: 'actions', sortable: false, width: '10%'},
-      ]
+      filter: {
+        month: new Date().getMonth(),
+        year: new Date().getFullYear(),
+      }
     }
   },
   created() {
@@ -64,7 +66,7 @@ export default defineComponent({
     async fetchTransactions(): Promise<void> {
       this.transactions = [];
       try {
-        this.transactions = await fetchApiTransactions();
+        this.transactions = await transactionApi.getFiltered(this.filter.month, this.filter.year);
       } catch (e) {
         console.error('Error:', e);
       }
@@ -72,18 +74,21 @@ export default defineComponent({
     async fetchUsers(): Promise<void> {
       this.users = [];
       try {
-        this.users = await fetchUsers();
+        this.users = await userApi.get();
       } catch (e) {
         console.error('Error:', e);
       }
     },
     async addTransaction(newTransaction: TransactionForCreation): Promise<void> {
       try {
-        const transaction = await postApiTransaction(newTransaction);
+        const transaction = await transactionApi.add(newTransaction);
         this.transactions.push(transaction);
       } catch (e) {
         console.error(e);
       }
+    },
+    editTransaction(id: number): void {
+      console.log(`Edit transaction ${id}`)
     },
     async deleteTransaction(id: number): Promise<void> {
       if (await this.$refs.confirm.open(
@@ -92,8 +97,15 @@ export default defineComponent({
           'Delete',
           'error'
       )) {
-        this.transactions = this.transactions.filter(t => t.id !== id);
+        if (await transactionApi.delete(id)) {
+          this.transactions = this.transactions.filter(t => t.id !== id);
+        }
       }
+    },
+    handleFilterChange(month: number, year: number) {
+      this.filter.year = year;
+      this.filter.month = month;
+      this.fetchTransactions();
     }
   }
 });
