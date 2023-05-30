@@ -1,5 +1,6 @@
 import Transaction from '@/entities/Transaction';
 import TransactionForCreation from '@/models/TransactionForCreation';
+import Settlement from '@/entities/Settlement';
 
 export default class TransactionApi {
   private path = '/api/v1/transaction';
@@ -52,6 +53,14 @@ export default class TransactionApi {
     const method = 'DELETE';
     const response = await fetch(`${this.path}/${id}`, { method });
     return response.ok;
+  }
+
+  public async getSettlements(): Promise<Settlement[]> {
+    const response = await fetch(`${this.path}/settlement`);
+    if (!response.ok) {
+      throw new Error(`failed to post API on path ${this.path}/settlement`);
+    }
+    return (await response.json()) as Settlement[];
   }
 
   private getDefaultHeaders(): Headers {

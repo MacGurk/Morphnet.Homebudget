@@ -16,7 +16,7 @@ import User from '@/components/users/User.vue';
 import Home from '@/components/Home/Home.vue';
 import NotFound from '@/components/common/NotFound.vue';
 import Login from '@/components/common/Login.vue';
-import Settle from '@/components/settle/Settle.vue';
+import Settlement from '@/components/settle/Settlement.vue';
 
 const vuetify = createVuetify({
   components: {
@@ -40,7 +40,7 @@ const routes = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   { path: '/', name: 'Home', component: Home },
   { path: '/transactions', name: 'Transactions', component: Transactions },
-  { path: '/settle', name: 'Settle', component: Settle },
+  { path: '/settlement', name: 'Settlement', component: Settlement },
   { path: '/users', name: 'Users', component: Users },
   { path: '/users/:id', name: 'User', component: User },
   { path: '/login', name: 'Login', component: Login },

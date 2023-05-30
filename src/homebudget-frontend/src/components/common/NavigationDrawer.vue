@@ -15,9 +15,9 @@
       ></v-list-item>
       <v-list-item
           prepend-icon="mdi-handshake"
-          title="Settle"
-          value="settle"
-          to="/settle"
+          title="Settlement"
+          value="settlement"
+          to="/settlement"
       ></v-list-item>
       <v-list-item
           prepend-icon="mdi-account"
