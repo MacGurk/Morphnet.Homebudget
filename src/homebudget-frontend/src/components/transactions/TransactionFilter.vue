@@ -22,7 +22,7 @@
   </div>
   <div class="d-flex justify-space-evenly ma-3">
     <div
-        class="month-box border border-secondary flex-column flex-grow-1 text-center py-2"
+        class="month-box border v-table__wrapper flex-column flex-grow-1 text-center py-2"
         :class="monthActive(index)"
         v-bind:key="index" v-for="(month, index) in allMonths"
         @click="changeMonth(index)"
@@ -76,7 +76,7 @@ export default defineComponent({
       this.month = month;
     },
     monthActive(index: number) {
-      return this.month === index ? 'bg-primary' : '';
+      return this.month === index ? 'bg-primary' : 'monthbox-bg';
     }
   },
   emits: ['filterChanged'],
@@ -100,5 +100,9 @@ export default defineComponent({
   }
   .month-box:last-of-type {
     border-radius: 0 15px 15px 0;
+  }
+  
+  .monthbox-bg {
+    background-color: rgb(var(--v-theme-surface));
   }
 </style>
