@@ -52,28 +52,28 @@ export default defineComponent({
   props: {
     user: {type: Object as PropType<User>, required: true}
   },
-  setup(props) {
-    const state: UserDetailState = reactive({
+  data(): UserDetailState {
+    return {
       userLoaded: false,
       transactions: []
-    });
-    
-    watch(() => props.user, () => {
-      state.userLoaded = false;
-      state.transactions = [];
-      
-      if (props.user.id) {
-        fetchTransactionsOfUser(props.user.id);
-      }
-    }, {immediate: true});
-    
-    async function fetchTransactionsOfUser(userId: number) {
-      state.transactions = await transactionApi.getByUser(userId);
-      state.userLoaded = true;
     }
-    
-    return {
-      ...toRefs(state)
+  },
+  watch: {
+    user: {
+      handler(newUser: User) {
+        this.userLoaded = false;
+        this.transactions = [];
+
+        if (newUser.id) {
+          this.fetchTransactionsOfUser(newUser.id);
+        }
+      }, immediate: true
+    }
+  },
+  methods: {
+    async fetchTransactionsOfUser(userId: number) {
+      this.transactions = await transactionApi.getByUser(userId);
+      this.userLoaded = true;
     }
   }
 });
