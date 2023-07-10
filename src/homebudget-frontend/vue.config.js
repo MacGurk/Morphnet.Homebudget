@@ -15,7 +15,7 @@ const certificateName = certificateArg
 
 if (!certificateName) {
   console.error(
-    'Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.'
+    'Invalid certificate name. Run this script in the context of an npm/yarn script or pass --name=<<app>> explicitly.',
   );
   process.exit(-1);
 }
@@ -25,9 +25,12 @@ const keyFilePath = path.join(baseFolder, `${certificateName}.key`);
 
 module.exports = {
   devServer: {
-    https: {
-      key: fs.readFileSync(keyFilePath),
-      cert: fs.readFileSync(certFilePath),
+    server: {
+      type: 'https',
+      options: {
+        key: fs.readFileSync(keyFilePath),
+        cert: fs.readFileSync(certFilePath),
+      },
     },
     proxy: 'https://localhost:5001/',
     port: 5002,
