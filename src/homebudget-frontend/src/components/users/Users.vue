@@ -1,15 +1,16 @@
 <template>
   <TitleBar>Users</TitleBar>
-  <UserTable 
-      :users="users"
-      @delete-user="deleteUser"
-      @edit-user="editUser"
+  <UserTable
+    :users="users"
+    @add-user="addUser"
+    @delete-user="deleteUser"
+    @edit-user="editUser"
   ></UserTable>
   <ConfirmDialog ref="confirm" />
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import TitleBar from '@/components/common/TitleBar.vue';
 import User from '@/entities/User';
 import UserApi from '@/api/UserApi';
@@ -29,13 +30,13 @@ export default defineComponent({
   data(): UsersData {
     return {
       users: [],
-      loading: false
+      loading: false,
     };
   },
   components: {
     UserTable,
     ConfirmDialog,
-    TitleBar
+    TitleBar,
   },
   created() {
     this.fetchUsers();
@@ -62,21 +63,23 @@ export default defineComponent({
       console.log(`Edit user: ${id}`);
     },
     async deleteUser(id: number): Promise<void> {
-      const deleteUser = this.users.find(u => u.id === id);
+      const deleteUser = this.users.find((u) => u.id === id);
       if (!deleteUser) {
         return;
       }
-      if (await this.$refs.confirm.open(
+      if (
+        await this.$refs.confirm.open(
           `Delete user ${deleteUser.name}`,
           `Do you really want to delete the user '${deleteUser.name}'?`,
           'Delete',
-          'error'
-      )) {
+          'error',
+        )
+      ) {
         if (await userApi.delete(id)) {
-          this.users = this.users.filter(user => user.id !== id);
+          this.users = this.users.filter((user) => user.id !== id);
         }
       }
-    }
+    },
   },
 });
 </script>
