@@ -70,6 +70,11 @@ namespace HomeBudget.API.Services
             await _context.SaveChangesAsync();
         }
 
+        public async Task<IEnumerable<Transaction>> GetTransactionsByIdAsync(List<int> transactionIds)
+        {
+            return await _context.Transactions.Where(t => transactionIds.Contains(t.Id)).ToListAsync();
+        }
+
         public async Task SaveChangedAsync() => await _context.SaveChangesAsync();
     }
 }

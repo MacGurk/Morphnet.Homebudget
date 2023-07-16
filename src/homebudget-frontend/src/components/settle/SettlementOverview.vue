@@ -1,14 +1,25 @@
 <template>
-  <div class="d-flex flex-wrap">
-    <SettlementCard v-for="settlement in this.settlements" v-bind:key="settlement.user.id" :settlement="settlement" @click="handleSettlementChange(settlement.user.id)"></SettlementCard>
-    
+  <div class="ma-16">
+    <div class="d-flex flex-wrap">
+      <SettlementCard
+        v-for="settlement in this.settlements"
+        v-bind:key="settlement.user.id"
+        :settlement="settlement"
+        @click="handleSettlementChange(settlement.user.id)"
+      ></SettlementCard>
+    </div>
+    <v-btn color="primary" @click="settleTransactions">Settle all</v-btn>
   </div>
-  <TransactionsTable :title="`Transactions of ${selectedSettlement.user.name}`" :transactions="this.selectedSettlement.transactions" hide-actions></TransactionsTable>
+  <TransactionsTable
+    v-if="selectedSettlement !== undefined"
+    :title="`Transactions of ${(selectedSettlement as Settlement).user.name}`"
+    :transactions="this.selectedSettlement.transactions"
+    hide-actions
+  ></TransactionsTable>
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
-import User from '@/entities/User';
+import { defineComponent } from 'vue';
 import TransactionApi from '@/api/TransactionApi';
 import Settlement from '@/entities/Settlement';
 import SettlementCard from '@/components/settle/SettlementCard.vue';
@@ -17,7 +28,7 @@ import Transaction from '@/entities/Transaction';
 
 interface SettlementOverviewData {
   settlements: Settlement[];
-  selectedSettlement: Settlement;
+  selectedSettlement: Settlement | undefined;
   transactions: Transaction[];
 }
 
@@ -25,13 +36,18 @@ const transactionApi = new TransactionApi();
 
 export default defineComponent({
   name: 'SettlementOverview',
-  components: {TransactionsTable, SettlementCard},
+  computed: {
+    Settlement() {
+      return Settlement;
+    },
+  },
+  components: { TransactionsTable, SettlementCard },
   data(): SettlementOverviewData {
     return {
-      selectedSettlement: new Settlement(),
+      selectedSettlement: undefined,
       settlements: [],
-      transactions: []
-    }
+      transactions: [],
+    };
   },
   created() {
     this.fetchSettlements();
@@ -42,12 +58,21 @@ export default defineComponent({
       this.selectedSettlement = this.settlements[0];
     },
     handleSettlementChange(userId: number) {
-      this.selectedSettlement = this.settlements.find(x => x.user.id === userId) as Settlement;
-    }
-  }
-})
+      this.selectedSettlement = this.settlements.find(
+        (x) => x.user.id === userId,
+      ) as Settlement;
+    },
+    settleTransactions() {
+      let transactionIds: number[] = [];
+      this.settlements.forEach((settlement) => {
+        settlement.transactions.forEach((transaction) =>
+          transactionIds.push(transaction.id),
+        );
+      });
+      transactionApi.settleTransactions(transactionIds);
+    },
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

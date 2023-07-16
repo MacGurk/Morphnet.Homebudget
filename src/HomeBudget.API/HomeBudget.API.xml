@@ -57,6 +57,12 @@
             <param name="transactionId">The id of the transaction to delete</param>
             <returns>No Content</returns>
         </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.GetSettlementAsync">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
         <member name="T:HomeBudget.API.Controllers.UserController">
             <summary>
             Handle user-related operations

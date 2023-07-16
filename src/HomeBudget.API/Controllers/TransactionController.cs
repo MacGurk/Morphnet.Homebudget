@@ -207,37 +207,72 @@ namespace HomeBudget.API.Controllers
             return NoContent();
         }
         
+        /// <summary>
+        /// Get a list of settlements, calculated for each user and the unsettled transactions
+        /// </summary>
+        /// <returns>A list of settlements</returns>
         [HttpGet("transaction/settlement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Settlement>>> GetSettlementAsync()
         {
-            var unsettledTransaction = await _transactionRepository.GetUnsettledTransactionsAsync();
+            var unsettledTransactions = (await _transactionRepository.GetUnsettledTransactionsAsync()).ToList();
+            var users = (await _userRepository.GetUsersAsync()).ToList();
 
-            var totalUnsettledPrice = unsettledTransaction.Sum(t => t.Price);
-
-            var userGroups = unsettledTransaction.GroupBy(t => t.User);
-
-            // We should use total Users here instead of the count of users with transactions
-            var averageUnsettledPrice = totalUnsettledPrice / userGroups.Count();
+            var splitTotalPrice = unsettledTransactions.Sum(t => t.Price) / users.Count();
+            var userGroups = unsettledTransactions.GroupBy(t => t.User.Id).ToList();
         
             var settlements = new List<Settlement>();
-
-            // Also we should iterate over all Users
-            foreach (var group in userGroups)
+            foreach (var user in users)
             {
-                var totalPrice = group.Sum(x => x.Price);
-                var settlement = new Settlement
+                var group = userGroups.SingleOrDefault(x => x.Key == user.Id);
+                var userDto = _mapper.Map<UserDto>(user);
+                if (group is null)
                 {
-                    User = _mapper.Map<UserDto>(group.Key),
-                    Transactions = _mapper.Map<IReadOnlyCollection<TransactionDto>>(group.ToList()),
-                    Amount = Math.Abs(totalPrice - averageUnsettledPrice),
-                    Receives = totalPrice >= averageUnsettledPrice
-                };
+                    settlements.Add(
+                        new Settlement
+                        {
+                            User = userDto,
+                            Transactions = new List<TransactionDto>(),
+                            Amount = splitTotalPrice,
+                            Receives = false
+                        });
+                    continue;
+                }
+
+                var transactions = group.ToList();
+                var totalUserPrice = transactions.Sum(t => t.Price);
+                settlements.Add(
+                    new Settlement
+                    {
+                        User = userDto,
+                        Transactions = _mapper.Map<IReadOnlyCollection<TransactionDto>>(transactions),
+                        Amount = Math.Abs(totalUserPrice - splitTotalPrice),
+                        Receives = totalUserPrice >= splitTotalPrice
+                    });
             
-                settlements.Add(settlement);
             }
         
             return Ok(settlements);
+        }
+        
+        /// <summary>
+        /// Updates all transactions to be settled by the transaction IDs passed.
+        /// </summary>
+        /// <param name="transactionIds">List of IDs of transactions to be settled</param>
+        /// <returns>No Content</returns>
+        [HttpPut("transaction/settlement")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<IActionResult> SettleTransactions([FromBody] List<int> transactionIds)
+        {
+            var transactions = await _transactionRepository.GetTransactionsByIdAsync(transactionIds);
+            foreach (var transaction in transactions)
+            {
+                transaction.IsSettled = true;
+            }
+
+            await _transactionRepository.SaveChangedAsync();
+
+            return NoContent();
         }
     }
 }

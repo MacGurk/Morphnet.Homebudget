@@ -19,5 +19,6 @@ namespace HomeBudget.API.Services
 
         Task DeleteTransactionAsync(Transaction transaction);
         Task SaveChangedAsync();
+        Task<IEnumerable<Transaction>> GetTransactionsByIdAsync(List<int> transactionIds);
     }
 }

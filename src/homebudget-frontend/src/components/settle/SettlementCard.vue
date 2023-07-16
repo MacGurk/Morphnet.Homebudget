@@ -1,5 +1,5 @@
 <template>
-  <v-card width="400" class="ma-16">
+  <v-card width="200" class="mr-4 mb-4">
     <v-card-title>{{ this.$props.settlement.user.name }}</v-card-title>
     <v-card-text>
       <div v-if="this.$props.settlement.receives">
@@ -19,17 +19,15 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, PropType} from 'vue';
+import { defineComponent, PropType } from 'vue';
 import Settlement from '@/entities/Settlement';
 
 export default defineComponent({
   name: 'SettlementCard',
   props: {
-    settlement: {type: Object as PropType<Settlement>, required: true}
-  }
-})
+    settlement: { type: Object as PropType<Settlement>, required: true },
+  },
+});
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

@@ -15,11 +15,11 @@ export default class Settlement {
     this._user = value;
   }
 
-  get transaction(): Transaction[] {
+  get transactions(): Transaction[] {
     return this._transactions;
   }
 
-  set transaction(value: Transaction[]) {
+  set transactions(value: Transaction[]) {
     this._transactions = value;
   }
 

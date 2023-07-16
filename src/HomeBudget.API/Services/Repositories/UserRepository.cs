@@ -32,6 +32,7 @@ namespace HomeBudget.API.Services
         }
 
         public async Task<bool> UserExistsAsync(int userId) => await _context.Users.AnyAsync(u => u.Id == userId);
+
         public async Task SaveChangesAsync() => await _context.SaveChangesAsync();
     }
 }

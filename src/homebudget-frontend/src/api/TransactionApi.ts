@@ -15,10 +15,10 @@ export default class TransactionApi {
 
   public async getFiltered(
     month: number,
-    year: number
+    year: number,
   ): Promise<Transaction[]> {
     const response = await fetch(
-      this.path + `?month=${month + 1}&year=${year}`
+      this.path + `?month=${month + 1}&year=${year}`,
     );
     if (!response.ok) {
       throw new Error(`failed to fetch API on path ${this.path}`);
@@ -30,7 +30,7 @@ export default class TransactionApi {
     const response = await fetch(`/api/v1/user/${userId}/transaction`);
     if (!response.ok) {
       throw new Error(
-        `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`
+        `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`,
       );
     }
     return (await response.json()) as Transaction[];
@@ -58,9 +58,21 @@ export default class TransactionApi {
   public async getSettlements(): Promise<Settlement[]> {
     const response = await fetch(`${this.path}/settlement`);
     if (!response.ok) {
-      throw new Error(`failed to post API on path ${this.path}/settlement`);
+      throw new Error(`failed to get API on path ${this.path}/settlement`);
     }
     return (await response.json()) as Settlement[];
+  }
+
+  public async settleTransactions(transactionIds: number[]): Promise<void> {
+    const method = 'PUT';
+    const response = await fetch(`${this.path}/settlement`, {
+      method,
+      headers: this.getDefaultHeaders(),
+      body: JSON.stringify(transactionIds),
+    });
+    if (!response.ok) {
+      throw new Error(`failed to put API on path ${this.path}/settlement`);
+    }
   }
 
   private getDefaultHeaders(): Headers {
