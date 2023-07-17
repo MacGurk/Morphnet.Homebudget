@@ -21,6 +21,10 @@ namespace HomeBudget.API.Entities
 
         [Required]
         [MaxLength(128)]
-        public string Password { get; set; } = default!;
+        public byte[] PasswordHash { get; set; } = default!;
+
+        [Required]
+        [MaxLength(128)]
+        public byte[] PasswordSalt { get; set; } = default!;
     }
 }

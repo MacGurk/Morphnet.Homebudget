@@ -1,6 +1,8 @@
 using System.Reflection;
 using HomeBudget.API.DbContexts;
 using HomeBudget.API.Services;
+using HomeBudget.API.Services.Repositories;
+using HomeBudget.API.Services.Utils;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -79,6 +81,8 @@ builder.Services.AddApiVersioning(options =>
     options.DefaultApiVersion = new ApiVersion(1, 0);
     options.ReportApiVersions = true;
 });
+
+builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Auth"));
 
 var app = builder.Build();
 

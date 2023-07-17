@@ -5,6 +5,7 @@ using HomeBudget.API.Models.Settlement;
 using HomeBudget.API.Models.Transaction;
 using HomeBudget.API.Models.User;
 using HomeBudget.API.Services;
+using HomeBudget.API.Services.Repositories;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -18,9 +19,9 @@ namespace HomeBudget.API.Controllers
     [ApiController]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransactionRepository _transactionRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
+        private readonly ITransactionRepository transactionRepository;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
         const int MaxTransactionPageSize = 100;
 
         public TransactionController(
@@ -28,9 +29,9 @@ namespace HomeBudget.API.Controllers
             IMapper mapper,
             IUserRepository userRepository)
         {
-            this._transactionRepository = transactionRepository;
-            _mapper = mapper;
-            _userRepository = userRepository;
+            this.transactionRepository = transactionRepository;
+            this.mapper = mapper;
+            this.userRepository = userRepository;
         }
 
         /// <summary>
@@ -57,11 +58,11 @@ namespace HomeBudget.API.Controllers
             }
 
             var (transactionEntities, paginationMetadata) =
-                await _transactionRepository.GetTransactionsAsync(searchQuery, month, year, pageNumber, pageSize);
+                await transactionRepository.GetTransactionsAsync(searchQuery, month, year, pageNumber, pageSize);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
-            return Ok(_mapper.Map<IEnumerable<TransactionDto>>(transactionEntities));
+            return Ok(mapper.Map<IEnumerable<TransactionDto>>(transactionEntities));
         }
 
         /// <summary>
@@ -74,8 +75,8 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransactionDto>> GetTransactionAsync(int transactionId)
         {
-            var transaction = await _transactionRepository.GetTransactionByIdAsync(transactionId);
-            return Ok(_mapper.Map<TransactionDto>(transaction));
+            var transaction = await transactionRepository.GetTransactionByIdAsync(transactionId);
+            return Ok(mapper.Map<TransactionDto>(transaction));
         }
 
         [HttpGet("user/{userId}/transaction")]
@@ -84,14 +85,14 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync([FromRoute]int userId)
         {
-            if (!await _userRepository.UserExistsAsync(userId))
+            if (!await userRepository.UserExistsAsync(userId))
             {
                 return BadRequest();
             }
 
-            var transactions = await _transactionRepository.GetTransactionsByUserAsync(userId);
+            var transactions = await transactionRepository.GetTransactionsByUserAsync(userId);
 
-            return Ok(_mapper.Map<IEnumerable<TransactionDto>>(transactions));
+            return Ok(mapper.Map<IEnumerable<TransactionDto>>(transactions));
 
         }
 
@@ -105,19 +106,19 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
         {
-            var user = await _userRepository.GetUserByIdAsync(transaction.UserId);
+            var user = await userRepository.GetUserByIdAsync(transaction.UserId);
             
             if (user == null)
             {
                 return BadRequest();
             }
 
-            var transactionToAdd = _mapper.Map<Transaction>(transaction);
+            var transactionToAdd = mapper.Map<Transaction>(transaction);
             transactionToAdd.User = user;
 
-            await _transactionRepository.AddTransactionAsync(transactionToAdd);
+            await transactionRepository.AddTransactionAsync(transactionToAdd);
 
-            var createdTransaction = _mapper.Map<TransactionDto>(transactionToAdd);
+            var createdTransaction = mapper.Map<TransactionDto>(transactionToAdd);
             return CreatedAtRoute(
                 "GetTransaction",
                 new { transactionId = createdTransaction.Id },
@@ -136,16 +137,16 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateTransactionAsync(int transactionId, TransactionForUpdateDto transaction)
         {
-            var transactionEntity = await _transactionRepository.GetTransactionByIdAsync(transactionId);
+            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
 
             if (transactionEntity == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(transaction, transactionEntity);
+            mapper.Map(transaction, transactionEntity);
 
-            await _transactionRepository.SaveChangedAsync();
+            await transactionRepository.SaveChangedAsync();
 
             return NoContent();
         }
@@ -164,14 +165,14 @@ namespace HomeBudget.API.Controllers
             int transactionId,
             JsonPatchDocument<TransactionForUpdateDto> patchDocument)
         {
-            var transactionEntity = await _transactionRepository.GetTransactionByIdAsync(transactionId);
+            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
 
             if (transactionEntity == null)
             {
                 return NotFound();
             }
 
-            var transactionToPatch = _mapper.Map<TransactionForUpdateDto>(transactionEntity);
+            var transactionToPatch = mapper.Map<TransactionForUpdateDto>(transactionEntity);
 
             patchDocument.ApplyTo(transactionToPatch, ModelState);
 
@@ -180,8 +181,8 @@ namespace HomeBudget.API.Controllers
                 return BadRequest(ModelState);
             }
 
-            _mapper.Map(transactionToPatch, transactionEntity);
-            await _transactionRepository.SaveChangedAsync();
+            mapper.Map(transactionToPatch, transactionEntity);
+            await transactionRepository.SaveChangedAsync();
 
             return NoContent();
         }
@@ -196,13 +197,13 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteTransaction(int transactionId)
         {
-            var transactionEntity = await _transactionRepository.GetTransactionByIdAsync(transactionId);
+            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
             if (transactionEntity == null)
             {
                 return NotFound();
             }
 
-            await _transactionRepository.DeleteTransactionAsync(transactionEntity);
+            await transactionRepository.DeleteTransactionAsync(transactionEntity);
 
             return NoContent();
         }
@@ -215,8 +216,8 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Settlement>>> GetSettlementAsync()
         {
-            var unsettledTransactions = (await _transactionRepository.GetUnsettledTransactionsAsync()).ToList();
-            var users = (await _userRepository.GetUsersAsync()).ToList();
+            var unsettledTransactions = (await transactionRepository.GetUnsettledTransactionsAsync()).ToList();
+            var users = (await userRepository.GetUsersAsync()).ToList();
 
             var splitTotalPrice = unsettledTransactions.Sum(t => t.Price) / users.Count();
             var userGroups = unsettledTransactions.GroupBy(t => t.User.Id).ToList();
@@ -225,7 +226,7 @@ namespace HomeBudget.API.Controllers
             foreach (var user in users)
             {
                 var group = userGroups.SingleOrDefault(x => x.Key == user.Id);
-                var userDto = _mapper.Map<UserDto>(user);
+                var userDto = mapper.Map<UserDto>(user);
                 if (group is null)
                 {
                     settlements.Add(
@@ -245,7 +246,7 @@ namespace HomeBudget.API.Controllers
                     new Settlement
                     {
                         User = userDto,
-                        Transactions = _mapper.Map<IReadOnlyCollection<TransactionDto>>(transactions),
+                        Transactions = mapper.Map<IReadOnlyCollection<TransactionDto>>(transactions),
                         Amount = Math.Abs(totalUserPrice - splitTotalPrice),
                         Receives = totalUserPrice >= splitTotalPrice
                     });
@@ -264,13 +265,13 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> SettleTransactions([FromBody] List<int> transactionIds)
         {
-            var transactions = await _transactionRepository.GetTransactionsByIdAsync(transactionIds);
+            var transactions = await transactionRepository.GetTransactionsByIdAsync(transactionIds);
             foreach (var transaction in transactions)
             {
                 transaction.IsSettled = true;
             }
 
-            await _transactionRepository.SaveChangedAsync();
+            await transactionRepository.SaveChangedAsync();
 
             return NoContent();
         }

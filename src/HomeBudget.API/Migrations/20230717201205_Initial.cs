@@ -23,7 +23,8 @@ namespace HomeBudget.API.Migrations
                         .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(type: "varchar(50)", maxLength: 50, nullable: false),
                     Email = table.Column<string>(type: "varchar(70)", maxLength: 70, nullable: false),
-                    Password = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false)
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(128)", maxLength: 128, nullable: false)
                 },
                 constraints: table =>
                 {

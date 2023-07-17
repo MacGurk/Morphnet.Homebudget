@@ -1,6 +1,7 @@
 ﻿using HomeBudget.API.Entities;
+using HomeBudget.API.Services.Utils;
 
-namespace HomeBudget.API.Services
+namespace HomeBudget.API.Services.Repositories
 {
     public interface ITransactionRepository
     {

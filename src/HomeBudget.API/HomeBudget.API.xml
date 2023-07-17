@@ -59,9 +59,16 @@
         </member>
         <member name="M:HomeBudget.API.Controllers.TransactionController.GetSettlementAsync">
             <summary>
-            
+            Get a list of settlements, calculated for each user and the unsettled transactions
             </summary>
-            <returns></returns>
+            <returns>A list of settlements</returns>
+        </member>
+        <member name="M:HomeBudget.API.Controllers.TransactionController.SettleTransactions(System.Collections.Generic.List{System.Int32})">
+            <summary>
+            Updates all transactions to be settled by the transaction IDs passed.
+            </summary>
+            <param name="transactionIds">List of IDs of transactions to be settled</param>
+            <returns>No Content</returns>
         </member>
         <member name="T:HomeBudget.API.Controllers.UserController">
             <summary>

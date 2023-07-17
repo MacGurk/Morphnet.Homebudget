@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeBudget.API.Migrations
 {
     [DbContext(typeof(HomeBudgetContext))]
-    [Migration("20230517220910_Initial")]
+    [Migration("20230717201205_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -68,10 +68,15 @@ namespace HomeBudget.API.Migrations
                         .HasMaxLength(50)
                         .HasColumnType("varchar(50)");
 
-                    b.Property<string>("Password")
+                    b.Property<byte[]>("PasswordHash")
                         .IsRequired()
                         .HasMaxLength(128)
-                        .HasColumnType("varchar(128)");
+                        .HasColumnType("varbinary(128)");
+
+                    b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
+                        .HasMaxLength(128)
+                        .HasColumnType("varbinary(128)");
 
                     b.HasKey("Id");
 

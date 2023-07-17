@@ -2,6 +2,7 @@ using AutoMapper;
 using HomeBudget.API.Entities;
 using HomeBudget.API.Models.User;
 using HomeBudget.API.Services;
+using HomeBudget.API.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeBudget.API.Controllers
@@ -14,13 +15,13 @@ namespace HomeBudget.API.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
+        private readonly IUserRepository userRepository;
+        private readonly IMapper mapper;
 
         public UserController(IUserRepository userRepository, IMapper mapper)
         {
-            _userRepository = userRepository;
-            _mapper = mapper;
+            this.userRepository = userRepository;
+            this.mapper = mapper;
         }
 
         /// <summary>
@@ -32,8 +33,8 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
         {
-            var users = await _userRepository.GetUsersAsync();
-            return Ok(_mapper.Map<IEnumerable<UserDto>>(users));
+            var users = await userRepository.GetUsersAsync();
+            return Ok(mapper.Map<IEnumerable<UserDto>>(users));
         }
 
         /// <summary>
@@ -47,14 +48,14 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> GetUser(int userId)
         {
-            var user = await _userRepository.GetUserByIdAsync(userId);
+            var user = await userRepository.GetUserByIdAsync(userId);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(_mapper.Map<UserDto>(user));
+            return Ok(mapper.Map<UserDto>(user));
         }
 
         /// <summary>
@@ -67,10 +68,10 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDto>> CreateUser(UserForCreationDto user)
         {
-            var userToAdd = _mapper.Map<User>(user);
+            var userToAdd = mapper.Map<User>(user);
 
-            await _userRepository.AddUserAsync(userToAdd);
-            var createdUser = _mapper.Map<UserDto>(userToAdd);
+            await userRepository.AddUserAsync(userToAdd, user.Password);
+            var createdUser = mapper.Map<UserDto>(userToAdd);
 
             return CreatedAtRoute("GetUser", new { userId = userToAdd.Id }, createdUser);
         }
@@ -87,15 +88,15 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> UpdateUser(int userId, UserForUpdateDto user)
         {
-            var userEntity = await _userRepository.GetUserByIdAsync(userId);
+            var userEntity = await userRepository.GetUserByIdAsync(userId);
             if (userEntity == null)
             {
                 return NotFound();
             }
 
-            _mapper.Map(userEntity, user);
+            mapper.Map(userEntity, user);
 
-            await _userRepository.SaveChangesAsync();
+            await userRepository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -110,13 +111,13 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteUser(int userId)
         {
-            var userEntity = await _userRepository.GetUserByIdAsync(userId);
+            var userEntity = await userRepository.GetUserByIdAsync(userId);
             if (userEntity == null)
             {
                 return NotFound();
             }
 
-            await _userRepository.DeleteUserAsync(userEntity);
+            await userRepository.DeleteUserAsync(userEntity);
 
             return NoContent();
         }

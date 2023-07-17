@@ -1,25 +1,26 @@
 ﻿using HomeBudget.API.DbContexts;
 using HomeBudget.API.Entities;
+using HomeBudget.API.Services.Utils;
 using Microsoft.EntityFrameworkCore;
 
-namespace HomeBudget.API.Services
+namespace HomeBudget.API.Services.Repositories
 {
     public class TransactionRepository : ITransactionRepository
     {
-        private readonly HomeBudgetContext _context;
+        private readonly HomeBudgetContext context;
 
         public TransactionRepository(HomeBudgetContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
 
-        public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await _context.Transactions.ToListAsync();
+        public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await context.Transactions.ToListAsync();
 
         public async Task<(IEnumerable<Transaction>, PaginationMetadata)> GetTransactionsAsync(string? searchQuery,
             int? month, int? year, int pageNumber, int pageSize)
         {
-            var collection = _context.Transactions as IQueryable<Transaction>;
+            var collection = context.Transactions as IQueryable<Transaction>;
 
             if (!string.IsNullOrEmpty(searchQuery))
             {
@@ -47,34 +48,34 @@ namespace HomeBudget.API.Services
         }
 
         public async Task<Transaction?> GetTransactionByIdAsync(int transactionId) =>
-            await _context.Transactions.FirstOrDefaultAsync(t => t.Id == transactionId);
+            await context.Transactions.FirstOrDefaultAsync(t => t.Id == transactionId);
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByUserAsync(int userId) =>
-            await _context.Transactions.Where(t => t.User.Id == userId).ToListAsync();
+            await context.Transactions.Where(t => t.User.Id == userId).ToListAsync();
 
         public async Task<IEnumerable<Transaction>> GetUnsettledTransactionsAsync() =>
-            await _context.Transactions
+            await context.Transactions
                 .Where(t => t.IsSettled == false)
                 .Include(t => t.User)
                 .ToListAsync();
 
         public async Task AddTransactionAsync(Transaction transaction)
         {
-            _context.Transactions.Add(transaction);
-            await _context.SaveChangesAsync();
+            context.Transactions.Add(transaction);
+            await context.SaveChangesAsync();
         }
 
         public async Task DeleteTransactionAsync(Transaction transaction)
         {
-            _context.Transactions.Remove(transaction);
-            await _context.SaveChangesAsync();
+            context.Transactions.Remove(transaction);
+            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByIdAsync(List<int> transactionIds)
         {
-            return await _context.Transactions.Where(t => transactionIds.Contains(t.Id)).ToListAsync();
+            return await context.Transactions.Where(t => transactionIds.Contains(t.Id)).ToListAsync();
         }
 
-        public async Task SaveChangedAsync() => await _context.SaveChangesAsync();
+        public async Task SaveChangedAsync() => await context.SaveChangesAsync();
     }
 }

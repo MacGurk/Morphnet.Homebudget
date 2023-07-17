@@ -1,4 +1,4 @@
-﻿namespace HomeBudget.API.Services;
+﻿namespace HomeBudget.API.Services.Utils;
 
 public class PaginationMetadata
 {
