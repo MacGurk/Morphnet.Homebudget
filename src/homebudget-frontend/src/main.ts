@@ -1,5 +1,6 @@
 import { createApp } from 'vue';
 import App from './App.vue';
+import router from './router';
 // Vuetify
 import 'vuetify/styles';
 import { createVuetify } from 'vuetify';
@@ -8,15 +9,7 @@ import * as directives from 'vuetify/directives';
 import { VDataTable } from 'vuetify/labs/VDataTable';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import '@mdi/font/css/materialdesignicons.css';
-
-import { createRouter, createWebHistory } from 'vue-router';
-import Transactions from '@/components/transactions/Transactions.vue';
-import Users from '@/components/users/Users.vue';
-import User from '@/components/users/User.vue';
-import Home from '@/components/Home/Home.vue';
-import NotFound from '@/components/common/NotFound.vue';
-import Login from '@/components/common/Login.vue';
-import Settlement from '@/components/settle/Settlement.vue';
+import { createPinia } from 'pinia';
 
 const vuetify = createVuetify({
   components: {
@@ -36,19 +29,6 @@ const vuetify = createVuetify({
   },
 });
 
-const routes = [
-  { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
-  { path: '/', name: 'Home', component: Home },
-  { path: '/transactions', name: 'Transactions', component: Transactions },
-  { path: '/settlement', name: 'Settlement', component: Settlement },
-  { path: '/users', name: 'Users', component: Users },
-  { path: '/users/:id', name: 'User', component: User },
-  { path: '/login', name: 'Login', component: Login },
-];
+const pinia = createPinia();
 
-const router = createRouter({
-  history: createWebHistory(),
-  routes: routes,
-});
-
-createApp(App).use(vuetify).use(router).mount('#app');
+createApp(App).use(vuetify).use(router).use(pinia).mount('#app');
