@@ -25,7 +25,7 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<AuthResponse>> GetTransactions([FromBody] AuthModel auth)
         {
-            var (user, token) = await userRepository.Authenticate(auth.Login, auth.Password);
+            var (user, token) = await userRepository.Authenticate(auth.Username, auth.Password);
 
             if (user is null || token is null)
             {

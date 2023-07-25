@@ -2499,6 +2499,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@vee-validate/yup@npm:^4.10.7":
+  version: 4.10.7
+  resolution: "@vee-validate/yup@npm:4.10.7"
+  dependencies:
+    type-fest: ^3.13.0
+    vee-validate: ^4.10.7
+    yup: ^1.2.0
+  checksum: dc2174720aae1230d3f342a018095fd0cf6a6221bd9c4189f9fc15c536b7a75149c45570e34d0f960319965ab261875b80a4949fda7dfff91f50cac1d2752c39
+  languageName: node
+  linkType: hard
+
 "@vue/babel-helper-vue-jsx-merge-props@npm:^1.4.0":
   version: 1.4.0
   resolution: "@vue/babel-helper-vue-jsx-merge-props@npm:1.4.0"
@@ -6002,6 +6013,7 @@ __metadata:
     "@mdi/font": ^7.1.96
     "@typescript-eslint/eslint-plugin": ^5.4.0
     "@typescript-eslint/parser": ^5.4.0
+    "@vee-validate/yup": ^4.10.7
     "@vue/cli-plugin-babel": ~5.0.0
     "@vue/cli-plugin-eslint": ~5.0.0
     "@vue/cli-plugin-typescript": ~5.0.0
@@ -6021,6 +6033,7 @@ __metadata:
     vue: ^3.3.4
     vue-router: ^4.2.4
     vuetify: ^3.3.7
+    yup: ^1.2.0
   languageName: unknown
   linkType: soft
 
@@ -9076,6 +9089,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"property-expr@npm:^2.0.5":
+  version: 2.0.5
+  resolution: "property-expr@npm:2.0.5"
+  checksum: 4ebe82ce45aaf1527e96e2ab84d75d25217167ec3ff6378cf83a84fb4abc746e7c65768a79d275881602ae82f168f9a6dfaa7f5e331d0fcc83d692770bcce5f1
+  languageName: node
+  linkType: hard
+
 "proxy-addr@npm:~2.0.7":
   version: 2.0.7
   resolution: "proxy-addr@npm:2.0.7"
@@ -10281,6 +10301,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"tiny-case@npm:^1.0.3":
+  version: 1.0.3
+  resolution: "tiny-case@npm:1.0.3"
+  checksum: 3f7a30c39d5b0e1bc097b0b271bec14eb5b836093db034f35a0de26c14422380b50dc12bfd37498cf35b192f5df06f28a710712c87ead68872a9e37ad6f6049d
+  languageName: node
+  linkType: hard
+
 "tmpl@npm:1.0.5":
   version: 1.0.5
   resolution: "tmpl@npm:1.0.5"
@@ -10308,6 +10335,13 @@ __metadata:
   version: 1.0.1
   resolution: "toidentifier@npm:1.0.1"
   checksum: 952c29e2a85d7123239b5cfdd889a0dde47ab0497f0913d70588f19c53f7e0b5327c95f4651e413c74b785147f9637b17410ac8c846d5d4a20a5a33eb6dc3a45
+  languageName: node
+  linkType: hard
+
+"toposort@npm:^2.0.2":
+  version: 2.0.2
+  resolution: "toposort@npm:2.0.2"
+  checksum: d64c74b570391c9432873f48e231b439ee56bc49f7cb9780b505cfdf5cb832f808d0bae072515d93834dd6bceca5bb34448b5b4b408335e4d4716eaf68195dcb
   languageName: node
   linkType: hard
 
@@ -10409,10 +10443,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"type-fest@npm:^2.19.0":
+  version: 2.19.0
+  resolution: "type-fest@npm:2.19.0"
+  checksum: a4ef07ece297c9fba78fc1bd6d85dff4472fe043ede98bd4710d2615d15776902b595abf62bd78339ed6278f021235fb28a96361f8be86ed754f778973a0d278
+  languageName: node
+  linkType: hard
+
 "type-fest@npm:^3.12.0":
   version: 3.13.0
   resolution: "type-fest@npm:3.13.0"
   checksum: f7be142ae1ad0582eafd52d085350799c8cd918c15455896a06c82c147b61f8cea58892bedf1348943478e37740562219375b3b59fd855db99cd2b2766510f98
+  languageName: node
+  linkType: hard
+
+"type-fest@npm:^3.13.0":
+  version: 3.13.1
+  resolution: "type-fest@npm:3.13.1"
+  checksum: c06b0901d54391dc46de3802375f5579868949d71f93b425ce564e19a428a0d411ae8d8cb0e300d330071d86152c3ea86e744c3f2860a42a79585b6ec2fdae8e
   languageName: node
   linkType: hard
 
@@ -10608,6 +10656,18 @@ __metadata:
   peerDependencies:
     vue: ^3.3.4
   checksum: 309c6766b83cf663493767a5e992c4cfb7533881f4eee097a1c4538a7e47be05a919d59f1fbb942bb49b8a8d4d0c92c32a7db799ff81ed2aee260d38467798dc
+  languageName: node
+  linkType: hard
+
+"vee-validate@npm:^4.10.7":
+  version: 4.10.7
+  resolution: "vee-validate@npm:4.10.7"
+  dependencies:
+    "@vue/devtools-api": ^6.5.0
+    type-fest: ^3.13.0
+  peerDependencies:
+    vue: ^3.3.4
+  checksum: 2df59acb51bc7582c930f0047685896062689de9663cccea964acf2d8c14418eeb9ad50f2a482b0acfeab44cc2d2b018945a79d239ec93c0666972cf1b023023
   languageName: node
   linkType: hard
 
@@ -11208,5 +11268,17 @@ __metadata:
     normalize-path: ^1.0.0
     strip-indent: ^2.0.0
   checksum: 6810adaf6be7b6cc115ed9454e5a4e8e0949deecb107d65dc0c196051e862f04d6394ad12fbef0d51e6c730329992ae98625ba82cba5e34775023ddb6dc921b8
+  languageName: node
+  linkType: hard
+
+"yup@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "yup@npm:1.2.0"
+  dependencies:
+    property-expr: ^2.0.5
+    tiny-case: ^1.0.3
+    toposort: ^2.0.2
+    type-fest: ^2.19.0
+  checksum: f0cdceb144e358c6155670f3e27404b65b090cc12594fde6db2699523661e13542aaf87ebe8e542b67f29a5f3f9bc5f23a3a3bb09e17f10d125353d35b841fac
   languageName: node
   linkType: hard

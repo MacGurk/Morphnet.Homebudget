@@ -25,13 +25,14 @@ const router = createRouter({
   routes: routes,
 });
 
-// router.beforeEach(async (to) => {
-//   const authRequired = !publicRoutes.includes(to.path);
-//   const auth = useAuthStore();
-//
-//   if (authRequired) {
-//     return '/login';
-//   }
-// });
+router.beforeEach(async (to) => {
+  const authRequired = !publicRoutes.includes(to.path);
+  const authStore = useAuthStore();
+
+  if (authRequired && !authStore.auth) {
+    authStore.returnUrl = to.fullPath;
+    return '/login';
+  }
+});
 
 export default router;

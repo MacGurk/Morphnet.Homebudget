@@ -10,6 +10,7 @@ import { VDataTable } from 'vuetify/labs/VDataTable';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import '@mdi/font/css/materialdesignicons.css';
 import { createPinia } from 'pinia';
+import { Form } from 'vee-validate';
 
 const vuetify = createVuetify({
   components: {
@@ -31,4 +32,9 @@ const vuetify = createVuetify({
 
 const pinia = createPinia();
 
-createApp(App).use(vuetify).use(router).use(pinia).mount('#app');
+createApp(App)
+  .use(vuetify)
+  .use(router)
+  .component('From', Form)
+  .use(pinia)
+  .mount('#app');

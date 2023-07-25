@@ -20,3 +20,8 @@ export const monthNames = [
 export function getMonthNameString(date: Date): string {
   return monthNames[date.getMonth()];
 }
+
+export function getErrorMessage(error: unknown) {
+  if (error instanceof Error) return error.message;
+  return String(error);
+}
