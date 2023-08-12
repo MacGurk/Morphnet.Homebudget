@@ -2,8 +2,8 @@
   <div class="ma-16">
     <div class="d-flex flex-wrap">
       <SettlementCard
-        v-for="settlement in this.settlements"
-        v-bind:key="settlement.user.id"
+        v-for="settlement in settlements"
+        :key="settlement.user.id"
         :settlement="settlement"
         @click="handleSettlementChange(settlement.user.id)"
       ></SettlementCard>
@@ -13,7 +13,7 @@
   <TransactionsTable
     v-if="selectedSettlement !== undefined"
     :title="`Transactions of ${(selectedSettlement as Settlement).user.name}`"
-    :transactions="this.selectedSettlement.transactions"
+    :transactions="selectedSettlement.transactions"
     hide-actions
   ></TransactionsTable>
 </template>
@@ -25,6 +25,7 @@ import Settlement from '@/entities/Settlement';
 import SettlementCard from '@/components/settle/SettlementCard.vue';
 import TransactionsTable from '@/components/transactions/TransactionsTable.vue';
 import Transaction from '@/entities/Transaction';
+import router from '@/router';
 
 interface SettlementOverviewData {
   settlements: Settlement[];
@@ -36,11 +37,6 @@ const transactionApi = new TransactionApi();
 
 export default defineComponent({
   name: 'SettlementOverview',
-  computed: {
-    Settlement() {
-      return Settlement;
-    },
-  },
   components: { TransactionsTable, SettlementCard },
   data(): SettlementOverviewData {
     return {
@@ -48,6 +44,11 @@ export default defineComponent({
       settlements: [],
       transactions: [],
     };
+  },
+  computed: {
+    Settlement() {
+      return Settlement;
+    },
   },
   created() {
     this.fetchSettlements();
@@ -70,6 +71,7 @@ export default defineComponent({
         );
       });
       transactionApi.settleTransactions(transactionIds);
+      router.push('/');
     },
   },
 });
