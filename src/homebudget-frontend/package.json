@@ -3,9 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "serve": "node aspnetcore-https.js && vue-cli-service serve --host localhost",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "dev": "vite",
+    "build": "vite build",
+    "serve": "vite preview",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore src",
+    "format": "prettier . --write"
   },
   "dependencies": {
     "@vee-validate/yup": "^4.10.7",
@@ -20,59 +22,18 @@
     "yup": "^1.2.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
     "@mdi/font": "^7.1.96",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-plugin-typescript": "~5.0.0",
-    "@vue/cli-service": "~5.0.0",
+    "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-typescript": "^9.1.0",
     "eslint": "^8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-vue": "^9.15.1",
     "prettier": "^3.0.0",
-    "typescript": "<5.0.0"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended",
-      "@vue/typescript",
-      "prettier"
-    ],
-    "parserOptions": {
-      "parser": "@typescript-eslint/parser"
-    },
-    "rules": {
-      "vue/multi-word-component-names": "off",
-      "vue/valid-v-slot": [
-        "error",
-        {
-          "allowModifiers": true
-        }
-      ],
-      "no-unused-vars": [
-        "warn",
-        {
-          "argsIgnorePattern": "^_"
-        }
-      ],
-      "quotes": [
-        2,
-        "single",
-        {
-          "avoidEscape": true
-        }
-      ]
-    }
+    "typescript": "<5.0.0",
+    "vite": "^4.4.9"
   },
   "browserslist": [
     "> 1%",
