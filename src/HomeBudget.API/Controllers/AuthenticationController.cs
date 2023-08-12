@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using HomeBudget.API.Models.Authentication;
 using HomeBudget.API.Models.User;
-using HomeBudget.API.Services;
 using HomeBudget.API.Services.Repositories;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,12 +11,12 @@ namespace HomeBudget.API.Controllers
     [ApiController]
     public class LoginController : ControllerBase
     {
-        private readonly IUserRepository userRepository;
+        private readonly IAuthRepository authRepository;
         private readonly IMapper mapper;
 
-        public LoginController(IUserRepository userRepository, IMapper mapper)
+        public LoginController(IAuthRepository authRepository, IMapper mapper)
         {
-            this.userRepository = userRepository;
+            this.authRepository = authRepository;
             this.mapper = mapper;
         }
 
@@ -25,7 +24,7 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<AuthResponse>> GetTransactions([FromBody] AuthModel auth)
         {
-            var (user, token) = await userRepository.Authenticate(auth.Username, auth.Password);
+            var (user, token) = await authRepository.Authenticate(auth.Username, auth.Password);
 
             if (user is null || token is null)
             {

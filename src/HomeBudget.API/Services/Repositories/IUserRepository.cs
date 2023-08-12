@@ -1,5 +1,4 @@
 ﻿using HomeBudget.API.Entities;
-using HomeBudget.API.Models.Authentication;
 
 namespace HomeBudget.API.Services.Repositories
 {
@@ -16,7 +15,5 @@ namespace HomeBudget.API.Services.Repositories
         Task<bool> UserExistsAsync(int userId);
 
         Task SaveChangesAsync();
-        
-        Task<(User?, string?)> Authenticate(string login, string password);
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using HomeBudget.API.Models.User;
 
 namespace HomeBudget.API.Models.Transaction;
 

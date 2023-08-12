@@ -5,6 +5,7 @@ using HomeBudget.API.Models.Settlement;
 using HomeBudget.API.Models.Transaction;
 using HomeBudget.API.Models.User;
 using HomeBudget.API.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
@@ -16,6 +17,7 @@ namespace HomeBudget.API.Controllers
     [Route("api/v{version:apiVersion}")]
     [ApiVersion("1")]
     [ApiController]
+    [Authorize]
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionRepository transactionRepository;

@@ -5,7 +5,13 @@ export default class UserApi {
   private path = '/api/v1/user';
 
   public async get(): Promise<User[]> {
-    const response = await fetch(this.path);
+    const token =
+      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2OTE4Mzk2NzQsImV4cCI6MTY5MjQ0NDQ3NCwiaWF0IjoxNjkxODM5Njc0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDEiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDIifQ.kufgB67YofqxJ4XqZaqvr-CPMArt01bNVUHeFG-GwDs';
+    const response = await fetch(this.path, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     const users = (await response.json()) as User[];
     return users;
   }

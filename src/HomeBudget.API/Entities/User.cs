@@ -1,7 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using HomeBudget.API.Models;
-using HomeBudget.API.Models.User;
 
 namespace HomeBudget.API.Entities
 {

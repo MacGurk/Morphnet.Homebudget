@@ -1,8 +1,8 @@
 using AutoMapper;
 using HomeBudget.API.Entities;
 using HomeBudget.API.Models.User;
-using HomeBudget.API.Services;
 using HomeBudget.API.Services.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeBudget.API.Controllers
@@ -13,6 +13,7 @@ namespace HomeBudget.API.Controllers
     [Route("api/v{version:apiVersion}/user")]
     [ApiVersion("1")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository userRepository;

@@ -1,5 +1,4 @@
 ﻿using HomeBudget.API.Entities;
-using HomeBudget.API.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudget.API.DbContexts
