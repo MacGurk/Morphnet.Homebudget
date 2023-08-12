@@ -1,23 +1,22 @@
 import User from '@/entities/User';
 import UserForCreation from '@/models/UserForCreation';
+import { useAuthStore } from '@/stores/auth.store';
 
 export default class UserApi {
   private path = '/api/v1/user';
 
   public async get(): Promise<User[]> {
-    const token =
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjUiLCJuYmYiOjE2OTE4Mzk2NzQsImV4cCI6MTY5MjQ0NDQ3NCwiaWF0IjoxNjkxODM5Njc0LCJpc3MiOiJodHRwOi8vbG9jYWxob3N0OjUwMDEiLCJhdWQiOiJodHRwOi8vbG9jYWxob3N0OjUwMDIifQ.kufgB67YofqxJ4XqZaqvr-CPMArt01bNVUHeFG-GwDs';
     const response = await fetch(this.path, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+      headers: this.getDefaultHeaders(),
     });
     const users = (await response.json()) as User[];
     return users;
   }
 
   public async getById(id: number): Promise<User> {
-    const response = await fetch(`${this.path}/${id}`);
+    const response = await fetch(`${this.path}/${id}`, {
+      headers: this.getDefaultHeaders(),
+    });
     if (!response.ok) {
       throw new Error(`Failed to fetch API on path ${this.path}/${id}`);
     }
@@ -28,9 +27,7 @@ export default class UserApi {
     const method = 'POST';
     const response = await fetch(this.path, {
       method,
-      headers: {
-        'Content-Type': 'application/json',
-      },
+      headers: this.getDefaultHeaders(),
       body: JSON.stringify(user),
     });
     const addedUser = (await response.json()) as User;
@@ -39,7 +36,22 @@ export default class UserApi {
 
   public async delete(id: number): Promise<boolean> {
     const method = 'DELETE';
-    const response = await fetch(`${this.path}/${id}`, { method });
+    const response = await fetch(`${this.path}/${id}`, {
+      method,
+      headers: this.getDefaultHeaders(),
+    });
     return response.status == 204;
+  }
+
+  private getDefaultHeaders(): Headers {
+    const { auth } = useAuthStore();
+    const isLoggedIn = !!auth?.token;
+
+    const headers = new Headers();
+    if (isLoggedIn) {
+      headers.set('Authorization', `Bearer ${auth.token}`);
+    }
+    headers.set('Content-Type', 'application/json');
+    return headers;
   }
 }

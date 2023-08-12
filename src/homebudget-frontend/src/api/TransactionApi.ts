@@ -1,12 +1,15 @@
 import Transaction from '@/entities/Transaction';
 import TransactionForCreation from '@/models/TransactionForCreation';
 import Settlement from '@/entities/Settlement';
+import { useAuthStore } from '@/stores/auth.store';
 
 export default class TransactionApi {
   private path = '/api/v1/transaction';
 
   public async get(): Promise<Transaction[]> {
-    const response = await fetch(this.path);
+    const response = await fetch(this.path, {
+      headers: this.getDefaultHeaders(),
+    });
     if (!response.ok) {
       throw new Error(`failed to fetch API on path ${this.path}`);
     }
@@ -19,6 +22,9 @@ export default class TransactionApi {
   ): Promise<Transaction[]> {
     const response = await fetch(
       this.path + `?month=${month + 1}&year=${year}`,
+      {
+        headers: this.getDefaultHeaders(),
+      },
     );
     if (!response.ok) {
       throw new Error(`failed to fetch API on path ${this.path}`);
@@ -27,7 +33,9 @@ export default class TransactionApi {
   }
 
   public async getByUser(userId: number): Promise<Transaction[]> {
-    const response = await fetch(`/api/v1/user/${userId}/transaction`);
+    const response = await fetch(`/api/v1/user/${userId}/transaction`, {
+      headers: this.getDefaultHeaders(),
+    });
     if (!response.ok) {
       throw new Error(
         `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`,
@@ -51,12 +59,17 @@ export default class TransactionApi {
 
   public async delete(id: number): Promise<boolean> {
     const method = 'DELETE';
-    const response = await fetch(`${this.path}/${id}`, { method });
+    const response = await fetch(`${this.path}/${id}`, {
+      method,
+      headers: this.getDefaultHeaders(),
+    });
     return response.ok;
   }
 
   public async getSettlements(): Promise<Settlement[]> {
-    const response = await fetch(`${this.path}/settlement`);
+    const response = await fetch(`${this.path}/settlement`, {
+      headers: this.getDefaultHeaders(),
+    });
     if (!response.ok) {
       throw new Error(`failed to get API on path ${this.path}/settlement`);
     }
@@ -76,8 +89,14 @@ export default class TransactionApi {
   }
 
   private getDefaultHeaders(): Headers {
-    return new Headers({
-      'Content-Type': 'application/json',
-    });
+    const { auth } = useAuthStore();
+    const isLoggedIn = !!auth?.token;
+
+    const headers = new Headers();
+    if (isLoggedIn) {
+      headers.set('Authorization', `Bearer ${auth.token}`);
+    }
+    headers.set('Content-Type', 'application/json');
+    return headers;
   }
 }
