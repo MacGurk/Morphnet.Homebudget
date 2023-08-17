@@ -14,8 +14,15 @@ namespace HomeBudget.API.Services.Repositories
             this.context = context;
         }
 
-        public async Task<IEnumerable<User>> GetUsersAsync() => await context.Users.ToListAsync();
-
+        public async Task<IEnumerable<User>> GetUsersAsync(bool isContributorFilter = false)
+        {
+            var collection = context.Users as IQueryable<User>;
+            if (isContributorFilter)
+            {
+                collection = collection.Where(u => u.IsContributor);
+            }
+            return await collection.ToListAsync();
+        }
 
         public async Task<User?> GetUserByIdAsync(int userId) =>
             await context.Users.FirstOrDefaultAsync(u => u.Id == userId);

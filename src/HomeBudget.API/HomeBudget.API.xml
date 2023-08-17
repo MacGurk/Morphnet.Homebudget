@@ -75,11 +75,12 @@
             Handle user-related operations
             </summary>
         </member>
-        <member name="M:HomeBudget.API.Controllers.UserController.GetUsers">
+        <member name="M:HomeBudget.API.Controllers.UserController.GetUsers(System.Boolean)">
             <summary>
-            Get all users
+            Get all or only contributing users
             </summary>
-            <returns>A list of all users</returns>
+            <param name="isContributor">Filter for only contributing users</param>
+            <returns>A list of users</returns>
         </member>
         <member name="M:HomeBudget.API.Controllers.UserController.GetUser(System.Int32)">
             <summary>
@@ -172,6 +173,11 @@
             Email address of the user
             </summary>
         </member>
+        <member name="P:HomeBudget.API.Models.User.UserDto.IsContributor">
+            <summary>
+            Is the user a contributor
+            </summary>
+        </member>
         <member name="T:HomeBudget.API.Models.User.UserForCreationDto">
             <summary>
             User object to create a new user
@@ -192,6 +198,11 @@
             Password of the user
             </summary>
         </member>
+        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.IsContributor">
+            <summary>
+            Is the user a contributor
+            </summary>
+        </member>
         <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Name">
             <summary>
             Name of the user
@@ -205,6 +216,11 @@
         <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Password">
             <summary>
             Password of the user
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.IsContributor">
+            <summary>
+            Is the user a contributor
             </summary>
         </member>
     </members>

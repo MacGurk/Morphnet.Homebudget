@@ -26,4 +26,9 @@ public class UserForCreationDto
     /// </summary>
     [Required(ErrorMessage = "You have to provide a password.")]
     public string Password { get; set; } = default!;
+
+    /// <summary>
+    /// Is the user a contributor
+    /// </summary>
+    public bool IsContributor { get; set; } = true;
 }

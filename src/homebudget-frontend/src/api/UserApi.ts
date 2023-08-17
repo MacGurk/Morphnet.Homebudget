@@ -13,6 +13,14 @@ export default class UserApi {
     return users;
   }
 
+  public async getContributors(): Promise<User[]> {
+    const response = await fetch(`${this.path}?isContributor=true`, {
+      headers: this.getDefaultHeaders(),
+    });
+    const users = (await response.json()) as User[];
+    return users;
+  }
+
   public async getById(id: number): Promise<User> {
     const response = await fetch(`${this.path}/${id}`, {
       headers: this.getDefaultHeaders(),

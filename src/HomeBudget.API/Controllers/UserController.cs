@@ -26,15 +26,17 @@ namespace HomeBudget.API.Controllers
         }
 
         /// <summary>
-        /// Get all users
+        /// Get all or only contributing users
         /// </summary>
-        /// <returns>A list of all users</returns>
+        /// <param name="isContributor">Filter for only contributing users</param>
+        /// <returns>A list of users</returns>
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers()
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery(Name = "isContributor")] bool isContributor = false)
         {
-            var users = await userRepository.GetUsersAsync();
+            var users = await userRepository.GetUsersAsync(isContributor);
+            
             return Ok(mapper.Map<IEnumerable<UserDto>>(users));
         }
 

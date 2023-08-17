@@ -24,5 +24,8 @@ namespace HomeBudget.API.Entities
         [Required]
         [MaxLength(128)]
         public byte[] PasswordSalt { get; set; } = default!;
+        
+        [Required]
+        public bool IsContributor { get; set; }
     }
 }

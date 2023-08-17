@@ -1,7 +1,18 @@
-﻿export default class User {
+﻿import { boolean, number, string } from 'yup';
+
+export default class User {
   private _id: number;
   private _name: string;
   private _email: string;
+  private _isContributor: boolean;
+
+  get isContributor(): boolean {
+    return this._isContributor;
+  }
+
+  set isContributor(value: boolean) {
+    this._isContributor = value;
+  }
 
   get id(): number {
     return this._id;

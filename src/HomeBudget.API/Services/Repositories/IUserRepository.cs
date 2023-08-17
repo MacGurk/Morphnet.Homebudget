@@ -4,7 +4,7 @@ namespace HomeBudget.API.Services.Repositories
 {
     public interface IUserRepository
     {
-        Task<IEnumerable<User>> GetUsersAsync();
+        Task<IEnumerable<User>> GetUsersAsync(bool isContributorFilter = false);
 
         Task<User?> GetUserByIdAsync(int userId);
 

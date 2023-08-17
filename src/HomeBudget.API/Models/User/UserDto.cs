@@ -19,4 +19,9 @@ public class UserDto
     /// Email address of the user
     /// </summary>
     public string Email { get; set; } = default!;
+
+    /// <summary>
+    /// Is the user a contributor
+    /// </summary>
+    public bool IsContributor { get; set; }
 }

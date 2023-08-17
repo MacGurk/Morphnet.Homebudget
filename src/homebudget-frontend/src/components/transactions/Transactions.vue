@@ -2,12 +2,12 @@
   <TitleBar>Transactions</TitleBar>
   <TransactionFilter @filter-changed="handleFilterChange" />
   <TransactionsTable
-      title="Transactions Overview"
-      :transactions="transactions"
-      @edit-transaction="editTransaction"
-      @delete-transaction="deleteTransaction"
+    title="Transactions Overview"
+    :transactions="transactions"
+    @edit-transaction="editTransaction"
+    @delete-transaction="deleteTransaction"
   >
-    <template v-slot:createForm>
+    <template #createForm>
       <TransactionCreateForm :users="users" @add-transaction="addTransaction" />
     </template>
   </TransactionsTable>
@@ -15,23 +15,23 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 import TitleBar from '@/components/common/TitleBar.vue';
 import Transaction from '@/entities/Transaction';
 import TransactionApi from '@/api/TransactionApi';
 import User from '@/entities/User';
 import UserApi from '@/api/UserApi';
 import TransactionForCreation from '@/models/TransactionForCreation';
-import {getDateString} from '../../utils/utils';
+import { getDateString } from '../../utils/utils';
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 import TransactionFilter from '@/components/transactions/TransactionFilter.vue';
-import {YearMonthFilter} from '@/types/YearMonthFilter';
+import { YearMonthFilter } from '@/types/YearMonthFilter';
 import TransactionsTable from '@/components/transactions/TransactionsTable.vue';
 import TransactionCreateForm from '@/components/transactions/TransactionCreateForm.vue';
 
 interface TransactionsData {
   transactions: Transaction[];
-  users: User[],
+  users: User[];
   filter: YearMonthFilter;
 }
 
@@ -54,8 +54,8 @@ export default defineComponent({
       filter: {
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
-      }
-    }
+      },
+    };
   },
   created() {
     this.fetchTransactions();
@@ -66,7 +66,10 @@ export default defineComponent({
     async fetchTransactions(): Promise<void> {
       this.transactions = [];
       try {
-        this.transactions = await transactionApi.getFiltered(this.filter.month, this.filter.year);
+        this.transactions = await transactionApi.getFiltered(
+          this.filter.month,
+          this.filter.year,
+        );
       } catch (e) {
         console.error('Error:', e);
       }
@@ -74,12 +77,14 @@ export default defineComponent({
     async fetchUsers(): Promise<void> {
       this.users = [];
       try {
-        this.users = await userApi.get();
+        this.users = await userApi.getContributors();
       } catch (e) {
         console.error('Error:', e);
       }
     },
-    async addTransaction(newTransaction: TransactionForCreation): Promise<void> {
+    async addTransaction(
+      newTransaction: TransactionForCreation,
+    ): Promise<void> {
       try {
         const transaction = await transactionApi.add(newTransaction);
         this.transactions.push(transaction);
@@ -88,17 +93,19 @@ export default defineComponent({
       }
     },
     editTransaction(id: number): void {
-      console.log(`Edit transaction ${id}`)
+      console.log(`Edit transaction ${id}`);
     },
     async deleteTransaction(id: number): Promise<void> {
-      if (await this.$refs.confirm.open(
+      if (
+        await this.$refs.confirm.open(
           `Delete user ${id}`,
           `Do you really want to delete the transaction '${id}'?`,
           'Delete',
-          'error'
-      )) {
+          'error',
+        )
+      ) {
         if (await transactionApi.delete(id)) {
-          this.transactions = this.transactions.filter(t => t.id !== id);
+          this.transactions = this.transactions.filter((t) => t.id !== id);
         }
       }
     },
@@ -106,8 +113,8 @@ export default defineComponent({
       this.filter.year = year;
       this.filter.month = month;
       this.fetchTransactions();
-    }
-  }
+    },
+  },
 });
 </script>
 

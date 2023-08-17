@@ -218,7 +218,7 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<IEnumerable<Settlement>>> GetSettlementAsync()
         {
             var unsettledTransactions = (await transactionRepository.GetUnsettledTransactionsAsync()).ToList();
-            var users = (await userRepository.GetUsersAsync()).ToList();
+            var users = (await userRepository.GetUsersAsync(isContributorFilter: true)).ToList();
 
             var splitTotalPrice = unsettledTransactions.Sum(t => t.Price) / users.Count();
             var userGroups = unsettledTransactions.GroupBy(t => t.User.Id).ToList();
