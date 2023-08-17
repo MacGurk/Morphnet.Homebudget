@@ -60,6 +60,9 @@ namespace HomeBudget.API.Migrations
                         .HasMaxLength(70)
                         .HasColumnType("varchar(70)");
 
+                    b.Property<bool>("IsContributor")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(50)
@@ -78,6 +81,17 @@ namespace HomeBudget.API.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Email = "",
+                            IsContributor = false,
+                            Name = "admin",
+                            PasswordHash = new byte[] { 80, 47, 136, 79, 21, 94, 51, 144, 77, 154, 135, 132, 131, 221, 102, 239 },
+                            PasswordSalt = new byte[] { 237, 252, 101, 139, 88, 226, 155, 124, 62, 154, 42, 40, 69, 46, 90, 217 }
+                        });
                 });
 
             modelBuilder.Entity("HomeBudget.API.Entities.Transaction", b =>

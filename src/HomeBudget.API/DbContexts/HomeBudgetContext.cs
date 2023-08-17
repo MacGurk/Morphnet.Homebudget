@@ -1,4 +1,5 @@
 ﻿using HomeBudget.API.Entities;
+using HomeBudget.API.Services.Utils;
 using Microsoft.EntityFrameworkCore;
 
 namespace HomeBudget.API.DbContexts
@@ -11,6 +12,24 @@ namespace HomeBudget.API.DbContexts
 
         public HomeBudgetContext(DbContextOptions<HomeBudgetContext> options) : base(options)
         {
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            var salt = Argon2Hasher.GenerateSalt();
+            var passwordHash = Argon2Hasher.GenerateHash("admin", salt);
+            
+            modelBuilder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    Name = "admin",
+                    Email = "",
+                    PasswordHash = passwordHash,
+                    PasswordSalt = salt,
+                    IsContributor = false
+                });
+            base.OnModelCreating(modelBuilder);
         }
     }
 }
