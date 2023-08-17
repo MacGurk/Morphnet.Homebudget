@@ -97,14 +97,17 @@ builder.Services.Configure<AuthOptions>(builder.Configuration.GetSection("Auth")
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
+    app.UseHttpsRedirection();
 }
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+    app.UseFileServer();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
