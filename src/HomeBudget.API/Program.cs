@@ -49,26 +49,14 @@ builder.Services.AddSwaggerGen(setupAction =>
 
 builder.Services.AddDbContext<HomeBudgetContext>(options =>
 {
-    var databaseType = builder.Configuration["Database:Type"];
-    var connectionString = builder.Configuration["Database:ConnectionString"];
+    var connectionString = builder.Configuration["Mysql:ConnectionString"];
 
-    if (databaseType.IsNullOrEmpty() || connectionString.IsNullOrEmpty())
+    if (connectionString.IsNullOrEmpty())
     {
         throw new ArgumentNullException($"Please configure Type and ConnectionString of Database in appsettings");
     }
-
-    if (databaseType == "sqlite")
-    {
-        options.UseSqlite(connectionString);
-    }
-    else if (databaseType == "mysql")
-    {
-        options.UseMySQL(connectionString!);
-    }
-    else
-    {
-        throw new ArgumentException($"{databaseType} is not a valid database type.");
-    }
+    
+    options.UseMySQL(connectionString!);
 });
 
 builder.Services.AddAuthentication(options =>
