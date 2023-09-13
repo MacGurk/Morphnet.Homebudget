@@ -41,7 +41,7 @@
                 label="Password"
                 :type="showPassword ? 'text' : 'password'"
                 :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-                :rules="[rules.minLength]"
+                :rules="[validationRules.minLength]"
                 clearable
                 @click:append="showPassword = !showPassword"
               >
@@ -75,70 +75,60 @@
   </v-dialog>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
+<script setup lang="ts">
+import { computed, ref } from 'vue';
 import UserForCreation from '@/models/UserForCreation';
 
-interface UserCreateFormData {
-  createDialog: boolean;
-  newUser: {
-    name: string;
-    email: string;
-    isContributor: boolean;
-    password: string;
-    passwordConfirm: string;
-  };
-  showPassword: boolean;
-  rules: Object;
+interface UserCreateForm {
+  name: string;
+  email: string;
+  isContributor: boolean;
+  password: string;
+  passwordConfirm: string;
 }
 
-export default defineComponent({
-  name: 'UserCreateForm',
-  emits: {
-    addUser: (_newUser: UserForCreation) => true,
-  },
-  data(): UserCreateFormData {
-    return {
-      createDialog: false,
-      newUser: {
-        email: '',
-        name: '',
-        isContributor: false,
-        password: '',
-        passwordConfirm: '',
-      },
-      showPassword: false,
-      rules: {
-        minLength: (v: string) => v.length >= 8 || 'Min 8 characters',
-      },
-    };
-  },
-  computed: {
-    passwordMatchError() {
-      return this.newUser.password === this.newUser.passwordConfirm
-        ? ''
-        : 'Password must match';
-    },
-  },
-  methods: {
-    closeDialog() {
-      this.createDialog = false;
-      this.newUser.name = '';
-      this.newUser.email = '';
-      this.newUser.isContributor = false;
-      this.newUser.password = '';
-    },
-    addUser() {
-      this.createDialog = false;
-      const user = new UserForCreation();
-      user.name = this.newUser.name;
-      user.email = this.newUser.email;
-      user.password = this.newUser.password;
-      user.isContributor = this.newUser.isContributor;
-      this.$emit('addUser', user);
-    },
-  },
+const createDialog = ref<boolean>(false);
+const newUser = ref<UserCreateForm>({
+  email: '',
+  name: '',
+  isContributor: false,
+  password: '',
+  passwordConfirm: '',
 });
+const showPassword = ref<boolean>(false);
+
+const validationRules = ref({
+  minLength: (v: string) => v.length >= 8 || 'Min 8 characters',
+});
+
+const emit = defineEmits<{
+  (_e: 'addUser', _newUser: UserForCreation): void;
+}>();
+
+const passwordMatchError = computed(() =>
+  newUser.value.password === newUser.value.passwordConfirm
+    ? ''
+    : 'Password must match',
+);
+
+const closeDialog = () => {
+  createDialog.value = false;
+  newUser.value.name = '';
+  newUser.value.email = '';
+  newUser.value.isContributor = false;
+  newUser.value.password = '';
+  newUser.value.passwordConfirm = '';
+};
+
+const addUser = () => {
+  createDialog.value = false;
+  const user = new UserForCreation();
+  user.name = newUser.value.name;
+  user.email = newUser.value.email;
+  user.password = newUser.value.password;
+  user.isContributor = newUser.value.isContributor;
+  emit('addUser', user);
+};
 </script>
 
 <style scoped></style>

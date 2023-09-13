@@ -1,6 +1,11 @@
 ﻿<template>
   <div class="pa-16">
-    <v-data-table :headers="headers" :items="$props.users" :items-per-page="10">
+    <v-data-table
+      :headers="headers"
+      :items="$props.users"
+      :items-per-page="10"
+      :loading="props.loading"
+    >
       <template #top>
         <v-toolbar flat>
           <v-toolbar-title>User Overview</v-toolbar-title>
@@ -33,67 +38,62 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from 'vue';
+<script setup lang="ts">
+import { defineComponent, PropType, ref } from 'vue';
 import User from '@/entities/User';
 import UserCreateForm from '@/components/users/UserCreateForm.vue';
 import UserForCreation from '@/models/UserForCreation';
 import CrudActions from '@/components/common/CrudActions.vue';
 
-interface UserTableData {
-  loading: boolean;
-  createDialog: boolean;
-  headers: {
-    title: string;
-    align?: string;
-    key: string;
-    sortable?: boolean;
-    width?: string;
-  }[];
+interface UserTableHeader {
+  title: string;
+  align?: string;
+  key: string;
+  sortable?: boolean;
+  width?: string;
 }
 
-export default defineComponent({
-  name: 'UserTable',
-  components: { CrudActions, UserCreateForm },
-  props: {
-    users: { type: Object as PropType<User[]>, required: true },
+const props = withDefaults(
+  defineProps<{
+    users: User[];
+    loading: boolean;
+  }>(),
+  {
+    loading: false,
   },
-  emits: {
-    editUser: (_id: number) => true,
-    deleteUser: (_id: number) => true,
-    addUser: (_userToCreate: UserForCreation) => true,
+);
+
+const emits = defineEmits<{
+  (_e: 'editUser', _id: number): true;
+  (_e: 'deleteUser', _id: number): true;
+  (_e: 'addUser', _userToCreate: UserForCreation): true;
+}>();
+
+const headers = ref<UserTableHeader[]>([
+  { title: 'Id', align: 'start', key: 'id', width: '5%' },
+  { title: 'Name', align: 'start', key: 'name' },
+  { title: 'E-Mail', align: 'start', key: 'email' },
+  { title: 'Contributor', align: 'start', key: 'isContributor' },
+  {
+    title: 'Actions',
+    align: 'start',
+    key: 'actions',
+    sortable: false,
+    width: '10%',
   },
-  data(): UserTableData {
-    return {
-      loading: false,
-      createDialog: false,
-      headers: [
-        { title: 'Id', align: 'start', key: 'id', width: '5%' },
-        { title: 'Name', align: 'start', key: 'name' },
-        { title: 'E-Mail', align: 'start', key: 'email' },
-        { title: 'Contributor', align: 'start', key: 'isContributor' },
-        {
-          title: 'Actions',
-          align: 'start',
-          key: 'actions',
-          sortable: false,
-          width: '10%',
-        },
-      ],
-    };
-  },
-  methods: {
-    editUser(id: number) {
-      this.$emit('editUser', id);
-    },
-    deleteUser(id: number) {
-      this.$emit('deleteUser', id);
-    },
-    addUser(newUser: UserForCreation) {
-      this.$emit('addUser', newUser);
-    },
-  },
-});
+]);
+
+const editUser = (id: number) => {
+  emits('editUser', id);
+};
+
+const deleteUser = (id: number) => {
+  emits('deleteUser', id);
+};
+
+const addUser = (newUser: UserForCreation) => {
+  emits('addUser', newUser);
+};
 </script>
 
 <style scoped></style>

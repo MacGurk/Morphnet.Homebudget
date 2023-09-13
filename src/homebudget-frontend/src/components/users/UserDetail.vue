@@ -1,84 +1,68 @@
 <template>
   <v-container class="w-25 bg-grey-lighten-1 rounded-xl mx-16 my-8">
-    <v-row class>
-      <v-col class="v-col-2">
-        Id:
-      </v-col>
-      <v-divider vertical color="blue"></v-divider>
-      <v-col>
-        {{ user.id }}
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="v-col-2">
-        Name:
-      </v-col>
-      <v-col>
-        {{ user.name }}
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col class="v-col-2">
-        E-Mail:
-      </v-col>
-      <v-col>
-        {{ user.email }}
-      </v-col>
-    </v-row>
+    <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
+    <div v-else>
+      <v-row class>
+        <v-col class="v-col-auto"> Id: </v-col>
+        <v-col class="v-col-auto">
+          {{ props.user.id }}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="v-col-auto"> Name: </v-col>
+        <v-col class="v-col-auto">
+          {{ props.user.name }}
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col class="v-col-auto"> E-Mail: </v-col>
+        <v-col class="v-col-auto">
+          {{ props.user.email }}
+        </v-col>
+      </v-row>
+    </div>
   </v-container>
   <TransactionsTable
-      :title="`Transactions of user ${user.id}`"
-      :transactions="transactions"
-      hide-actions
+    :title="`Transactions of user ${props.user.id}`"
+    :transactions="transactions"
+    :loading="loadingTransactions"
+    hide-actions
   ></TransactionsTable>
 </template>
 
-<script lang="ts">
-import {defineComponent, PropType, reactive, toRefs, watch} from 'vue';
-import TransactionsTable from '@/components/transactions/TransactionsTable.vue';
+<script setup lang="ts">
+import { Ref, ref, watch } from 'vue';
 import User from '@/entities/User';
 import TransactionApi from '@/api/TransactionApi';
 import Transaction from '@/entities/Transaction';
+import TransactionsTable from '@/components/transactions/TransactionsTable.vue';
 
-interface UserDetailState {
-  transactions: Transaction[];
-  userLoaded: boolean;
-}
+const props = defineProps<{
+  user: User;
+  loading: boolean;
+}>();
+
+const loadingTransactions = ref<boolean>(true);
+const transactions = ref<Transaction[]>([]) as Ref<Transaction[]>;
+
+watch(
+  () => props.user,
+  (newUser: User) => {
+    loadingTransactions.value = true;
+    transactions.value = [];
+
+    if (newUser.id) {
+      fetchTransactionsOfUser(newUser.id);
+    }
+  },
+);
 
 const transactionApi = new TransactionApi();
-export default defineComponent({
-  name: 'UserDetail',
-  components: {TransactionsTable},
-  props: {
-    user: {type: Object as PropType<User>, required: true}
-  },
-  data(): UserDetailState {
-    return {
-      userLoaded: false,
-      transactions: []
-    }
-  },
-  watch: {
-    user: {
-      handler(newUser: User) {
-        this.userLoaded = false;
-        this.transactions = [];
 
-        if (newUser.id) {
-          this.fetchTransactionsOfUser(newUser.id);
-        }
-      }, immediate: true
-    }
-  },
-  methods: {
-    async fetchTransactionsOfUser(userId: number) {
-      this.transactions = await transactionApi.getByUser(userId);
-      this.userLoaded = true;
-    }
-  }
-});
+const fetchTransactionsOfUser = async (userId: number) => {
+  transactions.value = await transactionApi.getByUser(userId);
+  loadingTransactions.value = false;
+};
 </script>
 
-<style scoped>
-  
-</style>
+<style scoped></style>

@@ -1,45 +1,35 @@
 <template>
-  <TitleBar>{{ `User ${this.user.name}` }}</TitleBar>
-  <v-progress-circular v-if="loading" indeterminate></v-progress-circular>
-  <UserDetail v-else :user="user"></UserDetail>
+  <TitleBar>{{ `User ${user.name}` }}</TitleBar>
+  <UserDetail :user="user" :loading="loading"></UserDetail>
 </template>
 
-<script lang="ts">
+<script setup lang="ts">
 import TitleBar from '@/components/common/TitleBar.vue';
 import UserDetail from '@/components/users/UserDetail.vue';
 import User from '@/entities/User';
 import UserApi from '@/api/UserApi';
-import {defineComponent} from 'vue';
-
-interface UserData {
-  user: User;
-  loading: boolean;
-}
+import { onMounted, Ref, ref } from 'vue';
+import { useRoute } from 'vue-router';
 
 const userApi = new UserApi();
+const route = useRoute();
 
-export default defineComponent({
-  name: 'User',
-  components: {UserDetail, TitleBar},
-  data(): UserData {
-    return {
-      user: new User(),
-      loading: true,
-    }
-  },
-  created() {
-    this.fetchUser();
-  },
-  methods: {
-    async fetchUser() {
-      this.user = new User;
-      
-      const id = Array.isArray(this.$route.params.id) ? this.$route.params.id[0] : this.$route.params.id;
-      this.user = await userApi.getById(parseInt(id));
-      
-      this.loading = false;
-    }
-  }
+const user = ref<User>(new User()) as Ref<User>;
+const loading = ref<boolean>(true);
+
+const fetchUser = async () => {
+  user.value = new User();
+
+  const id = Array.isArray(route.params.id)
+    ? route.params.id[0]
+    : route.params.id;
+  user.value = await userApi.getById(parseInt(id));
+
+  loading.value = false;
+};
+
+onMounted(() => {
+  fetchUser();
 });
 </script>
 
