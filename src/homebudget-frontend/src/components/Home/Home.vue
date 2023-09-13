@@ -7,7 +7,7 @@ import TitleBar from '@/components/common/TitleBar.vue';
 
 export default {
   name: 'Home',
-  components: {TitleBar},
+  components: { TitleBar },
 };
 </script>
 
