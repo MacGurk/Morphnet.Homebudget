@@ -10,9 +10,7 @@ export default class TransactionApi {
     const response = await fetch(this.path, {
       headers: this.getDefaultHeaders(),
     });
-    if (!response.ok) {
-      throw new Error(`failed to fetch API on path ${this.path}`);
-    }
+    this.checkResponse(response, this.path);
     return (await response.json()) as Transaction[];
   }
 
@@ -20,27 +18,20 @@ export default class TransactionApi {
     month: number,
     year: number,
   ): Promise<Transaction[]> {
-    const response = await fetch(
-      this.path + `?month=${month + 1}&year=${year}`,
-      {
-        headers: this.getDefaultHeaders(),
-      },
-    );
-    if (!response.ok) {
-      throw new Error(`failed to fetch API on path ${this.path}`);
-    }
+    const path = `${this.path}?month=${month + 1}&year=${year}`;
+    const response = await fetch(path, {
+      headers: this.getDefaultHeaders(),
+    });
+    this.checkResponse(response, path);
     return (await response.json()) as Transaction[];
   }
 
   public async getByUser(userId: number): Promise<Transaction[]> {
-    const response = await fetch(`/api/v1/user/${userId}/transaction`, {
+    const path = `/api/v1/user/${userId}/transaction`;
+    const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });
-    if (!response.ok) {
-      throw new Error(
-        `Failed to fetch API on path /api/v1.0/user/${userId}/transaction`,
-      );
-    }
+    this.checkResponse(response, path);
     return (await response.json()) as Transaction[];
   }
 
@@ -51,41 +42,38 @@ export default class TransactionApi {
       headers: this.getDefaultHeaders(),
       body: JSON.stringify(transaction),
     });
-    if (!response.ok) {
-      throw new Error(`failed to post API on path ${this.path}`);
-    }
+    this.checkResponse(response, this.path, method);
     return (await response.json()) as Transaction;
   }
 
-  public async delete(id: number): Promise<boolean> {
+  public async delete(id: number): Promise<void> {
     const method = 'DELETE';
-    const response = await fetch(`${this.path}/${id}`, {
+    const path = `${this.path}/${id}`;
+    const response = await fetch(path, {
       method,
       headers: this.getDefaultHeaders(),
     });
-    return response.ok;
+    this.checkResponse(response, path, method);
   }
 
   public async getSettlements(): Promise<Settlement[]> {
-    const response = await fetch(`${this.path}/settlement`, {
+    const path = `${this.path}/settlement`;
+    const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });
-    if (!response.ok) {
-      throw new Error(`failed to get API on path ${this.path}/settlement`);
-    }
+    this.checkResponse(response, path);
     return (await response.json()) as Settlement[];
   }
 
   public async settleTransactions(transactionIds: number[]): Promise<void> {
     const method = 'PUT';
-    const response = await fetch(`${this.path}/settlement`, {
+    const path = `${this.path}/settlement`;
+    const response = await fetch(path, {
       method,
       headers: this.getDefaultHeaders(),
       body: JSON.stringify(transactionIds),
     });
-    if (!response.ok) {
-      throw new Error(`failed to put API on path ${this.path}/settlement`);
-    }
+    this.checkResponse(response, path, method);
   }
 
   private getDefaultHeaders(): Headers {
@@ -98,5 +86,17 @@ export default class TransactionApi {
     }
     headers.set('Content-Type', 'application/json');
     return headers;
+  }
+
+  private checkResponse(
+    response: Response,
+    path: string,
+    method = 'GET',
+  ): void {
+    if (!response.ok) {
+      throw new Error(
+        `Failed to ${method} API on path ${path}. Status: ${response.status}`,
+      );
+    }
   }
 }

@@ -104,8 +104,11 @@ export default defineComponent({
           'error',
         )
       ) {
-        if (await transactionApi.delete(id)) {
+        try {
+          await transactionApi.delete(id);
           this.transactions = this.transactions.filter((t) => t.id !== id);
+        } catch (e) {
+          console.error(e);
         }
       }
     },
