@@ -65,8 +65,11 @@ const deleteUser = async (id: number) => {
       'error',
     )
   ) {
-    if (await userApi.delete(id)) {
+    try {
+      await userApi.delete(id);
       users.value = users.value.filter((user) => user.id !== id);
+    } catch (e) {
+      console.error(e);
     }
   }
 };
