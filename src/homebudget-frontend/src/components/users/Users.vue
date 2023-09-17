@@ -4,7 +4,6 @@
     :users="users"
     @add-user="addUser"
     @delete-user="deleteUser"
-    @edit-user="editUser"
   ></UserTable>
   <ConfirmDialog ref="confirm" />
 </template>
@@ -45,11 +44,6 @@ const addUser = async (newUser: UserForCreation) => {
   } finally {
     loading.value = false;
   }
-};
-
-const editUser = (id: number) => {
-  // PUT API call
-  console.log(`Edit user: ${id}`);
 };
 
 const deleteUser = async (id: number) => {
