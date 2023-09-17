@@ -7,6 +7,7 @@ import User from '@/components/users/User.vue';
 import Login from '@/components/common/Login.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
+import UserEdit from '@/components/users/UserEdit.vue';
 
 const routes = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
@@ -15,6 +16,7 @@ const routes = [
   { path: '/settlement', name: 'Settlement', component: Settlement },
   { path: '/users', name: 'Users', component: Users },
   { path: '/users/:id', name: 'User', component: User },
+  { path: '/users/:id/edit', name: 'UserEdit', component: UserEdit },
   { path: '/login', name: 'Login', component: Login },
 ];
 

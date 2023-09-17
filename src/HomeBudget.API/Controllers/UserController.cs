@@ -2,6 +2,7 @@ using AutoMapper;
 using HomeBudget.API.Entities;
 using HomeBudget.API.Models.User;
 using HomeBudget.API.Services.Repositories;
+using HomeBudget.API.Services.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -89,18 +90,52 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> UpdateUser(int userId, UserForUpdateDto user)
+        public async Task<ActionResult> UpdateUser(int userId, UserDto user)
         {
+            if (user.Id != userId)
+            {
+                return BadRequest();
+            }
+            
             var userEntity = await userRepository.GetUserByIdAsync(userId);
+            
             if (userEntity == null)
             {
                 return NotFound();
             }
 
-            mapper.Map(userEntity, user);
-
+            mapper.Map(user, userEntity);
+            
             await userRepository.SaveChangesAsync();
 
+            return NoContent();
+        }
+        
+        [HttpPut("{userId}/password")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult> UpdateUserPassword(int userId, UserForUpdatePasswordDto userUpdate)
+        {
+            if (userUpdate.Id != userId)
+            {
+                return BadRequest();
+            }
+            
+            var userEntity = await userRepository.GetUserByIdAsync(userId);
+            
+            if (userEntity == null)
+            {
+                return NotFound();
+            }
+
+            var salt = Argon2Hasher.GenerateSalt();
+            var passwordHash = Argon2Hasher.GenerateHash(userUpdate.Password, salt);
+            userEntity.PasswordSalt = salt;
+            userEntity.PasswordHash = passwordHash;
+
+            await userRepository.SaveChangesAsync();
+            
             return NoContent();
         }
 

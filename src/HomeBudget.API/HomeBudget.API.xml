@@ -96,7 +96,7 @@
             <param name="user">User to create</param>
             <returns>The created user and the corresponding route</returns>
         </member>
-        <member name="M:HomeBudget.API.Controllers.UserController.UpdateUser(System.Int32,HomeBudget.API.Models.User.UserForUpdateDto)">
+        <member name="M:HomeBudget.API.Controllers.UserController.UpdateUser(System.Int32,HomeBudget.API.Models.User.UserDto)">
             <summary>
             Update a user
             </summary>
@@ -221,6 +221,16 @@
         <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.IsContributor">
             <summary>
             Is the user a contributor
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdatePasswordDto.Id">
+            <summary>
+            Id of the user to update
+            </summary>
+        </member>
+        <member name="P:HomeBudget.API.Models.User.UserForUpdatePasswordDto.Password">
+            <summary>
+            Updates password for User
             </summary>
         </member>
     </members>

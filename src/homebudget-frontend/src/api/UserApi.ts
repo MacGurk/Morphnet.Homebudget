@@ -1,6 +1,7 @@
 import User from '@/entities/User';
 import UserForCreation from '@/models/UserForCreation';
 import { useAuthStore } from '@/stores/auth.store';
+import UserForUpdatePassword from '@/models/UserForUpdatePassword';
 
 export default class UserApi {
   private path = '/api/v1/user';
@@ -9,25 +10,27 @@ export default class UserApi {
     const response = await fetch(this.path, {
       headers: this.getDefaultHeaders(),
     });
+    this.checkResponse(response, this.path);
     const users = (await response.json()) as User[];
     return users;
   }
 
   public async getContributors(): Promise<User[]> {
-    const response = await fetch(`${this.path}?isContributor=true`, {
+    const path = `${this.path}?isContributor=true`;
+    const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });
+    this.checkResponse(response, path);
     const users = (await response.json()) as User[];
     return users;
   }
 
   public async getById(id: number): Promise<User> {
-    const response = await fetch(`${this.path}/${id}`, {
+    const path = `${this.path}/${id}`;
+    const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });
-    if (!response.ok) {
-      throw new Error(`Failed to fetch API on path ${this.path}/${id}`);
-    }
+    this.checkResponse(response, path);
     return (await response.json()) as User;
   }
 
@@ -38,17 +41,43 @@ export default class UserApi {
       headers: this.getDefaultHeaders(),
       body: JSON.stringify(user),
     });
+    this.checkResponse(response, this.path, method);
     const addedUser = (await response.json()) as User;
     return addedUser;
   }
 
-  public async delete(id: number): Promise<boolean> {
+  public async update(user: User): Promise<void> {
+    const method = 'PUT';
+    const path = `${this.path}/${user.id}`;
+    const response = await fetch(path, {
+      method,
+      headers: this.getDefaultHeaders(),
+      body: JSON.stringify(user),
+    });
+    this.checkResponse(response, path, method);
+  }
+
+  public async updatePassword(
+    userUpdate: UserForUpdatePassword,
+  ): Promise<void> {
+    const method = 'PUT';
+    const path = `${this.path}/${userUpdate.id}/password`;
+    const response = await fetch(path, {
+      method,
+      headers: this.getDefaultHeaders(),
+      body: JSON.stringify(userUpdate),
+    });
+    this.checkResponse(response, path, method);
+  }
+
+  public async delete(id: number): Promise<void> {
     const method = 'DELETE';
-    const response = await fetch(`${this.path}/${id}`, {
+    const path = `${this.path}/${id}`;
+    const response = await fetch(path, {
       method,
       headers: this.getDefaultHeaders(),
     });
-    return response.status == 204;
+    this.checkResponse(response, path, method);
   }
 
   private getDefaultHeaders(): Headers {
@@ -61,5 +90,17 @@ export default class UserApi {
     }
     headers.set('Content-Type', 'application/json');
     return headers;
+  }
+
+  private checkResponse(
+    response: Response,
+    path: string,
+    methode = 'GET',
+  ): void {
+    if (!response.ok) {
+      throw new Error(
+        `Failed to ${methode} API on path ${path}. Status: ${response.status}`,
+      );
+    }
   }
 }

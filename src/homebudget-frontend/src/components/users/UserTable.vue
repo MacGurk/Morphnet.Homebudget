@@ -39,11 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { defineComponent, PropType, ref } from 'vue';
+import { ref } from 'vue';
 import User from '@/entities/User';
 import UserCreateForm from '@/components/users/UserCreateForm.vue';
 import UserForCreation from '@/models/UserForCreation';
 import CrudActions from '@/components/common/CrudActions.vue';
+import router from '@/router';
 
 interface UserTableHeader {
   title: string;
@@ -64,7 +65,6 @@ const props = withDefaults(
 );
 
 const emits = defineEmits<{
-  (_e: 'editUser', _id: number): true;
   (_e: 'deleteUser', _id: number): true;
   (_e: 'addUser', _userToCreate: UserForCreation): true;
 }>();
@@ -84,7 +84,7 @@ const headers = ref<UserTableHeader[]>([
 ]);
 
 const editUser = (id: number) => {
-  emits('editUser', id);
+  router.push(`/users/${id}/edit`);
 };
 
 const deleteUser = (id: number) => {
