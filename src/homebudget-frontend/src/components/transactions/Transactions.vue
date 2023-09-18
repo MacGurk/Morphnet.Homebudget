@@ -4,7 +4,6 @@
   <TransactionsTable
     title="Transactions Overview"
     :transactions="transactions"
-    @edit-transaction="editTransaction"
     @delete-transaction="deleteTransaction"
   >
     <template #createForm>
@@ -91,9 +90,6 @@ export default defineComponent({
       } catch (e) {
         console.error(e);
       }
-    },
-    editTransaction(id: number): void {
-      console.log(`Edit transaction ${id}`);
     },
     async deleteTransaction(id: number): Promise<void> {
       if (

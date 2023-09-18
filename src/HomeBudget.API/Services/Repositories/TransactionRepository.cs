@@ -48,7 +48,7 @@ namespace HomeBudget.API.Services.Repositories
         }
 
         public async Task<Transaction?> GetTransactionByIdAsync(int transactionId) =>
-            await context.Transactions.FirstOrDefaultAsync(t => t.Id == transactionId);
+            await context.Transactions.Include(x => x.User).FirstOrDefaultAsync(t => t.Id == transactionId);
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByUserAsync(int userId) =>
             await context.Transactions.Where(t => t.User.Id == userId).ToListAsync();

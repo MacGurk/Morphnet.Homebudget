@@ -10,5 +10,6 @@ public class TransactionProfile : Profile
     {
         CreateMap<Transaction, TransactionDto>();
         CreateMap<TransactionForCreationDto, Transaction>();
+        CreateMap<TransactionForUpdateDto, Transaction>();
     }
 }

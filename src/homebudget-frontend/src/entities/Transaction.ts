@@ -1,4 +1,7 @@
 ﻿import User from '@/entities/User';
+import { boolean, date, number, string } from 'yup';
+import { id } from 'vuetify/locale';
+import user from '@/components/users/User.vue';
 
 export default class Transaction {
   private _id: number;
@@ -7,6 +10,22 @@ export default class Transaction {
   private _description: string;
   private _price: number;
   private _isSettled: boolean;
+
+  constructor(
+    id: number,
+    date: Date,
+    user: User,
+    description: string,
+    price: number,
+    isSettled: boolean,
+  ) {
+    this._id = id;
+    this._date = date;
+    this._user = user;
+    this._description = description;
+    this._price = price;
+    this._isSettled = isSettled;
+  }
 
   get id(): number {
     return this._id;
@@ -54,5 +73,16 @@ export default class Transaction {
 
   set isSettled(value: boolean) {
     this._isSettled = value;
+  }
+
+  toJSON() {
+    return {
+      id: this.id,
+      date: this.date,
+      user: this.user,
+      description: this.description,
+      price: this.price,
+      isSettled: this.isSettled,
+    };
   }
 }

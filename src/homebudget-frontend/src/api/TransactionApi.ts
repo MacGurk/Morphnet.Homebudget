@@ -26,6 +26,15 @@ export default class TransactionApi {
     return (await response.json()) as Transaction[];
   }
 
+  public async getById(transactionId: number): Promise<Transaction> {
+    const path = `${this.path}/${transactionId}`;
+    const response = await fetch(path, {
+      headers: this.getDefaultHeaders(),
+    });
+    this.checkResponse(response, path);
+    return (await response.json()) as Transaction;
+  }
+
   public async getByUser(userId: number): Promise<Transaction[]> {
     const path = `/api/v1/user/${userId}/transaction`;
     const response = await fetch(path, {
@@ -44,6 +53,17 @@ export default class TransactionApi {
     });
     this.checkResponse(response, this.path, method);
     return (await response.json()) as Transaction;
+  }
+
+  public async update(transaction: Transaction): Promise<void> {
+    const method = 'PUT';
+    const path = `${this.path}/${transaction.id}`;
+    const response = await fetch(path, {
+      method,
+      headers: this.getDefaultHeaders(),
+      body: JSON.stringify(transaction),
+    });
+    this.checkResponse(response, path, method);
   }
 
   public async delete(id: number): Promise<void> {

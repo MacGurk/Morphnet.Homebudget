@@ -40,6 +40,7 @@
 import { onBeforeMount, onMounted } from 'vue';
 import Transaction from '@/entities/Transaction';
 import CrudActions from '@/components/common/CrudActions.vue';
+import router from '@/router';
 
 interface TransactionsTableHeader {
   title: string;
@@ -86,7 +87,7 @@ onBeforeMount(() => {
 });
 
 const editTransaction = (id: number) => {
-  emit('editTransaction', id);
+  router.push(`/transactions/${id}/edit`);
 };
 
 const deleteTransaction = (id: number) => {

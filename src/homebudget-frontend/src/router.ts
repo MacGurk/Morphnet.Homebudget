@@ -8,11 +8,17 @@ import Login from '@/components/common/Login.vue';
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '@/stores/auth.store';
 import UserEdit from '@/components/users/UserEdit.vue';
+import TransactionEdit from '@/components/transactions/TransactionEdit.vue';
 
 const routes = [
   { path: '/:pathMatch(.*)*', name: 'NotFound', component: NotFound },
   { path: '/', name: 'Home', component: Home },
   { path: '/transactions', name: 'Transactions', component: Transactions },
+  {
+    path: '/transactions/:id/edit',
+    name: 'TransactionEdit',
+    component: TransactionEdit,
+  },
   { path: '/settlement', name: 'Settlement', component: Settlement },
   { path: '/users', name: 'Users', component: Users },
   { path: '/users/:id', name: 'User', component: User },
