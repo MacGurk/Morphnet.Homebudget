@@ -6,7 +6,7 @@ on:
 
 jobs:
 
-  build:
+  build-and-publish-image:
 
     runs-on: ubuntu-latest
 
