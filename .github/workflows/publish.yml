@@ -4,6 +4,10 @@ on:
   release:
     types: [published]
 
+env:
+  REGISTRY: ghcr.io
+  IMAGE_NAME: morphnet/homebudget
+
 jobs:
 
   build-and-publish-image:
