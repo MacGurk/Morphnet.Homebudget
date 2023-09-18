@@ -41,9 +41,9 @@ const { handleSubmit } = useForm({
       return 'Enter a name';
     },
     email(value: string) {
-      if (value?.length > 0) return true;
+      if (/^[A-Za-z0-9+_.-]+@(.+)$/i.test(value)) return true;
 
-      return 'Enter an e-mail address';
+      return 'Must be a valid e-mail.';
     },
   },
 });
