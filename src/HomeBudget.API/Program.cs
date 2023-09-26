@@ -107,6 +107,7 @@ if (app.Environment.IsDevelopment())
 if (app.Environment.IsProduction())
 {
     app.UseFileServer();
+    app.MapFallbackToFile("/index.html");
 }
 
 app.UseAuthentication();
