@@ -89,14 +89,14 @@
             <param name="userId">The id of the user to get</param>
             <returns>The requestsd user when it exists</returns>
         </member>
-        <member name="M:HomeBudget.API.Controllers.UserController.CreateUser(HomeBudget.API.Models.User.UserForCreationDto)">
+        <member name="M:HomeBudget.API.Controllers.UserController.CreateUser(HomeBudget.API.Models.UserModels.UserForCreationDto)">
             <summary>
             Create a new user
             </summary>
             <param name="user">User to create</param>
             <returns>The created user and the corresponding route</returns>
         </member>
-        <member name="M:HomeBudget.API.Controllers.UserController.UpdateUser(System.Int32,HomeBudget.API.Models.User.UserDto)">
+        <member name="M:HomeBudget.API.Controllers.UserController.UpdateUser(System.Int32,HomeBudget.API.Models.UserModels.UserDto)">
             <summary>
             Update a user
             </summary>
@@ -153,82 +153,82 @@
             The price of the transaction
             </summary>
         </member>
-        <member name="T:HomeBudget.API.Models.User.UserDto">
+        <member name="T:HomeBudget.API.Models.UserModels.UserDto">
             <summary>
             Full user object
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserDto.Id">
+        <member name="P:HomeBudget.API.Models.UserModels.UserDto.Id">
             <summary>
             Id of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserDto.Name">
+        <member name="P:HomeBudget.API.Models.UserModels.UserDto.Name">
             <summary>
             Name of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserDto.Email">
+        <member name="P:HomeBudget.API.Models.UserModels.UserDto.Email">
             <summary>
             Email address of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserDto.IsContributor">
+        <member name="P:HomeBudget.API.Models.UserModels.UserDto.IsContributor">
             <summary>
             Is the user a contributor
             </summary>
         </member>
-        <member name="T:HomeBudget.API.Models.User.UserForCreationDto">
+        <member name="T:HomeBudget.API.Models.UserModels.UserForCreationDto">
             <summary>
             User object to create a new user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Name">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForCreationDto.Name">
             <summary>
             Name of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Email">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForCreationDto.Email">
             <summary>
             Email address of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.Password">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForCreationDto.Password">
             <summary>
             Password of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForCreationDto.IsContributor">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForCreationDto.IsContributor">
             <summary>
             Is the user a contributor
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Name">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdateDto.Name">
             <summary>
             Name of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Email">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdateDto.Email">
             <summary>
             Email address of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.Password">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdateDto.Password">
             <summary>
             Password of the user
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdateDto.IsContributor">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdateDto.IsContributor">
             <summary>
             Is the user a contributor
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdatePasswordDto.Id">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdatePasswordDto.Id">
             <summary>
             Id of the user to update
             </summary>
         </member>
-        <member name="P:HomeBudget.API.Models.User.UserForUpdatePasswordDto.Password">
+        <member name="P:HomeBudget.API.Models.UserModels.UserForUpdatePasswordDto.Password">
             <summary>
             Updates password for User
             </summary>

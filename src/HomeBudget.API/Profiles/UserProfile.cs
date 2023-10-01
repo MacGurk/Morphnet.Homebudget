@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using HomeBudget.API.Entities;
-using HomeBudget.API.Models.User;
+using HomeBudget.API.Models.UserModels;
 
 namespace HomeBudget.API.Profiles;
 

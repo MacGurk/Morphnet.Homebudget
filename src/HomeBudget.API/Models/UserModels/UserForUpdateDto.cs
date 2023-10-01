@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace HomeBudget.API.Models.User;
+namespace HomeBudget.API.Models.UserModels;
 
 public class UserForUpdateDto
 {

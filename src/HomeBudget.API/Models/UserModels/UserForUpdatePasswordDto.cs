@@ -1,4 +1,4 @@
-namespace HomeBudget.API.Models.User;
+namespace HomeBudget.API.Models.UserModels;
 
 public class UserForUpdatePasswordDto
 {
