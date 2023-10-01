@@ -1,8 +1,11 @@
 using AutoMapper;
-using HomeBudget.API.Entities;
-using HomeBudget.API.Models.User;
+using HomeBudget.API.CQRS.Command.UserCommand;
+using HomeBudget.API.CQRS.Events;
+using HomeBudget.API.CQRS.Query.UserQuery;
+using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
 using HomeBudget.API.Services.Utils;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,11 +22,13 @@ namespace HomeBudget.API.Controllers
     {
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
+        private readonly IMediator mediator;
 
-        public UserController(IUserRepository userRepository, IMapper mapper)
+        public UserController(IUserRepository userRepository, IMapper mapper, IMediator mediator)
         {
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -34,11 +39,13 @@ namespace HomeBudget.API.Controllers
         [HttpGet]
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery(Name = "isContributor")] bool isContributor = false)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers(
+            [FromQuery(Name = "isContributor")] bool isContributor = false)
         {
-            var users = await userRepository.GetUsersAsync(isContributor);
+            var query = new GetUsersQuery(IsContributor: isContributor);
+            var users = await mediator.Send(query);
             
-            return Ok(mapper.Map<IEnumerable<UserDto>>(users));
+            return Ok(users);
         }
 
         /// <summary>
@@ -52,14 +59,15 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> GetUser(int userId)
         {
-            var user = await userRepository.GetUserByIdAsync(userId);
-
+            var query = new GetUserQuery(userId);
+            var user = await mediator.Send(query);
+            
             if (user == null)
             {
                 return NotFound();
             }
 
-            return Ok(mapper.Map<UserDto>(user));
+            return Ok(user);
         }
 
         /// <summary>
@@ -72,12 +80,10 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDto>> CreateUser(UserForCreationDto user)
         {
-            var userToAdd = mapper.Map<User>(user);
-
-            await userRepository.AddUserAsync(userToAdd, user.Password);
-            var createdUser = mapper.Map<UserDto>(userToAdd);
-
-            return CreatedAtRoute("GetUser", new { userId = userToAdd.Id }, createdUser);
+            var command = new CreateUserCommand(user, user.Password);
+            var createdUser = await mediator.Send(command);
+            
+            return CreatedAtRoute("GetUser", new { userId = createdUser.Id }, createdUser);
         }
 
         /// <summary>
@@ -96,17 +102,14 @@ namespace HomeBudget.API.Controllers
             {
                 return BadRequest();
             }
+
+            var command = new UpdateUserCommand(user);
+            var @event = await mediator.Send(command);
             
-            var userEntity = await userRepository.GetUserByIdAsync(userId);
-            
-            if (userEntity == null)
+            if (@event is UserNotFoundEvent)
             {
                 return NotFound();
             }
-
-            mapper.Map(user, userEntity);
-            
-            await userRepository.SaveChangesAsync();
 
             return NoContent();
         }
@@ -115,26 +118,20 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> UpdateUserPassword(int userId, UserForUpdatePasswordDto userUpdate)
+        public async Task<ActionResult> UpdateUserPassword(int userId, UserForUpdatePasswordDto userPasswordUpdate)
         {
-            if (userUpdate.Id != userId)
+            if (userPasswordUpdate.Id != userId)
             {
                 return BadRequest();
             }
+
+            var command = new UpdateUserPasswordCommand(userId, userPasswordUpdate);
+            var @event = await mediator.Send(command);
             
-            var userEntity = await userRepository.GetUserByIdAsync(userId);
-            
-            if (userEntity == null)
+            if (@event is UserNotFoundEvent)
             {
                 return NotFound();
             }
-
-            var salt = Argon2Hasher.GenerateSalt();
-            var passwordHash = Argon2Hasher.GenerateHash(userUpdate.Password, salt);
-            userEntity.PasswordSalt = salt;
-            userEntity.PasswordHash = passwordHash;
-
-            await userRepository.SaveChangesAsync();
             
             return NoContent();
         }
@@ -149,13 +146,12 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteUser(int userId)
         {
-            var userEntity = await userRepository.GetUserByIdAsync(userId);
-            if (userEntity == null)
+            var command = new DeleteUserCommand(userId);
+            var @event = await mediator.Send(command);
+            if (@event is UserNotFoundEvent)
             {
                 return NotFound();
             }
-
-            await userRepository.DeleteUserAsync(userEntity);
 
             return NoContent();
         }

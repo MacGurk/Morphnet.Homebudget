@@ -8,9 +8,9 @@ namespace HomeBudget.API.Services.Repositories
 
         Task<User?> GetUserByIdAsync(int userId);
 
-        Task AddUserAsync(User user, string password);
+        void AddUser(User user, string password);
 
-        Task DeleteUserAsync(User user);
+        void DeleteUser(User user);
 
         Task<bool> UserExistsAsync(int userId);
 

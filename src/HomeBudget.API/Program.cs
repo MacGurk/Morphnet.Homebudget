@@ -47,6 +47,8 @@ builder.Services.AddSwaggerGen(setupAction =>
     });
 });
 
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Program).Assembly));
+
 builder.Services.AddDbContext<HomeBudgetContext>(options =>
 {
     var connectionString = builder.Configuration["Mysql:ConnectionString"];
