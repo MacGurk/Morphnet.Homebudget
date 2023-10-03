@@ -1,10 +1,9 @@
 using AutoMapper;
-using HomeBudget.API.CQRS.Command.UserCommand;
+using HomeBudget.API.CQRS.Command.User;
 using HomeBudget.API.CQRS.Events;
-using HomeBudget.API.CQRS.Query.UserQuery;
+using HomeBudget.API.CQRS.Query.User;
 using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
-using HomeBudget.API.Services.Utils;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +19,10 @@ namespace HomeBudget.API.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
         private readonly IMediator mediator;
 
-        public UserController(IUserRepository userRepository, IMapper mapper, IMediator mediator)
+        public UserController(IMediator mediator)
         {
-            this.userRepository = userRepository;
-            this.mapper = mapper;
             this.mediator = mediator;
         }
 
