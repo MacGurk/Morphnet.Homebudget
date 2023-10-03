@@ -1,11 +1,10 @@
-using AutoMapper;
 using HomeBudget.API.CQRS.Events;
 using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
 using HomeBudget.API.Services.Utils;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Command.UserCommand;
+namespace HomeBudget.API.CQRS.Command.User;
 
 public record UpdateUserPasswordCommand(int UserId, UserForUpdatePasswordDto UserPasswordUpdate) : IRequest<IEvent>;
 

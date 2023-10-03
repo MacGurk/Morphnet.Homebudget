@@ -3,7 +3,7 @@ using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Query.UserQuery;
+namespace HomeBudget.API.CQRS.Query.User;
 
 public record GetUsersQuery(bool IsContributor = false) : IRequest<IEnumerable<UserDto>>;
 

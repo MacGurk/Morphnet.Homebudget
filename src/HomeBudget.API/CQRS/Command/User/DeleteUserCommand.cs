@@ -1,9 +1,8 @@
-using AutoMapper;
 using HomeBudget.API.CQRS.Events;
 using HomeBudget.API.Services.Repositories;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Command.UserCommand;
+namespace HomeBudget.API.CQRS.Command.User;
 
 public record DeleteUserCommand(int UserId) : IRequest<IEvent>;
 

@@ -1,10 +1,9 @@
 using AutoMapper;
-using HomeBudget.API.Entities;
 using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Query.UserQuery;
+namespace HomeBudget.API.CQRS.Query.User;
 
 public record GetUserQuery(int UserId) : IRequest<UserDto?>;
 

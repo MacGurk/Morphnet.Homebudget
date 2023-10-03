@@ -4,7 +4,7 @@ using HomeBudget.API.Models.UserModels;
 using HomeBudget.API.Services.Repositories;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Command.UserCommand;
+namespace HomeBudget.API.CQRS.Command.User;
 
 public record UpdateUserCommand(UserDto User) : IRequest<IEvent>;
 
