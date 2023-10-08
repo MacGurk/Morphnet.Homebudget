@@ -3,7 +3,7 @@ using HomeBudget.API.Models.UserModels;
 
 namespace HomeBudget.API.Models.Settlement;
 
-public class Settlement
+public class SettlementDto
 {
     public UserDto User { get; set; } = new();
 

@@ -59,16 +59,14 @@ namespace HomeBudget.API.Services.Repositories
                 .Include(t => t.User)
                 .ToListAsync();
 
-        public async Task AddTransactionAsync(Transaction transaction)
+        public void AddTransaction(Transaction transaction)
         {
             context.Transactions.Add(transaction);
-            await context.SaveChangesAsync();
         }
 
-        public async Task DeleteTransactionAsync(Transaction transaction)
+        public void DeleteTransaction(Transaction transaction)
         {
             context.Transactions.Remove(transaction);
-            await context.SaveChangesAsync();
         }
 
         public async Task<IEnumerable<Transaction>> GetTransactionsByIdAsync(List<int> transactionIds)

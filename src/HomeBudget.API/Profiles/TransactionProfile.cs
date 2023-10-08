@@ -8,7 +8,7 @@ public class TransactionProfile : Profile
 {
     public TransactionProfile()
     {
-        CreateMap<Transaction, TransactionDto>();
+        CreateMap<Transaction, TransactionDto>().ReverseMap();
         CreateMap<TransactionForCreationDto, Transaction>();
         CreateMap<TransactionForUpdateDto, Transaction>();
     }

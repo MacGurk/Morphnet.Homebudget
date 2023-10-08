@@ -1,12 +1,14 @@
 ﻿using System.Text.Json;
-using AutoMapper;
+using HomeBudget.API.CQRS.Command.Settlement;
+using HomeBudget.API.CQRS.Command.Transaction;
+using HomeBudget.API.CQRS.Events;
+using HomeBudget.API.CQRS.Query.Settlement;
+using HomeBudget.API.CQRS.Query.Transaction;
 using HomeBudget.API.Entities;
 using HomeBudget.API.Models.Settlement;
 using HomeBudget.API.Models.Transaction;
-using HomeBudget.API.Models.UserModels;
-using HomeBudget.API.Services.Repositories;
+using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HomeBudget.API.Controllers
@@ -20,19 +22,13 @@ namespace HomeBudget.API.Controllers
     [Authorize]
     public class TransactionController : ControllerBase
     {
-        private readonly ITransactionRepository transactionRepository;
-        private readonly IUserRepository userRepository;
-        private readonly IMapper mapper;
+        private readonly IMediator mediator;
+        
         const int MaxTransactionPageSize = 100;
 
-        public TransactionController(
-            ITransactionRepository transactionRepository,
-            IMapper mapper,
-            IUserRepository userRepository)
+        public TransactionController(IMediator mediator)
         {
-            this.transactionRepository = transactionRepository;
-            this.mapper = mapper;
-            this.userRepository = userRepository;
+            this.mediator = mediator;
         }
 
         /// <summary>
@@ -57,13 +53,13 @@ namespace HomeBudget.API.Controllers
             {
                 pageSize = MaxTransactionPageSize;
             }
-
-            var (transactionEntities, paginationMetadata) =
-                await transactionRepository.GetTransactionsAsync(searchQuery, month, year, pageNumber, pageSize);
-
+            
+            var query = new GetTransactionsQuery(searchQuery, month, year, pageNumber, pageSize);
+            var (transactionEntities, paginationMetadata) = await mediator.Send(query);
+            
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
 
-            return Ok(mapper.Map<IEnumerable<TransactionDto>>(transactionEntities));
+            return Ok(transactionEntities);
         }
 
         /// <summary>
@@ -76,25 +72,15 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransactionDto>> GetTransactionAsync(int transactionId)
         {
-            var transaction = await transactionRepository.GetTransactionByIdAsync(transactionId);
-            return Ok(mapper.Map<TransactionDto>(transaction));
-        }
-
-        [HttpGet("user/{userId}/transaction")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync([FromRoute]int userId)
-        {
-            if (!await userRepository.UserExistsAsync(userId))
+            var query = new GetTransactionQuery(transactionId);
+            var transaction = await mediator.Send(query);
+            
+            if (transaction is null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            var transactions = await transactionRepository.GetTransactionsByUserAsync(userId);
-
-            return Ok(mapper.Map<IEnumerable<TransactionDto>>(transactions));
-
+            return Ok(transaction);
         }
 
         /// <summary>
@@ -107,19 +93,14 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
         {
-            var user = await userRepository.GetUserByIdAsync(transaction.UserId);
-            
-            if (user == null)
+            var command = new CreateTransactionCommand(transaction);
+            var createdTransaction = await mediator.Send(command);
+
+            if (createdTransaction is null)
             {
                 return BadRequest();
             }
-
-            var transactionToAdd = mapper.Map<Transaction>(transaction);
-            transactionToAdd.User = user;
-
-            await transactionRepository.AddTransactionAsync(transactionToAdd);
-
-            var createdTransaction = mapper.Map<TransactionDto>(transactionToAdd);
+            
             return CreatedAtRoute(
                 "GetTransaction",
                 new { transactionId = createdTransaction.Id },
@@ -136,54 +117,15 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> UpdateTransactionAsync(int transactionId, TransactionForUpdateDto transaction)
+        public async Task<ActionResult> UpdateTransactionAsync(int transactionId, TransactionDto transaction)
         {
-            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
-
-            if (transactionEntity == null)
+            var command = new UpdateTransactionCommand(transaction);
+            var @event = await mediator.Send(command);
+            
+            if (@event is TransactionNotFoundEvent)
             {
                 return NotFound();
             }
-
-            mapper.Map(transaction, transactionEntity);
-
-            await transactionRepository.SaveChangedAsync();
-
-            return NoContent();
-        }
-
-        /// <summary>
-        /// Partially update a transaction
-        /// </summary>
-        /// <param name="transactionId">The id of the transaction to update</param>
-        /// <param name="patchDocument">The patch document describing the update</param>
-        /// <returns>No Content</returns>
-        [HttpPatch("transaction/{transactionId}")]
-        [ProducesResponseType(StatusCodes.Status204NoContent)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult> PartialUpdateTransactionAsync(
-            int transactionId,
-            JsonPatchDocument<TransactionForUpdateDto> patchDocument)
-        {
-            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
-
-            if (transactionEntity == null)
-            {
-                return NotFound();
-            }
-
-            var transactionToPatch = mapper.Map<TransactionForUpdateDto>(transactionEntity);
-
-            patchDocument.ApplyTo(transactionToPatch, ModelState);
-
-            if (!ModelState.IsValid || !TryValidateModel(transactionToPatch))
-            {
-                return BadRequest(ModelState);
-            }
-
-            mapper.Map(transactionToPatch, transactionEntity);
-            await transactionRepository.SaveChangedAsync();
 
             return NoContent();
         }
@@ -198,13 +140,13 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteTransaction(int transactionId)
         {
-            var transactionEntity = await transactionRepository.GetTransactionByIdAsync(transactionId);
-            if (transactionEntity == null)
+            var command = new DeleteTransactionCommand(transactionId);
+            var @event = await mediator.Send(command);
+            
+            if (@event is TransactionNotFoundEvent)
             {
                 return NotFound();
             }
-
-            await transactionRepository.DeleteTransactionAsync(transactionEntity);
 
             return NoContent();
         }
@@ -215,44 +157,10 @@ namespace HomeBudget.API.Controllers
         /// <returns>A list of settlements</returns>
         [HttpGet("transaction/settlement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public async Task<ActionResult<IEnumerable<Settlement>>> GetSettlementAsync()
+        public async Task<ActionResult<IEnumerable<SettlementDto>>> GetSettlementAsync()
         {
-            var unsettledTransactions = (await transactionRepository.GetUnsettledTransactionsAsync()).ToList();
-            var users = (await userRepository.GetUsersAsync(isContributorFilter: true)).ToList();
-
-            var splitTotalPrice = unsettledTransactions.Sum(t => t.Price) / users.Count();
-            var userGroups = unsettledTransactions.GroupBy(t => t.User.Id).ToList();
-        
-            var settlements = new List<Settlement>();
-            foreach (var user in users)
-            {
-                var group = userGroups.SingleOrDefault(x => x.Key == user.Id);
-                var userDto = mapper.Map<UserDto>(user);
-                if (group is null)
-                {
-                    settlements.Add(
-                        new Settlement
-                        {
-                            User = userDto,
-                            Transactions = new List<TransactionDto>(),
-                            Amount = splitTotalPrice,
-                            Receives = false
-                        });
-                    continue;
-                }
-
-                var transactions = group.ToList();
-                var totalUserPrice = transactions.Sum(t => t.Price);
-                settlements.Add(
-                    new Settlement
-                    {
-                        User = userDto,
-                        Transactions = mapper.Map<IReadOnlyCollection<TransactionDto>>(transactions),
-                        Amount = Math.Abs(totalUserPrice - splitTotalPrice),
-                        Receives = totalUserPrice >= splitTotalPrice
-                    });
-            
-            }
+            var query = new GetSettlementsQuery();
+            var settlements = await mediator.Send(query);
         
             return Ok(settlements);
         }
@@ -266,13 +174,8 @@ namespace HomeBudget.API.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> SettleTransactions([FromBody] List<int> transactionIds)
         {
-            var transactions = await transactionRepository.GetTransactionsByIdAsync(transactionIds);
-            foreach (var transaction in transactions)
-            {
-                transaction.IsSettled = true;
-            }
-
-            await transactionRepository.SaveChangedAsync();
+            var command = new SettleTransactionsCommand(transactionIds);
+            await mediator.Send(command);
 
             return NoContent();
         }

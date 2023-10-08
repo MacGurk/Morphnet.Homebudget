@@ -16,9 +16,9 @@ namespace HomeBudget.API.Services.Repositories
         
         Task<IEnumerable<Transaction>> GetUnsettledTransactionsAsync();
 
-        Task AddTransactionAsync(Transaction transaction);
+        void AddTransaction(Transaction transaction);
 
-        Task DeleteTransactionAsync(Transaction transaction);
+        void DeleteTransaction(Transaction transaction);
         Task SaveChangedAsync();
         Task<IEnumerable<Transaction>> GetTransactionsByIdAsync(List<int> transactionIds);
     }

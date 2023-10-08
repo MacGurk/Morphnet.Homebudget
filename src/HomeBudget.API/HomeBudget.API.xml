@@ -34,20 +34,12 @@
             <param name="transaction">Transaction to create</param>
             <returns>The created transaction and the corresponding route</returns>
         </member>
-        <member name="M:HomeBudget.API.Controllers.TransactionController.UpdateTransactionAsync(System.Int32,HomeBudget.API.Models.Transaction.TransactionForUpdateDto)">
+        <member name="M:HomeBudget.API.Controllers.TransactionController.UpdateTransactionAsync(System.Int32,HomeBudget.API.Models.Transaction.TransactionDto)">
             <summary>
             Update a transaction
             </summary>
             <param name="transactionId">The id of the transaction to update</param>
             <param name="transaction">The updated transaction</param>
-            <returns>No Content</returns>
-        </member>
-        <member name="M:HomeBudget.API.Controllers.TransactionController.PartialUpdateTransactionAsync(System.Int32,Microsoft.AspNetCore.JsonPatch.JsonPatchDocument{HomeBudget.API.Models.Transaction.TransactionForUpdateDto})">
-            <summary>
-            Partially update a transaction
-            </summary>
-            <param name="transactionId">The id of the transaction to update</param>
-            <param name="patchDocument">The patch document describing the update</param>
             <returns>No Content</returns>
         </member>
         <member name="M:HomeBudget.API.Controllers.TransactionController.DeleteTransaction(System.Int32)">

@@ -1,9 +1,8 @@
-using AutoMapper;
 using HomeBudget.API.CQRS.Command.User;
 using HomeBudget.API.CQRS.Events;
 using HomeBudget.API.CQRS.Query.User;
+using HomeBudget.API.Models.Transaction;
 using HomeBudget.API.Models.UserModels;
-using HomeBudget.API.Services.Repositories;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -63,6 +62,24 @@ namespace HomeBudget.API.Controllers
             }
 
             return Ok(user);
+        }
+        
+        [HttpGet("user/{userId}/transaction")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync([FromRoute]int userId)
+        {
+            var query = new GetTransactionsOfUserQuery(userId);
+            var transactions = await mediator.Send(query);
+            
+            if (transactions is null)
+            {
+                return BadRequest();
+            }
+            
+            return Ok(transactions);
+
         }
 
         /// <summary>
