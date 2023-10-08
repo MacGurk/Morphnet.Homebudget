@@ -8,9 +8,9 @@ public class TransactionForUpdateDto
 
     public DateTimeOffset Date { get; set; }
 
-    public UserDto User { get; set; } = null!;
+    public UserDto User { get; set; } = new();
 
-    public string Description { get; set; } = default!;
+    public string Description { get; set; } = string.Empty;
 
     public decimal Price { get; set; }
 

@@ -24,7 +24,7 @@ public class TransactionForCreationDto
     /// </summary>
     [Required]
     [MaxLength(200)]
-    public string Description { get; set; } = default!;
+    public string Description { get; set; } = string.Empty;
 
     /// <summary>
     /// The price of the transaction

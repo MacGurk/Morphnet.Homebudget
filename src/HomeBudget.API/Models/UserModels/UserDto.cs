@@ -13,12 +13,12 @@ public class UserDto
     /// <summary>
     /// Name of the user
     /// </summary>
-    public string Name { get; set; } = default!;
+    public string Name { get; set; } = string.Empty;
 
     /// <summary>
     /// Email address of the user
     /// </summary>
-    public string Email { get; set; } = default!;
+    public string Email { get; set; } = string.Empty;
 
     /// <summary>
     /// Is the user a contributor

@@ -10,5 +10,5 @@ public class UserForUpdatePasswordDto
     /// <summary>
     /// Updates password for User
     /// </summary>
-    public string Password { get; set; } = default!;
+    public string Password { get; set; } = string.Empty;
 }

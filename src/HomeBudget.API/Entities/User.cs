@@ -11,19 +11,19 @@ namespace HomeBudget.API.Entities
 
         [Required]
         [MaxLength(50)]
-        public string Name { get; set; } = default!;
+        public string Name { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(70)]
-        public string Email { get; set; } = default!;
+        public string Email { get; set; } = string.Empty;
 
         [Required]
         [MaxLength(128)]
-        public byte[] PasswordHash { get; set; } = default!;
+        public byte[] PasswordHash { get; set; } = Array.Empty<byte>();
 
         [Required]
         [MaxLength(128)]
-        public byte[] PasswordSalt { get; set; } = default!;
+        public byte[] PasswordSalt { get; set; } = Array.Empty<byte>();
         
         [Required]
         public bool IsContributor { get; set; }

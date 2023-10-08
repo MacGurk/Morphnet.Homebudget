@@ -15,11 +15,11 @@ namespace HomeBudget.API.Entities
         public int UserId { get; set; }
         
         [Required]
-        public User User { get; set; } = null!;
+        public User User { get; set; } = new();
 
         [Required]
         [MaxLength(200)]
-        public string Description { get; set; } = default!;
+        public string Description { get; set; } = string.Empty;
 
         [Required]
         public decimal Price { get; set; }

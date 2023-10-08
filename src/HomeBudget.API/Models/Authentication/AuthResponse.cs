@@ -4,6 +4,6 @@ namespace HomeBudget.API.Models.Authentication;
 
 public record AuthResponse
 {
-    public UserDto User { get; init; }
-    public string Token { get; init; }
+    public UserDto User { get; init; } = new();
+    public string Token { get; init; } = string.Empty;
 }
