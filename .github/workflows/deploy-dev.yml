@@ -21,7 +21,7 @@ jobs:
       - name: Replace token
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["./deploy/docker-compose/dev/docker-compose.yaml"]'
+          files: '["./deploy/docker-compose/developement/docker-compose.yaml"]'
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
