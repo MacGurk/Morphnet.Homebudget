@@ -10,7 +10,7 @@ services:
       - MYSQL_DATABASE=homebudget
       - MYSQL_USER=homebudget_admin
       - MYSQL_PASSWORD=#{MYSQL_PASSWORD}#
-      - MYSQL_ROOT_PASSWORD=#{MYQL_ROOT_PASSWORD}#
+      - MYSQL_ROOT_PASSWORD=#{MYSQL_ROOT_PASSWORD}#
     healthcheck:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
       timeout: 20s
