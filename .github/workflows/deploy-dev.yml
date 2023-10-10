@@ -10,6 +10,7 @@ env:
     
 jobs:
   wireguard_connect:
+    environment: development
     runs-on: ubuntu-latest
     steps:
       - name: Setup Wireguard
