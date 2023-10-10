@@ -1,0 +1,52 @@
+version: '3'
+
+services:
+  db:
+    image: mysql:8
+    restart: unless-stopped
+    volumes:
+      - ./db/data:/var/lib/mysql
+    environment:
+      - MYSQL_DATABASE=homebudget
+      - MYSQL_USER=homebudget_admin
+      - MYSQL_PASSWORD=#{MYSQL_PASSWORD}#
+      - MYSQL_ROOT_PASSWORD=#{MYQL_ROOT_PASSWORD}#
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 20s
+      retries: 10
+  
+  app:
+    image: ghcr.io/macgurk/morphnet.homebudget:latest
+    depends_on:
+      db:
+        condition: service_healthy
+    links:
+      - db
+    restart: unless-stopped
+    environment:
+      - Mysql__ConnectionString=server=db;database=homebudget;user=homebudget_admin;password=#{MYSQL_PASSWORD}#;
+      - Auth__Issuer=homebudget-dev.morphnet.ch
+      - Auth__Audience=homebudget-dev.morphnet.ch
+      - Auth__Secret=#{AUTH_SECRET}#
+    networks:
+      - default
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homebudget-dev.entrypoints=http
+      - traefik.http.routers.homebudget-dev.rule=Host(`homebudget-dev.morphnet.ch`)
+      - traefik.http.middlewares.homebudget-dev-https-redirect.redirectscheme.scheme=https
+      - traefik.http.routers.homebudget-dev.middlewares=homebudget-dev-https-redirect
+      - traefik.http.routers.homebudget-dev-secure.entrypoints=https
+      - traefik.http.routers.homebudget-dev-secure.rule=Host(`homebudget-dev.morphnet.ch`)
+      - traefik.http.routers.homebudget-dev-secure.tls=true
+      - traefik.http.routers.homebudget-dev-secure.tls.certresolver=http
+      - traefik.http.routers.homebudget-dev-secure.service=homebudget-dev
+      - traefik.http.services.homebudget-dev.loadbalancer.server.port=80
+      - traefik.http.services.homebudget-dev.loadbalancer.passHostHeader=true
+      - traefik.docker.network=proxy
+
+networks:
+  proxy:
+    external: true 
