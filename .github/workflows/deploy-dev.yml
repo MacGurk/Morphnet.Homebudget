@@ -18,12 +18,11 @@ jobs:
           sudo ip address add dev wg0 10.0.0.2 peer 10.0.0.1
           sudo wg set wg0 listen-port 48123 private-key privatekey peer ${{ secrets.WIREGUARD_ENDPOINT_PUBLICKEY }} allowed-ips 0.0.0.0/0 endpoint ${{ secrets.WIREGUARD_ENDPOINT }}
           sudo ip link set up dev wg0
-          ls -la
 
       - name: Replace token
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["deploy/docker-compose/development/docker-compose.yaml"]'
+          files: '["./deploy/docker-compose/development/docker-compose.yaml"]'
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
@@ -36,8 +35,8 @@ jobs:
           port: 22
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "deploy/docker-compose/development/docker-compose.yaml"
-          target: "/src/docker-compose/homebudget-dev/docker-compose.yaml"
+          source: "./deploy/docker-compose/development/docker-compose.yaml"
+          target: "/src/docker-compose/homebudget-dev/"
 
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
