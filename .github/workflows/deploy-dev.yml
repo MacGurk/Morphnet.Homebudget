@@ -23,7 +23,7 @@ jobs:
       - name: Replace token
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["deployment/docker-compose/developement/docker-compose.yaml"]'
+          files: '["deploy/docker-compose/development/docker-compose.yaml"]'
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
@@ -36,7 +36,7 @@ jobs:
           port: 22
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "deployment/docker-compose/developement/docker-compose.yaml"
+          source: "deploy/docker-compose/development/docker-compose.yaml"
           target: "/src/docker-compose/homebudget-dev/docker-compose.yaml"
 
       - name: Execute SSH commmands on remote server
