@@ -45,4 +45,5 @@ jobs:
           privateKey: ${{ secrets.SSH_KEY }}
           command: |
             cd /srv/docker-compose/homebudget-dev
-            docker-compose up -d --force-recreate
+            docker compose pull
+            docker compose up -d
