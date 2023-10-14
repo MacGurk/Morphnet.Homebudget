@@ -41,7 +41,7 @@ jobs:
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
         with:
-          hosts: ${{ secrets.SSH_USERNAME }}@10.0.0.2
+          hosts: ${{ secrets.SSH_USERNAME }}@10.0.0.1
           privateKey: ${{ secrets.SSH_KEY }}
           command: |
             cd /srv/docker-compose/homebudget-dev
