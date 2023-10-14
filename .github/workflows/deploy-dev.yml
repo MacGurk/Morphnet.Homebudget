@@ -2,9 +2,13 @@ name: Deploy development environment
 
 on:
   workflow_dispatch:
+  workflow_run:
+    workflows: [Create and publish Docker image]
+    types:
+      - completed
 
 jobs:
-  wireguard_connect:
+  deploy-dev-morphnet:
     environment: development
     runs-on: ubuntu-latest
     steps:
