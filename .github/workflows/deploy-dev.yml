@@ -1,9 +1,8 @@
 name: Deploy development environment
 
 on:
-  workflow_dispatch: 
-  
-    
+  workflow_dispatch:
+
 jobs:
   wireguard_connect:
     environment: development
@@ -19,17 +18,17 @@ jobs:
           sudo ip address add dev wg0 10.0.0.2 peer 10.0.0.1
           sudo wg set wg0 listen-port 48123 private-key privatekey peer ${{ secrets.WIREGUARD_ENDPOINT_PUBLICKEY }} allowed-ips 0.0.0.0/0 endpoint ${{ secrets.WIREGUARD_ENDPOINT }}
           sudo ip link set up dev wg0
-          ls deploy
-      
+          ls -la
+
       - name: Replace token
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["deploy/docker-compose/developement/docker-compose.yaml"]'
+          files: '["deployment/docker-compose/developement/docker-compose.yaml"]'
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
-      
+
       - name: Upload something
         uses: moonpathbg/scp_uploader@latest
         with:
@@ -37,9 +36,9 @@ jobs:
           port: 22
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "deploy/docker-compose/developement/docker-compose.yaml"
+          source: "deployment/docker-compose/developement/docker-compose.yaml"
           target: "/src/docker-compose/homebudget-dev/docker-compose.yaml"
-          
+
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
         with:
