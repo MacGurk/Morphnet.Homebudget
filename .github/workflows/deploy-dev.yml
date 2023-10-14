@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           source: "./deploy/docker-compose/development/docker-compose.yaml"
-          target: "/src/docker-compose/homebudget-dev/"
+          target: "/srv/docker-compose/homebudget-dev/"
 
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
