@@ -1,4 +1,4 @@
-name: Deploy development environment
+name: Deploy production environment
 
 on:
   workflow_dispatch:
