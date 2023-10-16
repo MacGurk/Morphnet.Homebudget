@@ -2,14 +2,14 @@ name: Deploy development environment
 
 on:
   workflow_dispatch:
-  workflow_run:
-    workflows: [Create and publish Docker image]
-    types:
-      - completed
+    inputs:
+      version:
+        type: string
+        description: Version to deploy
 
 jobs:
-  deploy-dev-morphnet:
-    environment: development
+  deploy-prod-morphnet:
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -26,11 +26,12 @@ jobs:
       - name: Replace token
         uses: cschleiden/replace-tokens@v1
         with:
-          files: '["./deploy/docker-compose/development/docker-compose.yaml"]'
+          files: '["./deploy/docker-compose/production/docker-compose.yaml"]'
         env:
           AUTH_SECRET: ${{ secrets.AUTH_SECRET }}
           MYSQL_PASSWORD: ${{ secrets.MYSQL_PASSWORD }}
           MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_ROOT_PASSWORD }}
+          PROD_VERSION: ${{ github.event.inputs.version }}
 
       - name: Upload something
         uses: moonpathbg/scp_uploader@latest
@@ -39,8 +40,8 @@ jobs:
           port: 22
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
-          source: "./deploy/docker-compose/development/docker-compose.yaml"
-          target: "/srv/docker-compose/homebudget-dev/"
+          source: "./deploy/docker-compose/production/docker-compose.yaml"
+          target: "/srv/docker-compose/homebudget/"
 
       - name: Execute SSH commmands on remote server
         uses: JimCronqvist/action-ssh@master
@@ -48,6 +49,6 @@ jobs:
           hosts: ${{ secrets.SSH_USERNAME }}@10.0.0.1
           privateKey: ${{ secrets.SSH_KEY }}
           command: |
-            cd /srv/docker-compose/homebudget-dev
+            cd /srv/docker-compose/homebudget
             docker compose pull
             docker compose up -d

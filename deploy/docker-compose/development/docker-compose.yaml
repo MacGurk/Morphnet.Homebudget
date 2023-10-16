@@ -1,4 +1,4 @@
-version: '3'
+version: "3"
 
 services:
   db:
@@ -12,10 +12,10 @@ services:
       - MYSQL_PASSWORD=#{MYSQL_PASSWORD}#
       - MYSQL_ROOT_PASSWORD=#{MYSQL_ROOT_PASSWORD}#
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
       timeout: 20s
       retries: 10
-  
+
   app:
     image: ghcr.io/macgurk/morphnet.homebudget:latest
     depends_on:
@@ -49,4 +49,4 @@ services:
 
 networks:
   proxy:
-    external: true 
+    external: true
