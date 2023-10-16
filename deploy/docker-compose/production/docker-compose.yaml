@@ -30,7 +30,7 @@ services:
       - Auth__Audience=homebudget.morphnet.ch
       - Auth__Secret=#{AUTH_SECRET}#
     networks:
-      - de  fault
+      - default
       - proxy
     labels:
       - traefik.enable=true
