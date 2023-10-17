@@ -28,6 +28,7 @@ public class CreateTransactionCommandHandler : IRequestHandler<CreateTransaction
             return null;
         }
         var transaction = mapper.Map<Entities.Transaction>(request.Transaction);
+        transaction.User = user;
         
         transactionRepository.AddTransaction(transaction);
         await transactionRepository.SaveChangedAsync();
