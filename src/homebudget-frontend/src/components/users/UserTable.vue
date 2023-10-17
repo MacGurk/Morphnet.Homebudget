@@ -14,22 +14,20 @@
           <UserCreateForm @add-user="addUser"></UserCreateForm>
         </v-toolbar>
       </template>
-      <template #[`item.name`]="{ item }">
-        <v-list-item :to="`/users/${item.raw.id}`">{{
-          item.raw.name
-        }}</v-list-item>
+      <template #item.name="{ item }">
+        <v-list-item :to="`/users/${item.id}`">{{ item.name }}</v-list-item>
       </template>
       <template #item.isContributor="{ item }">
-        <v-icon v-if="item.raw.isContributor" size="small" color="success">
+        <v-icon v-if="item.isContributor" size="small" color="success">
           mdi-check-circle-outline
         </v-icon>
         <v-icon v-else size="small" color="error">
           mdi-close-circle-outline
         </v-icon>
       </template>
-      <template #[`item.actions`]="{ item }">
+      <template #item.actions="{ item }">
         <CrudActions
-          :item-id="item.raw.id"
+          :item-id="item.id"
           @edit-item="editUser"
           @delete-item="deleteUser"
         ></CrudActions>

@@ -15,10 +15,10 @@
         </v-toolbar>
       </template>
       <template #item.date="{ item }">
-        {{ formatDate(item.raw.date) }}
+        {{ formatDate(item.date) }}
       </template>
       <template #item.isSettled="{ item }">
-        <v-icon v-if="item.raw.isSettled" size="small" color="success">
+        <v-icon v-if="item.isSettled" size="small" color="success">
           mdi-check-circle-outline
         </v-icon>
         <v-icon v-else size="small" color="error">
@@ -27,7 +27,7 @@
       </template>
       <template #[`item.actions`]="{ item }">
         <CrudActions
-          :item-id="item.raw.id"
+          :item-id="item.id"
           @edit-item="editTransaction"
           @delete-item="deleteTransaction"
         ></CrudActions>
