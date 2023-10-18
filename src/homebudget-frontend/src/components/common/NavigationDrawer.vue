@@ -1,5 +1,9 @@
 ﻿<template>
-  <v-navigation-drawer permanent>
+  <v-navigation-drawer
+    v-model="navStore.isNavOpen"
+    :temporary="mobile"
+    :permanent="!mobile"
+  >
     <v-list-item :title="username"> </v-list-item>
     <v-divider></v-divider>
     <v-list nav>
@@ -30,7 +34,7 @@
     </v-list>
     <v-divider></v-divider>
 
-    <template v-slot:append>
+    <template #append>
       <v-list-item
         prepend-icon="mdi-logout"
         title="Logout"
@@ -55,9 +59,14 @@
 import { useThemeStore } from '@/stores/theme.stora';
 import { useAuthStore } from '@/stores/auth.store';
 import { ref } from 'vue';
+import { useNavStore } from '@/stores/nav.store';
+import { useDisplay } from 'vuetify';
+
+const { mobile } = useDisplay();
 
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
+const navStore = useNavStore();
 
 const username = ref<string>('');
 if (authStore.auth) {

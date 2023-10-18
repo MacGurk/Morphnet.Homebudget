@@ -1,8 +1,6 @@
 <template>
   <v-app :theme="themeStore.theme">
-    <v-app-bar>
-      <v-app-bar-title>HomeBudget</v-app-bar-title>
-    </v-app-bar>
+    <AppBar />
     <NavigationDrawer v-if="!!authStore.auth"></NavigationDrawer>
     <v-main>
       <router-view></router-view>
@@ -14,6 +12,7 @@
 import NavigationDrawer from '@/components/common/NavigationDrawer.vue';
 import { useThemeStore } from '@/stores/theme.stora';
 import { useAuthStore } from '@/stores/auth.store';
+import AppBar from '@/components/common/AppBar.vue';
 
 const themeStore = useThemeStore();
 const authStore = useAuthStore();
