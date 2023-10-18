@@ -1,5 +1,5 @@
 ﻿<template>
-  <div class="pa-16">
+  <div :class="mobile ? 'ma-3' : 'ma-16'">
     <v-data-table
       :headers="headers"
       :items="$props.users"
@@ -43,6 +43,7 @@ import UserCreateForm from '@/components/users/UserCreateForm.vue';
 import UserForCreation from '@/models/UserForCreation';
 import CrudActions from '@/components/common/CrudActions.vue';
 import router from '@/router';
+import { useDisplay } from 'vuetify';
 
 interface UserTableHeader {
   title: string;
@@ -51,6 +52,8 @@ interface UserTableHeader {
   sortable?: boolean;
   width?: string;
 }
+
+const { mobile } = useDisplay();
 
 const props = withDefaults(
   defineProps<{

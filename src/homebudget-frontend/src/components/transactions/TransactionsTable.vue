@@ -1,5 +1,5 @@
 <template>
-  <div class="pa-16">
+  <div :class="mobile ? 'ma-3' : 'ma-16'">
     <v-data-table
       :headers="headers"
       :items="$props.transactions"
@@ -41,6 +41,7 @@ import { onBeforeMount, onMounted } from 'vue';
 import Transaction from '@/entities/Transaction';
 import CrudActions from '@/components/common/CrudActions.vue';
 import router from '@/router';
+import { useDisplay } from 'vuetify';
 
 interface TransactionsTableHeader {
   title: string;
@@ -49,6 +50,8 @@ interface TransactionsTableHeader {
   sortable?: boolean;
   width?: string;
 }
+
+const { mobile } = useDisplay();
 
 const props = withDefaults(
   defineProps<{
@@ -64,7 +67,6 @@ const props = withDefaults(
 );
 
 const headers: TransactionsTableHeader[] = [
-  { title: 'Id', align: 'start', key: 'id', width: '5%' },
   { title: 'Date', align: 'start', key: 'date', width: '5%' },
   { title: 'Description', align: 'start', key: 'description' },
   { title: 'User', align: 'start', key: 'user.name' },
