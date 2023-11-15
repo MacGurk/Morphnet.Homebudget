@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { useThemeStore } from '@/stores/theme.stora';
+import { useThemeStore } from '@/stores/theme.store';
 import { useAuthStore } from '@/stores/auth.store';
 import { ref } from 'vue';
 import { useNavStore } from '@/stores/nav.store';
