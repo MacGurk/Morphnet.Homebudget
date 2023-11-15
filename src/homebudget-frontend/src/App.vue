@@ -10,7 +10,7 @@
 
 <script setup lang="ts">
 import NavigationDrawer from '@/components/common/NavigationDrawer.vue';
-import { useThemeStore } from '@/stores/theme.stora';
+import { useThemeStore } from '@/stores/theme.store';
 import { useAuthStore } from '@/stores/auth.store';
 import AppBar from '@/components/common/AppBar.vue';
 
