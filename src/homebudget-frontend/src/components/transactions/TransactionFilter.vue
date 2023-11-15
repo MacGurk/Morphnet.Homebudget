@@ -1,13 +1,17 @@
 <template>
   <div class="d-flex justify-center align-center">
     <v-icon size="large" @click="year--"> mdi-chevron-double-left </v-icon>
-    <div class="mx-3">
+    <div class="mx-3 year-text text-center">
       <v-text-field
         v-if="editYear"
         ref="yearText"
         v-model="enteredYear"
         type="text"
         @blur="finishEditYear"
+        variant="solo"
+        single-line
+        hide-details
+        density="compact"
         @keydown:enter="finishEditYear"
       ></v-text-field>
       <div v-else class="text-h6" @click="startEditYear">
@@ -107,5 +111,9 @@ const monthActive = (index: number) => {
 
 .monthbox-bg {
   background-color: rgb(var(--v-theme-surface));
+}
+
+.year-text {
+  width: 75px;
 }
 </style>
