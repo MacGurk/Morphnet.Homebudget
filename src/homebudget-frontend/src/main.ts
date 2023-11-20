@@ -6,7 +6,6 @@ import 'vuetify/styles';
 import {createVuetify, ThemeDefinition} from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
-import { VDataTable } from 'vuetify/labs/VDataTable';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import '@mdi/font/css/materialdesignicons.css';
 import {createPinia, Pinia} from 'pinia';
@@ -45,10 +44,7 @@ const cattpucinMocha : ThemeDefinition = {
 }
 
 const vuetify = createVuetify({
-  components: {
-    ...components,
-    VDataTable,
-  },
+  components,
   icons: {
     defaultSet: 'mdi',
     aliases,
