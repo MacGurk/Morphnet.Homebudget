@@ -6,7 +6,7 @@
       :items-per-page="10"
       :loading="props.loading"
     >
-      <template #top>
+      <template v-slot:top>
         <v-toolbar flat>
           <v-toolbar-title>{{ $props.title }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -14,10 +14,10 @@
           <slot name="createForm"></slot>
         </v-toolbar>
       </template>
-      <template #item.date="{ item }">
+      <template v-slot:item.date="{ item }">
         {{ formatDate(item.date) }}
       </template>
-      <template #item.isSettled="{ item }">
+      <template v-slot:item.isSettled="{ item }">
         <v-icon v-if="item.isSettled" size="small" color="success">
           mdi-check-circle-outline
         </v-icon>
@@ -57,7 +57,7 @@ const props = withDefaults(
   defineProps<{
     title: string;
     transactions: Transaction[];
-    hideActions: boolean;
+    hideActions?: boolean;
     loading: boolean;
   }>(),
   {

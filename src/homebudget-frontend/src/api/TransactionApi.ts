@@ -18,7 +18,7 @@ export default class TransactionApi {
     month: number,
     year: number,
   ): Promise<Transaction[]> {
-    const path = `${this.path}?month=${month + 1}&year=${year}`;
+    const path = `${this.path}?month=${month + 1}&year=${year}&pageSize=1000000`;
     const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });

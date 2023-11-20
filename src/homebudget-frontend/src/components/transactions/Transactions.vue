@@ -4,6 +4,7 @@
   <TransactionsTable
     title="Transactions Overview"
     :transactions="transactions"
+    :loading="loading"
     @delete-transaction="deleteTransaction"
   >
     <template #createForm>
@@ -21,7 +22,7 @@ import TransactionApi from '@/api/TransactionApi';
 import User from '@/entities/User';
 import UserApi from '@/api/UserApi';
 import TransactionForCreation from '@/models/TransactionForCreation';
-import { getDateString } from '../../utils/utils';
+import { getDateString } from '@/utils/utils';
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';
 import TransactionFilter from '@/components/transactions/TransactionFilter.vue';
 import { YearMonthFilter } from '@/types/YearMonthFilter';
@@ -32,6 +33,7 @@ interface TransactionsData {
   transactions: Transaction[];
   users: User[];
   filter: YearMonthFilter;
+  loading: boolean;
 }
 
 const userApi = new UserApi();
@@ -54,6 +56,7 @@ export default defineComponent({
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
       },
+      loading: false,
     };
   },
   created() {
@@ -65,12 +68,15 @@ export default defineComponent({
     async fetchTransactions(): Promise<void> {
       this.transactions = [];
       try {
+        this.loading = true;
         this.transactions = await transactionApi.getFiltered(
           this.filter.month,
           this.filter.year,
         );
       } catch (e) {
         console.error('Error:', e);
+      } finally {
+        this.loading = false;
       }
     },
     async fetchUsers(): Promise<void> {

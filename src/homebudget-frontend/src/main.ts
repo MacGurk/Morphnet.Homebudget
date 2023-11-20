@@ -16,10 +16,10 @@ const cattpucinLatte : ThemeDefinition = {
   colors: {
     background: '#e6e9ef',
     surface: '#dce0e8',
-    primary: '#209fb5',
-    'primary-darken-1': '#0f4852',
-    secondary: '#dc8a78',
-    'secondary-darken-1': '#674139',
+    primary: '#dd7878',
+    'primary-darken-1': '#673838',
+    secondary: '#179299',
+    'secondary-darken-1': '#0b464a',
     error: '#d20f39',
     info: '#1e66f5',
     success: '#40a02b',
@@ -27,19 +27,19 @@ const cattpucinLatte : ThemeDefinition = {
   }
 }
 
-const cattpucinMocha : ThemeDefinition = {
+const cattpucinMacciato  = {
   dark: false,
   colors: {
-    background: '#181825',
-    surface: '#11111b',
-    primary: '#74c7ec',
-    'primary-darken-1': '#3f6c80',
-    secondary: '#f5e0dc',
-    'secondary-darken-1': '#796e6c',
-    error: '#f38ba8',
-    info: '#89b4fa',
-    success: '#a6e3a1',
-    warning: '#f9e2af',
+    background: '#1e2030',
+    surface: '#181926',
+    primary: '#b7bdf8',
+    'primary-darken-1': '#616483',
+    secondary: '#8bd5ca',
+    'secondary-darken-1': '#61968f',
+    error: '#ed8796',
+    info: '#8aadf4',
+    success: '#a6da95',
+    warning: '#eed49f',
   }
 }
 
@@ -56,7 +56,7 @@ const vuetify = createVuetify({
   theme: {
     defaultTheme: 'dark',
     themes: {
-      dark: cattpucinMocha,
+      dark: cattpucinMacciato,
       light: cattpucinLatte,
     },
   },
