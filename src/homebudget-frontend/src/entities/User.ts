@@ -7,13 +7,6 @@ export default class User {
   private _email: string;
   private _isContributor: boolean;
 
-  constructor(id: number, name: string, email: string, isContributor: boolean) {
-    this._id = id;
-    this._name = name;
-    this._email = email;
-    this._isContributor = isContributor;
-  }
-
   get isContributor(): boolean {
     return this._isContributor;
   }

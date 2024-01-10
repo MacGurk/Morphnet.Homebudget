@@ -1,26 +1,30 @@
 <template>
   <TitleBar>Home</TitleBar>
   <div class="ma-4 text-center">
-    <v-img
-        class="ml-2"
-        src="img/homebudget-logo.svg"
-        max-height="200"
-        contain
-    />
-    <h2>Welcome to HomeBudget</h2>
-    <p>The home screen is currently under development.</p>
-    <p>Maybe some statistics will be visible here in the future.</p>
-    <TransactionYearLineGraph />
+    <v-container>
+      <v-row>
+        <v-col cols="12" md="6">
+          <HomeCard title="Year statistic">
+            <YearBarGraph />
+          </HomeCard>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
-<script>
-import TitleBar from '@/components/common/TitleBar.vue';
+<script lang="ts">
+import TitleBar from "@/components/common/TitleBar.vue";
+import HomeCard from "@/components/Home/HomeCard.vue";
+import YearBarGraph from "@/components/statistics/YearBarGraph.vue";
 
 export default {
-  name: 'Home',
-  components: { TitleBar },
-};
+  name: 'BarChart',
+  components: {YearBarGraph, HomeCard, TitleBar},
+}
+
+
+
 </script>
 
 <style scoped></style>
