@@ -17,8 +17,7 @@ namespace HomeBudget.API.Services.Repositories
 
         public async Task<IEnumerable<Transaction>> GetTransactionsAsync() => await context.Transactions.ToListAsync();
 
-        public async Task<(IEnumerable<Transaction>, PaginationMetadata)> GetTransactionsAsync(string? searchQuery,
-            int? month, int? year, int pageNumber, int pageSize)
+        public async Task<IEnumerable<Transaction>> GetTransactionsAsync(string? searchQuery, int? month, int? year)
         {
             var collection = context.Transactions as IQueryable<Transaction>;
 
@@ -33,18 +32,17 @@ namespace HomeBudget.API.Services.Repositories
             {
                 collection = collection.Where(x => x.Date.Year == year.Value && x.Date.Month == month.Value);
             }
-
-            var totalItemCount = await collection.CountAsync();
-
-            var paginationMetadata = new PaginationMetadata(totalItemCount, pageSize, pageNumber);
-
+            
+            if (year.HasValue && !month.HasValue)
+            {
+                collection = collection.Where(x => x.Date.Year == year.Value);
+            }
+            
             var collectionToReturn = await collection
-                .Skip(pageSize * (pageNumber - 1))
-                .Take(pageSize)
                 .Include(x => x.User)
                 .ToListAsync();
 
-            return (collectionToReturn, paginationMetadata);
+            return collectionToReturn;
         }
 
         public async Task<Transaction?> GetTransactionByIdAsync(int transactionId) =>

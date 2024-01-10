@@ -7,8 +7,7 @@ namespace HomeBudget.API.Services.Repositories
     {
         Task<IEnumerable<Transaction>> GetTransactionsAsync();
 
-        Task<(IEnumerable<Transaction>, PaginationMetadata)> GetTransactionsAsync(string? searchQuery, int? month,
-            int? year, int pageNumber, int pageSize);
+        Task<IEnumerable<Transaction>> GetTransactionsAsync(string? searchQuery, int? month, int? year);
 
         Task<Transaction?> GetTransactionByIdAsync(int transactionId);
 

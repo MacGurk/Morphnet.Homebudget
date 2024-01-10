@@ -7,15 +7,13 @@ using MediatR;
 namespace HomeBudget.API.CQRS.Query.Transaction;
 
 public record GetTransactionsQuery(
-        string? SearchQuery,
-        int? Month,
-        int? Year,
-        int PageNumber,
-        int PageSize
-    ) : IRequest<(IEnumerable<TransactionDto>, PaginationMetadata)>;
+    string? SearchQuery,
+    int? Month,
+    int? Year
+) : IRequest<IEnumerable<TransactionDto>>;
 
-
-public class GetTransactionsQueryRequestHandler : IRequestHandler<GetTransactionsQuery, (IEnumerable<TransactionDto>, PaginationMetadata)>
+public class
+    GetTransactionsQueryRequestHandler : IRequestHandler<GetTransactionsQuery, IEnumerable<TransactionDto>>
 {
     private readonly ITransactionRepository transactionRepository;
     private readonly IMapper mapper;
@@ -26,15 +24,15 @@ public class GetTransactionsQueryRequestHandler : IRequestHandler<GetTransaction
         this.mapper = mapper;
     }
 
-    public async Task<(IEnumerable<TransactionDto>, PaginationMetadata)> Handle(GetTransactionsQuery request, CancellationToken cancellationToken)
+    public async Task<IEnumerable<TransactionDto>> Handle(GetTransactionsQuery request,
+        CancellationToken cancellationToken)
     {
-        var (transactions, paginationMetadata) = await transactionRepository.GetTransactionsAsync(
+        var transactions = await transactionRepository.GetTransactionsAsync(
             request.SearchQuery,
             request.Month,
-            request.Year,
-            request.PageNumber,
-            request.PageSize);
+            request.Year
+        );
 
-        return (mapper.Map<IEnumerable<TransactionDto>>(transactions), paginationMetadata);
+        return mapper.Map<IEnumerable<TransactionDto>>(transactions);
     }
 }

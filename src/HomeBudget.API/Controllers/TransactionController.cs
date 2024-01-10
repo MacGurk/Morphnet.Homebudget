@@ -1,5 +1,4 @@
-﻿using System.Text.Json;
-using HomeBudget.API.CQRS.Command.Settlement;
+﻿using HomeBudget.API.CQRS.Command.Settlement;
 using HomeBudget.API.CQRS.Command.Transaction;
 using HomeBudget.API.CQRS.Events;
 using HomeBudget.API.CQRS.Query.Settlement;
@@ -22,13 +21,11 @@ namespace HomeBudget.API.Controllers
     [Authorize]
     public class TransactionController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
         
-        const int MaxTransactionPageSize = 100;
-
         public TransactionController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -37,27 +34,16 @@ namespace HomeBudget.API.Controllers
         /// <param name="searchQuery">Optional: Search filter</param>
         /// <param name="month">Month filter</param>
         /// <param name="year">Year filter</param>
-        /// <param name="pageNumber">Page of the results to return</param>
-        /// <param name="pageSize">Amount of results to return</param>
         /// <returns>A list of transactions</returns>
         [HttpGet("transaction")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
             string? searchQuery,
             int? month,
-            int? year,
-            int pageNumber = 1,
-            int pageSize = 10)
+            int? year)
         {
-            if (pageSize > MaxTransactionPageSize)
-            {
-                pageSize = MaxTransactionPageSize;
-            }
-            
-            var query = new GetTransactionsQuery(searchQuery, month, year, pageNumber, pageSize);
-            var (transactionEntities, paginationMetadata) = await mediator.Send(query);
-            
-            Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(paginationMetadata));
+            var query = new GetTransactionsQuery(searchQuery, month, year);
+            var transactionEntities = await _mediator.Send(query);
 
             return Ok(transactionEntities);
         }
@@ -73,8 +59,8 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<TransactionDto>> GetTransactionAsync(int transactionId)
         {
             var query = new GetTransactionQuery(transactionId);
-            var transaction = await mediator.Send(query);
-            
+            var transaction = await _mediator.Send(query);
+
             if (transaction is null)
             {
                 return NotFound();
@@ -94,13 +80,13 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
         {
             var command = new CreateTransactionCommand(transaction);
-            var createdTransaction = await mediator.Send(command);
+            var createdTransaction = await _mediator.Send(command);
 
             if (createdTransaction is null)
             {
                 return BadRequest();
             }
-            
+
             return CreatedAtRoute(
                 "GetTransaction",
                 new { transactionId = createdTransaction.Id },
@@ -120,8 +106,8 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult> UpdateTransactionAsync(int transactionId, TransactionDto transaction)
         {
             var command = new UpdateTransactionCommand(transaction);
-            var @event = await mediator.Send(command);
-            
+            var @event = await _mediator.Send(command);
+
             if (@event is TransactionNotFoundEvent)
             {
                 return NotFound();
@@ -141,8 +127,8 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult> DeleteTransaction(int transactionId)
         {
             var command = new DeleteTransactionCommand(transactionId);
-            var @event = await mediator.Send(command);
-            
+            var @event = await _mediator.Send(command);
+
             if (@event is TransactionNotFoundEvent)
             {
                 return NotFound();
@@ -150,7 +136,7 @@ namespace HomeBudget.API.Controllers
 
             return NoContent();
         }
-        
+
         /// <summary>
         /// Get a list of settlements, calculated for each user and the unsettled transactions
         /// </summary>
@@ -160,11 +146,11 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<IEnumerable<SettlementDto>>> GetSettlementAsync()
         {
             var query = new GetSettlementsQuery();
-            var settlements = await mediator.Send(query);
-        
+            var settlements = await _mediator.Send(query);
+
             return Ok(settlements);
         }
-        
+
         /// <summary>
         /// Updates all transactions to be settled by the transaction IDs passed.
         /// </summary>
@@ -175,9 +161,19 @@ namespace HomeBudget.API.Controllers
         public async Task<IActionResult> SettleTransactions([FromBody] List<int> transactionIds)
         {
             var command = new SettleTransactionsCommand(transactionIds);
-            await mediator.Send(command);
+            await _mediator.Send(command);
 
             return NoContent();
+        }
+
+        [HttpGet("transaction/statistics")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        public async Task<ActionResult<IEnumerable<TransactionStatisticsDto>>> GetTransactionStatisticsAsync([FromQuery]int year)
+        {
+            var query = new GetTransactionStatisticsQuery(year);
+            var statistics = await _mediator.Send(query);
+
+            return Ok(statistics);
         }
     }
 }

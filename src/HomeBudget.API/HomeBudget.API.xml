@@ -9,15 +9,13 @@
             Handle transaction-related operations
             </summary>
         </member>
-        <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactions(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32},System.Int32,System.Int32)">
+        <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactions(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Get all transactions
             </summary>
             <param name="searchQuery">Optional: Search filter</param>
             <param name="month">Month filter</param>
             <param name="year">Year filter</param>
-            <param name="pageNumber">Page of the results to return</param>
-            <param name="pageSize">Amount of results to return</param>
             <returns>A list of transactions</returns>
         </member>
         <member name="M:HomeBudget.API.Controllers.TransactionController.GetTransactionAsync(System.Int32)">
