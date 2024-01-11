@@ -6,11 +6,11 @@ const props = defineProps<{
 </script>
 
 <template>
-  <v-card>
+  <v-card height="30em">
     <v-card-title>
       <h2>{{ title }}</h2>
     </v-card-title>
-    <v-card-text>
+    <v-card-text class="asdf">
       <slot></slot>
     </v-card-text>
     
@@ -18,5 +18,7 @@ const props = defineProps<{
 </template>
 
 <style scoped>
-
+.asdf {
+  height: 80%;
+}
 </style>

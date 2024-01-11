@@ -3,7 +3,7 @@
   <div class="ma-4 text-center">
     <v-container>
       <v-row>
-        <v-col cols="12" md="6">
+        <v-col cols="12" lg="6">
           <HomeCard title="Year statistic">
             <YearBarGraph />
           </HomeCard>
@@ -27,4 +27,5 @@ export default {
 
 </script>
 
-<style scoped></style>
+<style scoped>
+</style>

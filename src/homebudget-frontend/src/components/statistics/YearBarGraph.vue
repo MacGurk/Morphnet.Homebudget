@@ -17,17 +17,45 @@ const dummyData = {
   ]
 };
 
+const colors = ['#ed8796', '#8aadf4', '#f5a97f', '#a6da95', '#eed49f', '#c6a0f6', '#91d7e3', '#f4dbd6']
+
 const data = shallowRef<ChartData | null>(null);
 const loaded = ref(false);
 const options = {
   responsive: true,
-  maintainAspectRatio: true,
+  maintainAspectRatio: false,
   scales: {
     x: {
       stacked: true,
+      title: {
+        display: true,
+        text: "Month"
+      },
+      border: {
+        display: false,
+      },
+      ticks: {
+        color: '#718096'
+      },
+      grid: {
+        display: false
+      }
     },
     y: {
       stacked: true,
+      title: {
+        display: true,
+        text: "in CHF"
+      },
+      border: {
+        display: false,
+      },
+      ticks: {
+        color: '#718096',
+      },
+      grid: {
+        color: '#EDF2F7'
+      }
     }
   }
 }
@@ -40,10 +68,11 @@ const getStatistics = async () => {
   const statistics = await transactionApi.getStatisticsByYear(year.value);
   data.value = {
     labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    datasets: statistics.map((statistic) => {
+    datasets: statistics.map((statistic, index) => {
       return {
         label: statistic.user.name,
         data: statistic.monthlyTotal,
+        backgroundColor: colors[index % colors.length]
       }
     })
   };
@@ -63,19 +92,22 @@ onMounted(async () => {
 <template>
   <div class="d-flex justify-center align-center">
     <v-icon size="large" @click="year--"> mdi-chevron-double-left </v-icon>
-    <div class="mx-3 year-text text-center">
-    <div class="text-h6">
+    <div class="text-h5 mx-3">
         {{ year }}
-      </div>
     </div>
     <v-icon size="large" @click="year++"> mdi-chevron-double-right </v-icon>
   </div>
-  <div class="container ma-16">
+  <div class="chart-container">
     <Bar v-if="loaded" :data="data" :options="options" />
     <Bar v-else :data="dummyData" :options="options" />
   </div>
 </template>
 
 <style scoped>
-
+.chart-container {
+  flex-grow: 1;
+  min-height: 0;
+  
+  height: 100%;
+}
 </style>
