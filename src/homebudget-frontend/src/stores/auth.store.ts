@@ -29,8 +29,24 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('auth');
       router.push('/login');
     },
+    isTokenValid(): boolean {
+      if (this.auth == null) {
+        return false;
+      }
+      const token = JSON.parse(atob(this.auth.token.split('.')[1]));
+      const expire = new Date(token.exp * 1000);
+      
+      if (expire < new Date()) {
+        this.auth = null;
+        localStorage.removeItem('auth');
+        return false;
+      }
+      
+      return true;
+    },
     isAuthenticated(): boolean {
       return !!this.auth;
     },
+    
   },
 });
