@@ -3,9 +3,11 @@ import { defineStore } from 'pinia';
 interface NavState {
   isNavOpen: boolean;
 }
+
+
 export const useNavStore = defineStore('nav', {
   state: (): NavState => ({
-    isNavOpen: false,
+    isNavOpen: window.innerWidth > 600,
   }),
   actions: {
     toggleNav() {
