@@ -2,6 +2,7 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import AuthApi from '@/api/AuthApi';
 import AuthData from '@/models/AuthData';
+import User from "@/entities/User";
 
 interface AuthState {
   auth: AuthData | null;
@@ -47,6 +48,16 @@ export const useAuthStore = defineStore('auth', {
     isAuthenticated(): boolean {
       return !!this.auth;
     },
-    
+    getAuthenticatedUser(): User | null {
+      if (this.auth == null) {
+        return null;
+      }
+      const user = new User();
+      user.id = this.auth.user.id;
+      user.name = this.auth.user.name;
+      user.email = this.auth.user.email;
+      user.isContributor = this.auth.user.isContributor;
+      return user;
+    }
   },
 });

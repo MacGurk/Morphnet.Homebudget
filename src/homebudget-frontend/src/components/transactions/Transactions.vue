@@ -8,7 +8,7 @@
     @delete-transaction="deleteTransaction"
   >
     <template #createForm>
-      <TransactionCreateForm :users="users" @add-transaction="addTransaction" />
+      <TransactionCreateForm @add-transaction="addTransaction" />
     </template>
   </TransactionsTable>
   <ConfirmDialog ref="confirm" />
@@ -31,12 +31,10 @@ import TransactionCreateForm from '@/components/transactions/TransactionCreateFo
 
 interface TransactionsData {
   transactions: Transaction[];
-  users: User[];
   filter: YearMonthFilter;
   loading: boolean;
 }
 
-const userApi = new UserApi();
 const transactionApi = new TransactionApi();
 
 export default defineComponent({
@@ -51,7 +49,6 @@ export default defineComponent({
   data(): TransactionsData {
     return {
       transactions: [],
-      users: [],
       filter: {
         month: new Date().getMonth(),
         year: new Date().getFullYear(),
@@ -61,7 +58,6 @@ export default defineComponent({
   },
   created() {
     this.fetchTransactions();
-    this.fetchUsers();
   },
   methods: {
     getDateString,
@@ -77,14 +73,6 @@ export default defineComponent({
         console.error('Error:', e);
       } finally {
         this.loading = false;
-      }
-    },
-    async fetchUsers(): Promise<void> {
-      this.users = [];
-      try {
-        this.users = await userApi.getContributors();
-      } catch (e) {
-        console.error('Error:', e);
       }
     },
     async addTransaction(

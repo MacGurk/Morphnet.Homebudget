@@ -61,7 +61,7 @@
                 <v-select
                     v-model="newTransaction.userId"
                     label="User"
-                    :items="$props.users"
+                    :items="users"
                     item-title="name"
                     item-value="id"
                 >
@@ -104,10 +104,14 @@ import { getDateString } from '@/utils/utils';
 import {defineComponent} from 'vue';
 import User from '@/entities/User';
 import TransactionForCreation from '@/models/TransactionForCreation';
+import {useAuthStore} from "@/stores/auth.store";
+import UserApi from "@/api/UserApi";
+import users from "@/components/users/Users.vue";
 
 interface TransactionCreateFormData {
   createDialog: boolean;
   loadingUsers: boolean;
+  users: User[];
   newTransaction: {
     date: string,
     userId: number | null,
@@ -116,15 +120,15 @@ interface TransactionCreateFormData {
   };
 }
 
+const userApi = new UserApi();
+
 export default defineComponent({
   name: 'TransactionCreateForm',
-  props: {
-    users: { type: Array as () => User[], required: true}
-  },
   data(): TransactionCreateFormData {
     return {
       createDialog: false,
       loadingUsers: false,
+      users: [],
       newTransaction: {
         date: getDateString(new Date()),
         userId: null,
@@ -145,8 +149,15 @@ export default defineComponent({
       this.newTransaction.userId = null;
     },
     async openDialog() {
+      this.users = [];
+      const authStore = useAuthStore();
       try {
         this.loadingUsers = true;
+        this.users = await userApi.getContributors()
+        const user = authStore.getAuthenticatedUser();
+        if (user && this.users.find(u => u.id == user.id)) {
+          this.newTransaction.userId = user.id;
+        }
       } catch (e) {
         console.error('Error:', e)
       } finally {
