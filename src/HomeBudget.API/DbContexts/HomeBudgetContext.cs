@@ -10,23 +10,21 @@ namespace HomeBudget.API.DbContexts
         public DbSet<Transaction> Transactions { get; set; } = null!;
 
 
-        public HomeBudgetContext(DbContextOptions<HomeBudgetContext> options) : base(options)
+        public HomeBudgetContext(DbContextOptions<HomeBudgetContext> options) :
+            base(options)
         {
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            var salt = Argon2Hasher.GenerateSalt();
-            var passwordHash = Argon2Hasher.GenerateHash("admin", salt);
-            
             modelBuilder.Entity<User>().HasData(
                 new User
                 {
                     Id = 1,
                     Name = "admin",
                     Email = "",
-                    PasswordHash = passwordHash,
-                    PasswordSalt = salt,
+                    PasswordHash = new byte[] { 72, 191, 220, 112, 232, 12, 207, 95, 217, 110, 190, 186, 33, 153, 226, 171 },
+                    PasswordSalt = new byte[] { 23, 221, 35, 137, 84, 205, 181, 136, 212, 93, 228, 146, 152, 177, 82, 3 },
                     IsContributor = false
                 });
             base.OnModelCreating(modelBuilder);

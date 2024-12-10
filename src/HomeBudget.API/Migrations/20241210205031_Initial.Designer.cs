@@ -3,6 +3,7 @@ using System;
 using HomeBudget.API.DbContexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
@@ -11,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace HomeBudget.API.Migrations
 {
     [DbContext(typeof(HomeBudgetContext))]
-    [Migration("20230815204818_Initial")]
+    [Migration("20241210205031_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -19,14 +20,18 @@ namespace HomeBudget.API.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.5")
+                .HasAnnotation("ProductVersion", "9.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
+
+            MySqlModelBuilderExtensions.AutoIncrementColumns(modelBuilder);
 
             modelBuilder.Entity("HomeBudget.API.Entities.Transaction", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTimeOffset>("Date")
                         .HasColumnType("datetime(6)");
@@ -40,7 +45,7 @@ namespace HomeBudget.API.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(65,30)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -57,6 +62,8 @@ namespace HomeBudget.API.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    MySqlPropertyBuilderExtensions.UseMySqlIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -92,8 +99,8 @@ namespace HomeBudget.API.Migrations
                             Email = "",
                             IsContributor = false,
                             Name = "admin",
-                            PasswordHash = new byte[] { 80, 47, 136, 79, 21, 94, 51, 144, 77, 154, 135, 132, 131, 221, 102, 239 },
-                            PasswordSalt = new byte[] { 237, 252, 101, 139, 88, 226, 155, 124, 62, 154, 42, 40, 69, 46, 90, 217 }
+                            PasswordHash = new byte[] { 72, 191, 220, 112, 232, 12, 207, 95, 217, 110, 190, 186, 33, 153, 226, 171 },
+                            PasswordSalt = new byte[] { 23, 221, 35, 137, 84, 205, 181, 136, 212, 93, 228, 146, 152, 177, 82, 3 }
                         });
                 });
 

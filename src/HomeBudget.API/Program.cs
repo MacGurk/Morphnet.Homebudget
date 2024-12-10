@@ -1,6 +1,7 @@
 using System.Reflection;
 using System.Text;
 using HomeBudget.API.DbContexts;
+using HomeBudget.API.Profiles;
 using HomeBudget.API.Services.Repositories;
 using HomeBudget.API.Services.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -51,14 +52,14 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 builder.Services.AddDbContext<HomeBudgetContext>(options =>
 {
-    var connectionString = builder.Configuration["Mysql:ConnectionString"];
+    var connectionString = builder.Configuration["Database:ConnectionString"];
 
-    if (connectionString.IsNullOrEmpty())
+    if (connectionString == null)
     {
-        throw new ArgumentNullException($"Please configure Type and ConnectionString of Database in appsettings");
+        throw new ArgumentNullException($"Please configure ConnectionString of Database in appsettings");
     }
-    
-    options.UseMySQL(connectionString!);
+
+    options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString));
 });
 
 builder.Services.AddAuthentication(options =>
@@ -86,7 +87,7 @@ builder.Services.AddTransient<IUserRepository, UserRepository>();
 builder.Services.AddTransient<ITransactionRepository, TransactionRepository>();
 builder.Services.AddTransient<IAuthRepository, AuthRepository>();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddAutoMapper(typeof(UserProfile).Assembly);
 
 builder.Services.AddApiVersioning(options =>
 {

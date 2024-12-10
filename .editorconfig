@@ -1,0 +1,16 @@
+
+[*]
+
+# Microsoft .NET properties
+csharp_indent_braces = false
+csharp_new_line_before_open_brace = accessors,anonymous_methods,anonymous_types,control_blocks,lambdas,local_functions,methods,object_collection_array_initializers,types
+csharp_preferred_modifier_order = private, internal, public, protected, file, new, required, async, override, readonly, extern, sealed, virtual, unsafe, volatile, static, abstract:suggestion
+
+# ReSharper properties
+resharper_blank_lines_around_auto_property = 1
+resharper_blank_lines_around_invocable = 1
+resharper_braces_for_ifelse = required
+resharper_csharp_max_line_length = 153
+resharper_place_expr_method_on_single_line = if_owner_is_single_line
+resharper_place_simple_anonymousmethod_on_single_line = true
+resharper_place_simple_initializer_on_single_line = true

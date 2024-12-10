@@ -25,7 +25,7 @@ services:
       - db
     restart: unless-stopped
     environment:
-      - Mysql__ConnectionString=server=db;database=homebudget;user=homebudget_admin;password=#{MYSQL_PASSWORD}#;
+      - Database__ConnectionString=server=db;database=homebudget;user=homebudget_admin;password=#{MYSQL_PASSWORD}#;
       - Auth__Issuer=homebudget.morphnet.ch
       - Auth__Audience=homebudget.morphnet.ch
       - Auth__Secret=#{AUTH_SECRET}#

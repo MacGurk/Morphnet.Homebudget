@@ -10,7 +10,7 @@ namespace HomeBudget.API.Tests.CQRS.Query.Transaction;
 public class TransactionStatisticsQueryTest
 {
     [Fact]
-    public void Handle_GetStatistics()
+    public async Task Handle_GetStatistics()
     {
         var contributingUsers = new List<User>
         {
@@ -82,7 +82,7 @@ public class TransactionStatisticsQueryTest
 
         var handler =
             new GetTransactionStatisticsQueryHandler(transactionRepositoryMock.Object, userRepositoryMock.Object, mapper);
-        var result = handler.Handle(new GetTransactionStatisticsQuery(2021), CancellationToken.None).Result.ToList();
+        var result = (await handler.Handle(new GetTransactionStatisticsQuery(2021), CancellationToken.None)).ToList();
 
         Assert.Equal(2, result.Count);
         Assert.Equal(12, result[0].MonthlyTotal.Length);
