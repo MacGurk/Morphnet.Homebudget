@@ -51,14 +51,9 @@ builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssembly(typeof(Progr
 
 builder.Services.AddDbContext<HomeBudgetContext>(options =>
 {
-    var connectionString = builder.Configuration["Mysql:ConnectionString"];
+    var connectionString = builder.Configuration["Database:ConnectionString"];
 
-    if (connectionString.IsNullOrEmpty())
-    {
-        throw new ArgumentNullException($"Please configure Type and ConnectionString of Database in appsettings");
-    }
-    
-    options.UseMySQL(connectionString!);
+    options.UseSqlite(connectionString);
 });
 
 builder.Services.AddAuthentication(options =>

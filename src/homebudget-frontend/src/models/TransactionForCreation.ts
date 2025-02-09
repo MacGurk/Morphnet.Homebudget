@@ -1,14 +1,14 @@
 export default class TransactionForCreation {
-  private _date: Date;
+  private _date: string;
   private _userId: number;
   private _description: string;
   private _price: number;
 
-  get date(): Date {
+  get date(): string {
     return this._date;
   }
 
-  set date(value: Date) {
+  set date(value: string) {
     this._date = value;
   }
 

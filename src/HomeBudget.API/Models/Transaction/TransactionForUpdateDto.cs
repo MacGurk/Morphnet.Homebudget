@@ -6,7 +6,7 @@ public class TransactionForUpdateDto
 {
     public int Id { get; set; }
 
-    public DateTimeOffset Date { get; set; }
+    public DateOnly Date { get; set; }
 
     public UserDto User { get; set; } = new();
 

@@ -170,7 +170,7 @@ export default defineComponent({
       }
       this.createDialog = false;
       const transaction = new TransactionForCreation();
-      transaction.date = new Date(this.newTransaction.date);
+      transaction.date = this.newTransaction.date;
       transaction.description = this.newTransaction.description;
       transaction.price = this.newTransaction.price;
       transaction.userId = this.newTransaction.userId;
