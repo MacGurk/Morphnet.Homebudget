@@ -4,6 +4,7 @@ WORKDIR /app
 
 COPY src/homebudget-frontend ./
 
+RUN corepack enable yarn
 RUN yarn install
 RUN yarn build
 
