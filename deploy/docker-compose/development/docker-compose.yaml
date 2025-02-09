@@ -1,8 +1,6 @@
 services:
   app:
     image: ghcr.io/macgurk/morphnet.homebudget:latest
-    links:
-      - db
     restart: unless-stopped
     volumes:
       - ./database:/app/database

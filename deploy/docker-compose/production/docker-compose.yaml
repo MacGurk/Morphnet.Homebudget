@@ -1,9 +1,9 @@
 services:
   app:
     image: ghcr.io/macgurk/morphnet.homebudget:#{PROD_VERSION}#
+    restart: unless-stopped
     volumes:
       - ./database:/app/database
-    restart: unless-stopped
     environment:
       - Auth__Issuer=homebudget.morphnet.ch
       - Auth__Audience=homebudget.morphnet.ch
