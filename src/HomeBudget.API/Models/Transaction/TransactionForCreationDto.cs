@@ -11,7 +11,7 @@ public class TransactionForCreationDto
     /// Date of the transaction
     /// </summary>
     [Required]
-    public DateTimeOffset Date { get; set; }
+    public DateOnly Date { get; set; }
 
     /// <summary>
     /// Associated user of the transaction

@@ -4,7 +4,7 @@
     <v-sheet width="300" class="mx-auto pa-4">
       <h4 class="mb-4">Edit transaction information</h4>
       <form @submit.prevent="submit">
-        <v-text-field v-model="date.value.value" label="Date" type="text">
+        <v-text-field v-model="date.value.value" label="Date" type="date">
         </v-text-field>
         <v-textarea
           v-model="description.value.value"
@@ -81,7 +81,7 @@ const { handleSubmit } = useForm({
 const submit = handleSubmit(async (values) => {
   const transaction = new Transaction(
     parseInt(route.params.id as string),
-    new Date(values.date),
+    values.date,
     users.value.find((user) => user.id === values.userId) as User,
     values.description,
     values.price,
@@ -124,7 +124,7 @@ const fetchTransaction = async () => {
   const transactionId = parseInt(route.params.id as string);
   const transaction = await transactionApi.getById(transactionId);
   transactionName.value = transaction.id.toString();
-  date.value.value = getDateString(new Date(transaction.date));
+  date.value.value = transaction.date;
   description.value.value = transaction.description;
   price.value.value = transaction.price;
   isSettled.value.value = transaction.isSettled;
