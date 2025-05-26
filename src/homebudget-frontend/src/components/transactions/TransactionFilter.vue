@@ -1,44 +1,67 @@
 <template>
-  <div class="d-flex justify-center align-center">
-    <v-icon size="large" @click="year--"> mdi-chevron-double-left </v-icon>
-    <div class="mx-3 year-text text-center">
-      <v-text-field
-        v-if="editYear"
-        ref="yearText"
-        v-model="enteredYear"
-        type="text"
-        @blur="finishEditYear"
-        variant="solo"
-        single-line
-        hide-details
-        density="compact"
-        @keydown:enter="finishEditYear"
-      ></v-text-field>
-      <div v-else class="text-h6" @click="startEditYear">
-        {{ year }}
+  <v-sheet class="ma-4 pa-3" rounded="lg">
+    <div class="d-flex justify-center align-center"></div>
+    <v-container>
+      <v-row justify="end">
+        <v-col />
+        <v-col>
+          <div class="d-flex justify-center align-center">
+            <v-icon size="large" @click="year--">
+              mdi-chevron-double-left
+            </v-icon>
+            <div class="mx-3 year-text text-center">
+              <v-text-field
+                v-if="editYear"
+                ref="yearText"
+                v-model="enteredYear"
+                type="text"
+                density="compact"
+                variant="solo"
+                single-line
+                hide-details
+                @blur="finishEditYear"
+                @keydown:enter="finishEditYear"
+              ></v-text-field>
+              <div v-else class="text-h6" @click="startEditYear">
+                {{ year }}
+              </div>
+            </div>
+            <v-icon size="large" @click="year++">
+              mdi-chevron-double-right
+            </v-icon>
+          </div>
+        </v-col>
+        <v-col>
+          <div class="d-flex justify-end align-center">
+            <v-btn
+              color="info"
+              icon="mdi-calendar-today"
+              @click="currentMonth"
+            ></v-btn>
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+    <div class="d-flex justify-space-evenly ma-3">
+      <v-select
+        v-if="mobile"
+        v-model="selectedMonth"
+        :items="allMonths"
+        item-value="index"
+        item-title="name"
+      ></v-select>
+      <div
+        v-for="month in allMonths"
+        v-else
+        :key="month.index"
+        class="month-box border v-table__wrapper flex-column flex-grow-1 text-center py-2"
+        :class="monthActive(month.index)"
+        @click="changeMonth(month.index)"
+      >
+        {{ month.name }}
       </div>
     </div>
-    <v-icon size="large" @click="year++"> mdi-chevron-double-right </v-icon>
-  </div>
-  <div class="d-flex justify-space-evenly ma-3">
-    <v-select
-      v-if="mobile"
-      v-model="selectedMonth"
-      :items="allMonths"
-      item-value="index"
-      item-title="name"
-    ></v-select>
-    <div
-      v-for="month in allMonths"
-      v-else
-      :key="month.index"
-      class="month-box border v-table__wrapper flex-column flex-grow-1 text-center py-2"
-      :class="monthActive(month.index)"
-      @click="changeMonth(month.index)"
-    >
-      {{ month.name }}
-    </div>
-  </div>
+  </v-sheet>
 </template>
 
 <script setup lang="ts">
@@ -95,6 +118,12 @@ const changeMonth = (clickedMonth: number) => {
 
 const monthActive = (index: number) => {
   return selectedMonth.value === index ? 'bg-primary' : 'monthbox-bg';
+};
+
+const currentMonth = () => {
+  const now = new Date();
+  selectedMonth.value = now.getMonth();
+  year.value = now.getFullYear();
 };
 </script>
 
