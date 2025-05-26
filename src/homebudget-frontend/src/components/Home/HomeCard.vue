@@ -1,5 +1,4 @@
 <script setup lang="ts">
-
 const props = defineProps<{
   title: string;
 }>();
@@ -13,7 +12,6 @@ const props = defineProps<{
     <v-card-text class="asdf">
       <slot></slot>
     </v-card-text>
-    
   </v-card>
 </template>
 

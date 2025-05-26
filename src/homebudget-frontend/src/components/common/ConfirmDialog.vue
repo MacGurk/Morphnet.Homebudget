@@ -1,4 +1,4 @@
-<template> 
+<template>
   <v-dialog v-model="dialog" max-width="512px" @keydown:esc="cancel">
     <v-card>
       <v-card-title :class="cardTitleColor">{{ title }}</v-card-title>
@@ -7,10 +7,10 @@
         <v-spacer></v-spacer>
         <v-btn variant="outlined" @click="cancel">Cancel</v-btn>
         <v-btn
-            class="font-weight-bold"
-            :color="color"
-            variant="flat"
-            @click="confirm"
+          class="font-weight-bold"
+          :color="color"
+          variant="flat"
+          @click="confirm"
         >
           {{ confirmText }}
         </v-btn>
@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from 'vue';
+import { defineComponent } from 'vue';
 
 interface DialogData {
   dialog: boolean;
@@ -42,7 +42,12 @@ export default defineComponent({
       confirmText: '',
       resolve: Function,
       reject: Function,
-    }
+    };
+  },
+  computed: {
+    cardTitleColor(): string {
+      return `bg-${this.color}`;
+    },
   },
   methods: {
     open(title: string, text: string, confirmText = 'Ok', color = 'primary') {
@@ -54,7 +59,7 @@ export default defineComponent({
       return new Promise((resolve, reject) => {
         this.resolve = resolve;
         this.reject = reject;
-      })
+      });
     },
     confirm() {
       this.resolve(true);
@@ -63,15 +68,9 @@ export default defineComponent({
     cancel() {
       this.resolve(false);
       this.dialog = false;
-    }
+    },
   },
-  computed: {
-    cardTitleColor(): string {
-      return `bg-${this.color}`;
-    }
-  }
-})
+});
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

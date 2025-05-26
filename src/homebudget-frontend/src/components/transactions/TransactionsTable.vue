@@ -3,10 +3,10 @@
     <v-data-table
       :headers="headers"
       :items="$props.transactions"
-      :items-per-page="10"
+      :items-per-page="50"
       :loading="props.loading"
     >
-      <template v-slot:top>
+      <template #top>
         <v-toolbar flat>
           <v-toolbar-title>{{ $props.title }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
@@ -14,18 +14,18 @@
           <slot name="createForm"></slot>
         </v-toolbar>
       </template>
-      <template v-slot:item.date="{ item }">
-        {{ formatDate(item.date) }}
+      <template #item.date="{ value }">
+        {{ date.format(value, 'keyboardDate') }}
       </template>
-      <template v-slot:item.isSettled="{ item }">
-        <v-icon v-if="item.isSettled" size="small" color="success">
+      <template #item.isSettled="{ value }">
+        <v-icon v-if="value" size="small" color="success">
           mdi-check-circle-outline
         </v-icon>
         <v-icon v-else size="small" color="error">
           mdi-close-circle-outline
         </v-icon>
       </template>
-      <template #[`item.actions`]="{ item }">
+      <template #item.actions="{ item }">
         <CrudActions
           :item-id="item.id"
           @edit-item="editTransaction"
@@ -37,28 +37,22 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, onMounted } from 'vue';
+import { onBeforeMount } from 'vue';
 import Transaction from '@/entities/Transaction';
 import CrudActions from '@/components/common/CrudActions.vue';
 import router from '@/router';
-import { useDisplay } from 'vuetify';
-
-interface TransactionsTableHeader {
-  title: string;
-  align?: string;
-  key: string;
-  sortable?: boolean;
-  width?: string;
-}
+import { DataTableHeader } from 'vuetify/lib/components/VDataTable/types';
+import { useDisplay, useDate } from 'vuetify';
 
 const { mobile } = useDisplay();
+const date = useDate();
 
 const props = withDefaults(
   defineProps<{
     title: string;
     transactions: Transaction[];
     hideActions?: boolean;
-    loading: boolean;
+    loading?: boolean;
   }>(),
   {
     hideActions: false,
@@ -66,7 +60,7 @@ const props = withDefaults(
   },
 );
 
-const headers: TransactionsTableHeader[] = [
+const headers: DataTableHeader[] = [
   { title: 'Date', align: 'start', key: 'date', width: '5%' },
   { title: 'Description', align: 'start', key: 'description' },
   { title: 'User', align: 'start', key: 'user.name' },

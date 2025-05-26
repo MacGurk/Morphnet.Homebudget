@@ -19,8 +19,6 @@ import { defineComponent } from 'vue';
 import TitleBar from '@/components/common/TitleBar.vue';
 import Transaction from '@/entities/Transaction';
 import TransactionApi from '@/api/TransactionApi';
-import User from '@/entities/User';
-import UserApi from '@/api/UserApi';
 import TransactionForCreation from '@/models/TransactionForCreation';
 import { getDateString } from '@/utils/utils';
 import ConfirmDialog from '@/components/common/ConfirmDialog.vue';

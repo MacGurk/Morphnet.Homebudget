@@ -2,7 +2,7 @@ import Transaction from '@/entities/Transaction';
 import TransactionForCreation from '@/models/TransactionForCreation';
 import Settlement from '@/entities/Settlement';
 import { useAuthStore } from '@/stores/auth.store';
-import TransactionStatistics from "@/entities/TransactionStatistics";
+import TransactionStatistics from '@/entities/TransactionStatistics';
 
 export default class TransactionApi {
   private path = '/api/v1/transaction';
@@ -96,8 +96,10 @@ export default class TransactionApi {
     });
     this.checkResponse(response, path, method);
   }
-  
-  public async getStatisticsByYear(year: number): Promise<TransactionStatistics[]> {
+
+  public async getStatisticsByYear(
+    year: number,
+  ): Promise<TransactionStatistics[]> {
     const path = `${this.path}/statistics?year=${year}`;
     const response = await fetch(path, {
       headers: this.getDefaultHeaders(),

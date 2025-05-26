@@ -2,7 +2,7 @@ import { defineStore } from 'pinia';
 import router from '@/router';
 import AuthApi from '@/api/AuthApi';
 import AuthData from '@/models/AuthData';
-import User from "@/entities/User";
+import User from '@/entities/User';
 
 interface AuthState {
   auth: AuthData | null;
@@ -36,13 +36,13 @@ export const useAuthStore = defineStore('auth', {
       }
       const token = JSON.parse(atob(this.auth.token.split('.')[1]));
       const expire = new Date(token.exp * 1000);
-      
+
       if (expire < new Date()) {
         this.auth = null;
         localStorage.removeItem('auth');
         return false;
       }
-      
+
       return true;
     },
     isAuthenticated(): boolean {
@@ -58,6 +58,6 @@ export const useAuthStore = defineStore('auth', {
       user.email = this.auth.user.email;
       user.isContributor = this.auth.user.isContributor;
       return user;
-    }
+    },
   },
 });

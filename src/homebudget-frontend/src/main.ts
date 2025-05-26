@@ -3,15 +3,15 @@ import App from './App.vue';
 import router from './router';
 // Vuetify
 import 'vuetify/styles';
-import {createVuetify, ThemeDefinition} from 'vuetify';
+import { createVuetify, ThemeDefinition } from 'vuetify';
 import * as components from 'vuetify/components';
 import * as directives from 'vuetify/directives';
 import { aliases, mdi } from 'vuetify/iconsets/mdi';
 import '@mdi/font/css/materialdesignicons.css';
-import {createPinia, Pinia} from 'pinia';
+import { createPinia, Pinia } from 'pinia';
 import { Form } from 'vee-validate';
 
-const cattpucinLatte : ThemeDefinition = {
+const cattpucinLatte: ThemeDefinition = {
   dark: true,
   colors: {
     background: '#e6e9ef',
@@ -24,10 +24,10 @@ const cattpucinLatte : ThemeDefinition = {
     info: '#1e66f5',
     success: '#40a02b',
     warning: '#df8e1d',
-  }
-}
+  },
+};
 
-const cattpucinMacciato  = {
+const cattpucinMacciato = {
   dark: false,
   colors: {
     background: '#1e2030',
@@ -40,8 +40,8 @@ const cattpucinMacciato  = {
     info: '#8aadf4',
     success: '#a6da95',
     warning: '#eed49f',
-  }
-}
+  },
+};
 
 const vuetify = createVuetify({
   components,
@@ -62,7 +62,7 @@ const vuetify = createVuetify({
   },
 });
 
-const pinia : Pinia = createPinia();
+const pinia: Pinia = createPinia();
 
 createApp(App)
   .use(vuetify)

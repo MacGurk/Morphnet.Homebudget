@@ -4,7 +4,6 @@ interface NavState {
   isNavOpen: boolean;
 }
 
-
 export const useNavStore = defineStore('nav', {
   state: (): NavState => ({
     isNavOpen: window.innerWidth > 600,

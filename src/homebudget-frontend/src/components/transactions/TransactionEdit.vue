@@ -54,7 +54,6 @@ import { onMounted, ref } from 'vue';
 import TransactionApi from '@/api/TransactionApi';
 import { useField, useForm } from 'vee-validate';
 import User from '@/entities/User';
-import { getDateString } from '@/utils/utils';
 import UserApi from '@/api/UserApi';
 import Transaction from '@/entities/Transaction';
 import router from '@/router';

@@ -5,7 +5,7 @@
         <v-card class="mx-auto px-6 pb-8">
           <v-card-title>Login</v-card-title>
           <v-card-text>
-            <form @submit.prevent="onSubmit" :validation-schema="schema">
+            <form :validation-schema="schema" @submit.prevent="onSubmit">
               <v-text-field
                 v-model="username.value.value"
                 :error-messages="username.errorMessage.value as string"
@@ -18,8 +18,8 @@
                 :type="passwordVisible ? 'text' : 'password'"
                 :error-messages="password.errorMessage.value as string"
                 :append-inner-icon="passwordVisible ? 'mdi-eye-off' : 'mdi-eye'"
-                @click:append-inner="switchVisibility"
                 required
+                @click:append-inner="switchVisibility"
               ></v-text-field>
               <v-btn type="submit" size="large" color="primary" block>
                 Sign In

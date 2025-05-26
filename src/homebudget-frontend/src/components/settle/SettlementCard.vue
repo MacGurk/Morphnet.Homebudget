@@ -1,18 +1,18 @@
 <template>
   <v-card width="200" class="mr-4 mb-4">
-    <v-card-title>{{ this.$props.settlement.user.name }}</v-card-title>
+    <v-card-title>{{ $props.settlement.user.name }}</v-card-title>
     <v-card-text>
-      <div v-if="this.$props.settlement.receives">
+      <div v-if="$props.settlement.receives">
         <v-icon color="success">mdi-hand-extended</v-icon>
         <v-icon color="success">mdi-arrow-left-thick</v-icon>
         <v-icon color="success">mdi-cash</v-icon>
-        {{ this.$props.settlement.amount }} CHF
+        {{ $props.settlement.amount }} CHF
       </div>
       <div v-else>
         <v-icon color="error">mdi-hand-extended</v-icon>
         <v-icon color="error">mdi-arrow-right-thick</v-icon>
         <v-icon color="error">mdi-cash</v-icon>
-        {{ this.$props.settlement.amount }} CHF
+        {{ $props.settlement.amount }} CHF
       </div>
     </v-card-text>
   </v-card>

@@ -14,18 +14,14 @@
 </template>
 
 <script lang="ts">
-import TitleBar from "@/components/common/TitleBar.vue";
-import HomeCard from "@/components/Home/HomeCard.vue";
-import YearBarGraph from "@/components/statistics/YearBarGraph.vue";
+import TitleBar from '@/components/common/TitleBar.vue';
+import HomeCard from '@/components/Home/HomeCard.vue';
+import YearBarGraph from '@/components/statistics/YearBarGraph.vue';
 
 export default {
   name: 'BarChart',
-  components: {YearBarGraph, HomeCard, TitleBar},
-}
-
-
-
+  components: { YearBarGraph, HomeCard, TitleBar },
+};
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

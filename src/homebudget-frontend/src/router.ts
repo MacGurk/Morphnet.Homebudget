@@ -36,7 +36,7 @@ const router = createRouter({
 router.beforeEach(async (to) => {
   const authRequired = !publicRoutes.includes(to.path);
   const authStore = useAuthStore();
-  
+
   if (authRequired && (!authStore.auth || !authStore.isTokenValid())) {
     authStore.returnUrl = to.fullPath;
     return '/login';

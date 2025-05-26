@@ -58,7 +58,7 @@ const { mobile } = useDisplay();
 const props = withDefaults(
   defineProps<{
     users: User[];
-    loading: boolean;
+    loading?: boolean;
   }>(),
   {
     loading: false,
