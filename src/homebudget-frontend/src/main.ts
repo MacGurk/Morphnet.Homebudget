@@ -60,6 +60,10 @@ const vuetify = createVuetify({
       light: cattpucinLatte,
     },
   },
+  locale: {
+    locale: 'de',
+    fallback: 'en',
+  },
 });
 
 const pinia: Pinia = createPinia();
