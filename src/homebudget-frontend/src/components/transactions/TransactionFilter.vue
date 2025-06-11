@@ -6,7 +6,7 @@
         <v-col />
         <v-col>
           <div class="d-flex justify-center align-center">
-            <v-icon size="large" @click="year--">
+            <v-icon size="large" @click="setFilters({year: filters.year - 1})">
               mdi-chevron-double-left
             </v-icon>
             <div class="mx-3 year-text text-center">
@@ -23,10 +23,10 @@
                 @keydown:enter="finishEditYear"
               ></v-text-field>
               <div v-else class="text-h6" @click="startEditYear">
-                {{ year }}
+                {{ filters.year }}
               </div>
             </div>
-            <v-icon size="large" @click="year++">
+            <v-icon size="large" @click="setFilters({year: filters.year + 1})">
               mdi-chevron-double-right
             </v-icon>
           </div>
@@ -45,7 +45,7 @@
     <div class="d-flex justify-space-evenly ma-3">
       <v-select
         v-if="mobile"
-        v-model="selectedMonth"
+        v-model="filters.month"
         :items="allMonths"
         item-value="index"
         item-title="name"
@@ -66,13 +66,14 @@
 
 <script setup lang="ts">
 import { monthNames } from '@/utils/utils';
-import { ref, watch, nextTick } from 'vue';
+import {ref, watch, nextTick, inject} from 'vue';
 import { useDisplay } from 'vuetify';
+import {FilterContext, FilterSymbol} from "@/components/transactions/filters";
+
+const {filters, setFilters} = inject(FilterSymbol) as FilterContext;
 
 const yearText = ref<HTMLInputElement | null>(null);
 
-const selectedMonth = ref<number>(new Date().getMonth());
-const year = ref<number>(new Date().getFullYear());
 const editYear = ref<boolean>(false);
 const enteredYear = ref<number>(0);
 
@@ -80,19 +81,8 @@ const allMonths = ref(monthNames);
 
 const { mobile } = useDisplay();
 
-const emits = defineEmits<{
-  (_e: 'filterChanged', _month: number, _year: number): true;
-}>();
-
-watch(selectedMonth, () => {
-  emits('filterChanged', selectedMonth.value, year.value);
-});
-watch(year, () => {
-  emits('filterChanged', selectedMonth.value, year.value);
-});
-
 const startEditYear = () => {
-  enteredYear.value = year.value;
+  enteredYear.value = filters.value.year;
   editYear.value = true;
   nextTick(() => {
     yearText.value!!.focus();
@@ -106,24 +96,25 @@ const finishEditYear = (e: Event) => {
     enteredYear.value <= new Date().getFullYear() &&
     enteredYear.value > 1970
   ) {
-    year.value = enteredYear.value;
+    filters.value.year = enteredYear.value;
   }
 
   editYear.value = false;
 };
 
 const changeMonth = (clickedMonth: number) => {
-  selectedMonth.value = clickedMonth;
+  setFilters({month: clickedMonth});
+  // selectedMonth.value = clickedMonth;
 };
 
 const monthActive = (index: number) => {
-  return selectedMonth.value === index ? 'bg-primary' : 'monthbox-bg';
+  return filters.value.month === index ? 'bg-primary' : 'monthbox-bg';
 };
 
 const currentMonth = () => {
   const now = new Date();
-  selectedMonth.value = now.getMonth();
-  year.value = now.getFullYear();
+  filters.value.month = now.getMonth();
+  filters.value.year = now.getFullYear();
 };
 </script>
 

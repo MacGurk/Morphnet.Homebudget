@@ -2,16 +2,16 @@
   <div :class="mobile ? 'ma-3' : 'ma-16'">
     <v-data-table
       :headers="headers"
-      :items="$props.transactions"
+      :items="transactions"
       :items-per-page="50"
-      :loading="props.loading"
+      :loading="loading"
     >
       <template #top>
         <v-toolbar flat>
           <v-toolbar-title>{{ $props.title }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <slot name="createForm"></slot>
+          <TransactionCreateForm @add-transaction="addTransaction" />
         </v-toolbar>
       </template>
       <template #item.date="{ value }">
@@ -29,34 +29,43 @@
         <CrudActions
           :item-id="item.id"
           @edit-item="editTransaction"
-          @delete-item="deleteTransaction"
+          @delete-item="deleteAction"
         ></CrudActions>
       </template>
     </v-data-table>
   </div>
+  <ConfirmDialog ref="confirm" />
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount } from 'vue';
-import Transaction from '@/entities/Transaction';
+import {inject, onBeforeMount, ref} from 'vue';
 import CrudActions from '@/components/common/CrudActions.vue';
 import router from '@/router';
 import { DataTableHeader } from 'vuetify/lib/components/VDataTable/types';
 import { useDisplay, useDate } from 'vuetify';
+import {FilterSymbol} from "@/components/transactions/filters";
+import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
+import TransactionCreateForm from "@/components/transactions/TransactionCreateForm.vue";
+
+const context = inject(FilterSymbol);
+if (!context) {
+  throw new Error('Not child of a FilterContext');
+}
+
+const { loading, transactions, addTransaction, deleteTransaction } = context;
 
 const { mobile } = useDisplay();
 const date = useDate();
 
+const confirm = ref<InstanceType<typeof ConfirmDialog> | null>(null);
+
 const props = withDefaults(
   defineProps<{
     title: string;
-    transactions: Transaction[];
     hideActions?: boolean;
-    loading?: boolean;
   }>(),
   {
     hideActions: false,
-    loading: false,
   },
 );
 
@@ -67,8 +76,6 @@ const headers: DataTableHeader[] = [
   { title: 'Price', align: 'start', key: 'price' },
   { title: 'Settled', align: 'start', key: 'isSettled' },
 ];
-
-const emit = defineEmits(['editTransaction', 'deleteTransaction']);
 
 onBeforeMount(() => {
   if (!props.hideActions) {
@@ -86,12 +93,17 @@ const editTransaction = (id: number) => {
   router.push(`/transactions/${id}/edit`);
 };
 
-const deleteTransaction = (id: number) => {
-  emit('deleteTransaction', id);
-};
-
-const formatDate = (date: string): string => {
-  return new Date(date).toLocaleDateString();
+const deleteAction = async (id: number) => {
+  if (
+      await confirm.value?.open(
+          `Delete user ${id}`,
+          `Do you really want to delete the transaction '${id}'?`,
+          'Delete',
+          'error',
+      )
+  ) {
+    await deleteTransaction(id);
+  }
 };
 </script>
 
