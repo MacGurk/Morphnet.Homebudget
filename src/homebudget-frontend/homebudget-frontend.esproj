@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.94-alpha">
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/1.0.3095219">
     <PropertyGroup Condition=" '$(OS)' == 'Unix' " >
         <FrameworkPathOverride>/usr/share/dotnet/shared/Microsoft.NETCore.App/7.0.8/mscorlib.dll</FrameworkPathOverride>
     </PropertyGroup>
