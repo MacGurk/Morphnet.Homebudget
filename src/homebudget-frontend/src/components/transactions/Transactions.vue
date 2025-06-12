@@ -5,26 +5,16 @@
       <TransactionFilter />
     </template>
     <template #content>
-      <TransactionsTable
-          title="Transactions Overview"
-          :loading="loading"
-      >
-      </TransactionsTable>
+      <TransactionsCrudTable />
     </template>
   </TransactionFilterLayout>
 </template>
 
 <script setup lang="ts">
-import {ref} from 'vue';
 import TitleBar from "@/components/common/TitleBar.vue";
 import TransactionFilterLayout from "@/components/transactions/TransactionFilterLayout.vue";
 import TransactionFilter from "@/components/transactions/TransactionFilter.vue";
-import TransactionsTable from "@/components/transactions/TransactionsTable.vue";
-
-
-const loading = ref(false);
-
-
+import TransactionsCrudTable from "@/components/transactions/TransactionsCrudTable.vue";
 </script>
 
 <style scoped></style>

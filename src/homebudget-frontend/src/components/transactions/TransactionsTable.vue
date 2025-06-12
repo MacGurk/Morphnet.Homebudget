@@ -2,16 +2,17 @@
   <div :class="mobile ? 'ma-3' : 'ma-16'">
     <v-data-table
       :headers="headers"
-      :items="transactions"
+      :items="props.transactions"
       :items-per-page="50"
-      :loading="loading"
+      :loading="props.loading"
     >
       <template #top>
         <v-toolbar flat>
           <v-toolbar-title>{{ $props.title }}</v-toolbar-title>
           <v-divider class="mx-4" inset vertical></v-divider>
           <v-spacer></v-spacer>
-          <TransactionCreateForm @add-transaction="addTransaction" />
+          <slot name="create" />
+            
         </v-toolbar>
       </template>
       <template #item.date="{ value }">
@@ -25,12 +26,8 @@
           mdi-close-circle-outline
         </v-icon>
       </template>
-      <template #item.actions="{ item }">
-        <CrudActions
-          :item-id="item.id"
-          @edit-item="editTransaction"
-          @delete-item="deleteAction"
-        ></CrudActions>
+      <template #item.actions="slotProps">
+        <slot name="actions" v-bind="slotProps" />
       </template>
     </v-data-table>
   </div>
@@ -38,21 +35,11 @@
 </template>
 
 <script setup lang="ts">
-import {inject, onBeforeMount, ref} from 'vue';
-import CrudActions from '@/components/common/CrudActions.vue';
-import router from '@/router';
+import { onBeforeMount, ref } from 'vue';
 import { DataTableHeader } from 'vuetify/lib/components/VDataTable/types';
 import { useDisplay, useDate } from 'vuetify';
-import {FilterSymbol} from "@/components/transactions/filters";
 import ConfirmDialog from "@/components/common/ConfirmDialog.vue";
-import TransactionCreateForm from "@/components/transactions/TransactionCreateForm.vue";
-
-const context = inject(FilterSymbol);
-if (!context) {
-  throw new Error('Not child of a FilterContext');
-}
-
-const { loading, transactions, addTransaction, deleteTransaction } = context;
+import Transaction from "@/entities/Transaction";
 
 const { mobile } = useDisplay();
 const date = useDate();
@@ -63,9 +50,12 @@ const props = withDefaults(
   defineProps<{
     title: string;
     hideActions?: boolean;
+    loading?: boolean;
+    transactions: Transaction[];
   }>(),
   {
     hideActions: false,
+    loading: false,
   },
 );
 
@@ -88,23 +78,6 @@ onBeforeMount(() => {
     });
   }
 });
-
-const editTransaction = (id: number) => {
-  router.push(`/transactions/${id}/edit`);
-};
-
-const deleteAction = async (id: number) => {
-  if (
-      await confirm.value?.open(
-          `Delete user ${id}`,
-          `Do you really want to delete the transaction '${id}'?`,
-          'Delete',
-          'error',
-      )
-  ) {
-    await deleteTransaction(id);
-  }
-};
 </script>
 
 <style scoped></style>

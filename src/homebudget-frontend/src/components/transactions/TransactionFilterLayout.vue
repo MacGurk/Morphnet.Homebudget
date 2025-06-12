@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import {onMounted, provide, reactive, ref, watch} from "vue";
+import {onMounted, provide, ref, watch} from "vue";
 import {Filters, FilterSymbol} from "@/components/transactions/filters";
 import Transaction from "@/entities/Transaction";
 import TransactionApi from "@/api/TransactionApi";
