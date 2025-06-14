@@ -15,7 +15,7 @@ namespace HomeBudget.API.Controllers
     /// <summary>
     /// Handle transaction-related operations
     /// </summary>
-    [Route("api/v{version:apiVersion}")]
+    [Route("api/v{version:apiVersion}/transaction")]
     [ApiVersion("1")]
     [ApiController]
     [Authorize]
@@ -35,7 +35,7 @@ namespace HomeBudget.API.Controllers
         /// <param name="month">Month filter</param>
         /// <param name="year">Year filter</param>
         /// <returns>A list of transactions</returns>
-        [HttpGet("transaction")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<Transaction>>> GetTransactions(
             string? searchQuery,
@@ -53,7 +53,7 @@ namespace HomeBudget.API.Controllers
         /// </summary>
         /// <param name="transactionId">The id of the transaction to get</param>
         /// <returns>A transaction when it exists</returns>
-        [HttpGet("transaction/{transactionId}", Name = "GetTransaction")]
+        [HttpGet("{transactionId}", Name = "GetTransaction")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<TransactionDto>> GetTransactionAsync(int transactionId)
@@ -68,13 +68,31 @@ namespace HomeBudget.API.Controllers
 
             return Ok(transaction);
         }
+        
+        [HttpGet("user/{userId}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync([FromRoute]int userId)
+        {
+            var query = new GetTransactionsOfUserQuery(userId);
+            var transactions = await _mediator.Send(query);
+            
+            if (transactions is null)
+            {
+                return BadRequest();
+            }
+            
+            return Ok(transactions);
+
+        }
 
         /// <summary>
         /// Create a new transaction
         /// </summary>
         /// <param name="transaction">Transaction to create</param>
         /// <returns>The created transaction and the corresponding route</returns>
-        [HttpPost("transaction")]
+        [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<TransactionDto>> CreateTransactionAsync(TransactionForCreationDto transaction)
@@ -99,7 +117,7 @@ namespace HomeBudget.API.Controllers
         /// <param name="transactionId">The id of the transaction to update</param>
         /// <param name="transaction">The updated transaction</param>
         /// <returns>No Content</returns>
-        [HttpPut("transaction/{transactionId}")]
+        [HttpPut("{transactionId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -121,7 +139,7 @@ namespace HomeBudget.API.Controllers
         /// </summary>
         /// <param name="transactionId">The id of the transaction to delete</param>
         /// <returns>No Content</returns>
-        [HttpDelete("transaction/{transactionId}")]
+        [HttpDelete("{transactionId}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult> DeleteTransaction(int transactionId)
@@ -141,7 +159,7 @@ namespace HomeBudget.API.Controllers
         /// Get a list of settlements, calculated for each user and the unsettled transactions
         /// </summary>
         /// <returns>A list of settlements</returns>
-        [HttpGet("transaction/settlement")]
+        [HttpGet("settlement")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<SettlementDto>>> GetSettlementAsync()
         {
@@ -156,7 +174,7 @@ namespace HomeBudget.API.Controllers
         /// </summary>
         /// <param name="transactionIds">List of IDs of transactions to be settled</param>
         /// <returns>No Content</returns>
-        [HttpPut("transaction/settlement")]
+        [HttpPut("settlement")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<IActionResult> SettleTransactions([FromBody] List<int> transactionIds)
         {
@@ -166,7 +184,7 @@ namespace HomeBudget.API.Controllers
             return NoContent();
         }
 
-        [HttpGet("transaction/statistics")]
+        [HttpGet("statistics")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         public async Task<ActionResult<IEnumerable<TransactionStatisticsDto>>> GetTransactionStatisticsAsync([FromQuery]int year)
         {

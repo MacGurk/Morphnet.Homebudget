@@ -18,11 +18,11 @@ namespace HomeBudget.API.Controllers
     [Authorize]
     public class UserController : ControllerBase
     {
-        private readonly IMediator mediator;
+        private readonly IMediator _mediator;
 
         public UserController(IMediator mediator)
         {
-            this.mediator = mediator;
+            this._mediator = mediator;
         }
 
         /// <summary>
@@ -37,7 +37,7 @@ namespace HomeBudget.API.Controllers
             [FromQuery(Name = "isContributor")] bool isContributor = false)
         {
             var query = new GetUsersQuery(IsContributor: isContributor);
-            var users = await mediator.Send(query);
+            var users = await _mediator.Send(query);
             
             return Ok(users);
         }
@@ -54,7 +54,7 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<UserDto>> GetUser(int userId)
         {
             var query = new GetUserQuery(userId);
-            var user = await mediator.Send(query);
+            var user = await _mediator.Send(query);
             
             if (user == null)
             {
@@ -64,23 +64,6 @@ namespace HomeBudget.API.Controllers
             return Ok(user);
         }
         
-        [HttpGet("user/{userId}/transaction")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetTransactionsByUserAsync([FromRoute]int userId)
-        {
-            var query = new GetTransactionsOfUserQuery(userId);
-            var transactions = await mediator.Send(query);
-            
-            if (transactions is null)
-            {
-                return BadRequest();
-            }
-            
-            return Ok(transactions);
-
-        }
 
         /// <summary>
         /// Create a new user
@@ -93,7 +76,7 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult<UserDto>> CreateUser(UserForCreationDto user)
         {
             var command = new CreateUserCommand(user, user.Password);
-            var createdUser = await mediator.Send(command);
+            var createdUser = await _mediator.Send(command);
             
             return CreatedAtRoute("GetUser", new { userId = createdUser.Id }, createdUser);
         }
@@ -116,7 +99,7 @@ namespace HomeBudget.API.Controllers
             }
 
             var command = new UpdateUserCommand(user);
-            var @event = await mediator.Send(command);
+            var @event = await _mediator.Send(command);
             
             if (@event is UserNotFoundEvent)
             {
@@ -138,7 +121,7 @@ namespace HomeBudget.API.Controllers
             }
 
             var command = new UpdateUserPasswordCommand(userId, userPasswordUpdate);
-            var @event = await mediator.Send(command);
+            var @event = await _mediator.Send(command);
             
             if (@event is UserNotFoundEvent)
             {
@@ -159,7 +142,7 @@ namespace HomeBudget.API.Controllers
         public async Task<ActionResult> DeleteUser(int userId)
         {
             var command = new DeleteUserCommand(userId);
-            var @event = await mediator.Send(command);
+            var @event = await _mediator.Send(command);
             if (@event is UserNotFoundEvent)
             {
                 return NotFound();

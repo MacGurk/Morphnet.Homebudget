@@ -3,7 +3,7 @@ using HomeBudget.API.Models.Transaction;
 using HomeBudget.API.Services.Repositories;
 using MediatR;
 
-namespace HomeBudget.API.CQRS.Query.User;
+namespace HomeBudget.API.CQRS.Query.Transaction;
 
 public record GetTransactionsOfUserQuery(int UserId) : IRequest<IEnumerable<TransactionDto>?>;
 
