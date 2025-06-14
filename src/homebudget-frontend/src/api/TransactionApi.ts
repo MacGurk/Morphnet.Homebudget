@@ -37,7 +37,7 @@ export default class TransactionApi {
   }
 
   public async getByUser(userId: number): Promise<Transaction[]> {
-    const path = `/api/v1/user/${userId}/transaction`;
+    const path = `${this.path}/user/${userId}`;
     const response = await fetch(path, {
       headers: this.getDefaultHeaders(),
     });
