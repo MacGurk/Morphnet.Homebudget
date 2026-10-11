@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="src/homebudget-frontend/homebudget-frontend.esproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="src/HomeBudget.API/HomeBudget.API.csproj" />
+  <Project Path="test/HomeBudget.API.Tests/HomeBudget.API.Tests.csproj" />
+</Solution>
