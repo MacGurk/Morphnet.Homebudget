@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,32 +17,26 @@ builder.Services.AddControllers(options => { options.ReturnHttpNotAcceptable = t
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(setupAction =>
+builder.Services.AddSwaggerGen(options =>
 {
     var xmlCommentsFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlCommentsFullPath = Path.Combine(AppContext.BaseDirectory, xmlCommentsFile);
 
-    setupAction.IncludeXmlComments(xmlCommentsFullPath);
+    options.IncludeXmlComments(xmlCommentsFullPath);
 
-    setupAction.AddSecurityDefinition("HomeBudgetApiBearerAuth", new OpenApiSecurityScheme
+    options.AddSecurityDefinition("HomeBudgetApiBearerAuth", new OpenApiSecurityScheme
     {
         Type = SecuritySchemeType.Http,
         Description = "Input a valid token to access this API",
         In = ParameterLocation.Query,
         Scheme = "Bearer"
     });
-    setupAction.AddSecurityRequirement(new OpenApiSecurityRequirement
+    
+    options.AddSecurityRequirement(document => new OpenApiSecurityRequirement
     {
         {
-            new OpenApiSecurityScheme
-            {
-                Reference = new OpenApiReference
-                {
-                    Type = ReferenceType.SecurityScheme,
-                    Id = "HomeBudgetApiBearerAuth"
-                }
-            },
-            new List<string>()
+            new OpenApiSecuritySchemeReference("HomeBudgetApiBearerAuth", document),
+            []
         }
     });
 });
